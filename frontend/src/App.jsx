@@ -1,14 +1,15 @@
 import React from 'react';
-import HomePage from './pages/home';
-import { Header, Content, Footer } from './components/Layouts';
+import { Router } from 'react-router-dom';
+import HomePage from '~/pages/HomePage';
 
 const App = () => {
     return (
-        <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-9[vw]">
-            <HomePage />
-            <Header />
-            <Content />
-            <Footer />
+        <div>
+            <Router>
+                <Routes>
+                    <Route path="/home" element={<HomePage />} />
+                </Routes>
+            </Router>
         </div>
     );
 };
