@@ -4,7 +4,7 @@ export default function Features() {
     return (
         <div>
             <Header />
-            <div>Features</div>
+            <h1 className="text-9xl">Features</h1>
             <Footer />
         </div>
     );

@@ -11,7 +11,7 @@ import Contact from '~/pages/Contact';
 
 const App = () => {
     return (
-        <div>
+        <div className="App">
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/shop" element={<Shop />} />
@@ -19,7 +19,6 @@ const App = () => {
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
-
             </Routes>
         </div>
     );

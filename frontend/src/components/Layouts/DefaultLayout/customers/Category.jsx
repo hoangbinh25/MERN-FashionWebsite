@@ -4,28 +4,28 @@ const categories = [
     {
         title: "Women",
         subtitle: "Spring 2018",
-        img: "https://themewagon.github.io/cozastore/images/banner-01.jpg",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/d1b1796b71a94f6fae31bb058e2cdcf9~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=4058a708&x-expires=1751299200&x-signature=4I89ENmzKBOJKi7n9KbT8MYY9II%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
     },
     {
         title: "Men",
         subtitle: "Spring 2018",
-        img: "https://themewagon.github.io/cozastore/images/banner-02.jpg",
+        img: "https://p9-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/734b4575eacc32bb407257378e2136ea~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=647b808d&x-expires=1751385600&x-signature=ephpXmszXdI9EcVnJUUddlAHnH4%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
     },
     {
         title: "Accessories",
         subtitle: "New Trend",
-        img: "https://themewagon.github.io/cozastore/images/banner-03.jpg",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/5c5d3c1799ec60a4bf1b682a0f7f8ce7~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=126b7a96&x-expires=1751385600&x-signature=iUQ1y8m7BXKC5jcDgkUjGmDkATc%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
     },
 ];
 
 export default function Category() {
     return (
-        <section className="w-full bg-white py-12">
-            <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 justify-center items-center">
+        <section className="mx-auto bg-white py-16">
+            <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-8 justify-between items-center">
                 {categories.map((cat) => (
                     <div
                         key={cat.title}
-                        className="relative w-[350px] h-[350px] bg-white border border-gray-200 rounded-sm overflow-hidden flex items-center"
+                        className="group relative w-[430px] h-[290px] bg-white border border-gray-200 rounded-sm overflow-hidden flex items-center cursor-pointer"
                     >
                         {/* Ảnh */}
                         <img
@@ -33,12 +33,16 @@ export default function Category() {
                             alt={cat.title}
                             className="absolute inset-0 w-full h-full object-cover"
                         />
-                        {/* Overlay trắng nhẹ để chữ dễ đọc */}
-                        <div className="absolute inset-0 bg-white bg-opacity-60"></div>
+                        {/* Overlay xanh chỉ hiện khi hover */}
+                        <div className="absolute inset-0 bg-indigo-400 transition-opacity duration-300 pointer-events-none group-hover:opacity-80 group-hover:pointer-events-auto opacity-0"></div>
                         {/* Nội dung */}
                         <div className="relative z-10 p-8">
-                            <h3 className="text-2xl font-bold text-gray-800 mb-2">{cat.title}</h3>
-                            <p className="text-lg text-gray-600">{cat.subtitle}</p>
+                            <h3 className="text-2xl font-bold text-gray-800 group-hover:text-white mb-2 transition-colors duration-300">{cat.title}</h3>
+                            <p className="text-lg text-gray-600 group-hover:text-white transition-colors duration-300">{cat.subtitle}</p>
+                            {/* Nút chỉ hiện khi hover */}
+                            <button className="mt-8 px-0 py-0 text-white font-semibold text-lg border-b-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                SHOP NOW
+                            </button>
                         </div>
                     </div>
                 ))}
