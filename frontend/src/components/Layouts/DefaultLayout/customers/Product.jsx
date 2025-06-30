@@ -31,7 +31,7 @@ const Products = [
 
 const categoryProducts = [
     {
-        name: "AllProducts"
+        name: "All Products"
     },
     {
         name: "Women"
@@ -55,15 +55,14 @@ export default function Product() {
         <div className="max-w-screen-2xl mx-auto my-16">
             {/* Header Product Overview */}
             <h1 className="text-4xl font-bold mb-4 md:mb-0">PRODUCT OVERVIEW</h1>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12 ">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between my-6">
                 <div>
                     <div className="flex text-xl gap-8">
                         {categoryProducts.map((cat, index) => {
                             return (
                                 <button
                                     key={index}
-                                    className="text-gray-500 hover:text-gray-800 hover:underline hover:underline-offset-4 transition-all duration-200"
-
+                                    className="text-gray-500 hover:text-gray-800 hover:underline hover:underline-offset-4 transition-all duration-300"
                                 >
                                     {cat.name}
                                 </button>
@@ -72,19 +71,22 @@ export default function Product() {
                     </div>
                 </div>
                 <div className="flex gap-4 md:mt-0 items-center">
-                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-gray-100">
+                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-400">
                         <svg width="18" height="18" fill="none" stroke="currentColor"><path d="M3 6h12M6 9h6M9 12h0" strokeWidth="2" strokeLinecap="round" /></svg>
                         Filter
                     </button>
-                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-gray-100">
+                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-400">
                         <svg width="18" height="18" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6" strokeWidth="2" /><line x1="14" y1="14" x2="17" y2="17" strokeWidth="2" strokeLinecap="round" /></svg>
                         Search
                     </button>
                 </div>
             </div>
-            <div className="flex gap-8 flex-wrap justify-between">
+            <div className="flex gap-8 flex-wrap justify-center md:justify-between p-8 md:px-0">
                 {Products.map((product, idx) => (
-                    <div key={idx} className="group relative w-[315px] bg-white overflow-hidden">
+                    <div
+                        key={idx}
+                        className="group relative w-[315px] bg-white overflow-hidden mx-auto sm:mx-auto md:mx-0"
+                    >
                         {/* Ảnh sản phẩm */}
                         <img
                             src={product.img}

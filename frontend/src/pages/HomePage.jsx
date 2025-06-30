@@ -3,7 +3,7 @@ import Content from "~/components/Layouts/Content/Content";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="sm:col-span-1">
       <Header />
       <Content />
       <Footer />
