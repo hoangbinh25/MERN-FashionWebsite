@@ -1,5 +1,5 @@
 import { Footer, Header } from "~/components/Layouts";
-import Content from "~/components/Layouts/Content/Content";
+import Content from "~/components/Layouts/HomePage/Content";
 
 const HomePage = () => {
   return (

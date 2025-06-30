@@ -1,6 +1,6 @@
 import Banner from "~/components/Layouts/DefaultLayout/customers/Banner";
-import Category from "~/components/Layouts/DefaultLayout/customers/Category";
-import Product from "~/components/Layouts/DefaultLayout/customers/Product";
+import Category from "~/components/Layouts/HomePage/Category";
+import Product from "~/components/Layouts/HomePage/Product";
 
 export default function Content() {
     return <div>
