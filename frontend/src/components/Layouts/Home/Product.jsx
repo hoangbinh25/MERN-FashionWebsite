@@ -1,4 +1,4 @@
-import { act, useState } from "react";
+import { useState } from "react";
 
 const Products = [
     {

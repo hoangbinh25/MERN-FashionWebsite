@@ -1,18 +1,18 @@
-import HomePage from '~/pages/customers/HomePage';
-import Shop from '~/pages/customers/Shop';
-import Blog from '~/pages/customers/Blog';
-import About from '~/pages/customers/About';
-import Contact from '~/pages/customers/Contact';
-import Login from '~/pages/customers/Login';
-import Register from '~/pages/customers/Register';
+import HomePage from '~/pages/Customers/HomePage.jsx';
+import Login from '~/pages/Customers/LoginPage.jsx';
+import Register from '~/pages/Customers/RegisterPage.jsx';
+import ShopPage from '~/pages/Customers/ShopPage.jsx';
+import BlogPage from '~/pages/Customers/BlogPage.jsx';
+import AboutPage from '~/pages/Customers/AboutPage.jsx';
+import ContactPage from '~/pages/Customers/ContactPage.jsx';
 
 const routes = [
     // customers
     { path: '/', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
-    { path: '/shop', component: Shop, content: 'Shop', showBanner: false },
-    { path: '/blog', component: Blog, content: 'Blog', showBanner: true, bannerHeight: 'h-[400px]' },
-    { path: '/about', component: About, content: 'About', showBanner: true, bannerHeight: 'h-[400px]' },
-    { path: '/contact', component: Contact, content: 'Contact', showBanner: true, bannerHeight: 'h-[400px]' },
+    { path: '/shop', component: ShopPage, content: 'Shop', showBanner: false },
+    { path: '/blog', component: BlogPage, content: 'Blog', showBanner: true, bannerHeight: 'h-[400px]' },
+    { path: '/about', component: AboutPage, content: 'About', showBanner: true, bannerHeight: 'h-[400px]' },
+    { path: '/contact', component: ContactPage, content: 'Contact', showBanner: true, bannerHeight: 'h-[400px]' },
 
     // auth
     { path: '/login', component: Login },

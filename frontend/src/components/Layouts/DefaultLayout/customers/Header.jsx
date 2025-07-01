@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, Links, useLocation } from "react-router-dom";
 import { FaRegUserCircle, FaSearch } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useEffect, useState } from "react";
@@ -25,7 +25,7 @@ export default function Header() {
     }, []);
 
     return (
-     <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
+        <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
 
             {/* Main Navbar */}
             <div className={`bg-[#f3f1ef] ${isFixed ? "bg-white shadow" : ""}`}>
@@ -51,9 +51,6 @@ export default function Header() {
                                         {item.title}
 
                                     </Link>
-                                    {item.hot && (
-                                        <span className="ml-2 px-2 py-0.5 text-xs bg-pink-500 text-white rounded-full font-semibold absolute -top-1 left-10">HOT</span>
-                                    )}
                                 </li>
                             ))}
                         </ul>
@@ -71,9 +68,9 @@ export default function Header() {
                             <span className="absolute -top-1.5 -right-1 bg-indigo-400 text-white text-xs font-bold px-1.5 rounded-full">2</span>
                         </button>
                         {/* User Icon */}
-                        <button className="group flex items-center justify-center w-9 h-9 relative">
+                        <Link to="/login" className="group flex items-center justify-center w-9 h-9 relative">
                             <FaRegUserCircle className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
-                        </button>
+                        </Link>
                         {/* Hamburger - chỉ hiện mobile */}
                         <button className="ml-2 flex flex-col justify-center items-center w-9 h-9 md:hidden">
                             <span className="block w-7 h-1 bg-gray-700 mb-1 rounded"></span>
