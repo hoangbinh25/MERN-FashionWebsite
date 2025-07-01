@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 const menuList = [
     { title: 'Home', path: '/' },
     { title: 'Shop', path: '/shop' },
-    { title: 'Features', path: '/features', hot: true },
     { title: 'Blog', path: '/blog' },
     { title: 'About', path: '/about' },
     { title: 'Contact', path: '/contact' },
@@ -29,27 +28,13 @@ export default function Header() {
 
     return (
         <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
-            {/* Top Bar */}
-            <div className={`bg-neutral-900 text-white text-sm ${isFixed ? "hidden" : ""}`}>
-                <div className="max-w-screen-2xl mx-auto flex justify-between items-center h-9 px-4">
-                    <div>
-                        Free shipping for standard order over $100
-                    </div>
-                    <div className="flex items-center divide-x divide-gray-600">
-                        <Link to="#" className="px-4 hover:underline">Help &amp; FAQs</Link>
-                        <Link to="#" className="px-4 hover:underline">My Account</Link>
-                        <Link to="#" className="px-4 hover:underline">EN</Link>
-                        <Link to="#" className="px-4 hover:underline">USD</Link>
-                    </div>
-                </div>
-            </div>
 
             {/* Main Navbar */}
             <div className={`bg-[#f3f1ef] ${isFixed ? "bg-white shadow" : ""}`}>
                 <div className="max-w-screen-2xl mx-auto flex items-center justify-between h-20 px-4">
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
-                        <span className="text-2xl font-bold tracking-wide text-gray-800">COZA</span>
+                        <span className="text-2xl font-bold tracking-wide text-gray-800">TBN</span>
                         <span className="text-2xl font-light tracking-wide text-gray-600">STORE</span>
                     </div>
 
