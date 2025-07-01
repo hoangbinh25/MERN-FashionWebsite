@@ -29,7 +29,7 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-bold text-white mb-4">GET IN TOUCH</h3>
           <p className="mb-4 text-sm">
-            Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+            Any questions? Let us know in store at Trinh Van Bo, Nam Tu Liem, Ha Noi or call us on (+84 912345678)
           </p>
           <div className="flex space-x-4 text-2xl">
             {/* Facebook */}
@@ -74,7 +74,7 @@ export default function Footer() {
           <img src="https://themewagon.github.io/cozastore/images/icons/icon-pay-05.png" alt="Discover" className="h-6" />
         </div>
         <p className="text-sm text-gray-400 text-center">
-          Copyright ©2025 All rights reserved | Made with <span className="text-pink-400">♥</span> by <a href="https://colorlib.com" className="text-blue-400 hover:underline">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" className="text-blue-400 hover:underline">ThemeWagon</a>
+          {/* Copyright ©2025 All rights reserved | Made with <span className="text-pink-400">♥</span> by <a href="https://colorlib.com" className="text-blue-400 hover:underline">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" className="text-blue-400 hover:underline">ThemeWagon</a> */}
         </p>
       </div>
     </footer>

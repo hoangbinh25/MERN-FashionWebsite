@@ -1,9 +1,9 @@
 import { Footer, Header } from "~/components/Layouts";
-import Content from "~/components/Layouts/Content/Content";
+import Content from "~/components/Layouts/HomePage/Content";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="sm:col-span-1">
       <Header />
       <Content />
       <Footer />

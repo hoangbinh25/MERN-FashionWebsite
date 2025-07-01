@@ -1,4 +1,7 @@
 import { Footer, Header } from "~/components/Layouts";
+import { OurMission, OurStory } from "~/components/Layouts/About";
+
+// Layout
 import Banner from "~/components/Layouts/DefaultLayout/customers/Banner";
 
 export default function About() {
@@ -6,6 +9,8 @@ export default function About() {
         <div>
             <Header />
             <Banner heightClass="h-[240px]" />
+            <OurStory />
+            <OurMission />
             <Footer />
         </div>
     );

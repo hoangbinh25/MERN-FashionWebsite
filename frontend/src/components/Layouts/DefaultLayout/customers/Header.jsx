@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaRegUserCircle, FaSearch } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 const menuList = [
     { title: 'Home', path: '/' },
@@ -13,11 +14,23 @@ const menuList = [
 
 export default function Header() {
     const location = useLocation();
+    const [isFixed, setIsFixed] = useState();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsFixed(window.scrollY > 20);
+        }
+        window.addEventListener("scroll", handleScroll);
+
+        // remove 
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, []);
+
 
     return (
-        <header className="w-full">
+        <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
             {/* Top Bar */}
-            <div className="bg-neutral-900 text-white text-sm">
+            <div className={`bg-neutral-900 text-white text-sm ${isFixed ? "hidden" : ""}`}>
                 <div className="max-w-screen-2xl mx-auto flex justify-between items-center h-9 px-4">
                     <div>
                         Free shipping for standard order over $100
@@ -32,7 +45,7 @@ export default function Header() {
             </div>
 
             {/* Main Navbar */}
-            <div className="bg-gray-200">
+            <div className={`bg-[#f3f1ef] ${isFixed ? "bg-white shadow" : ""}`}>
                 <div className="max-w-screen-2xl mx-auto flex items-center justify-between h-20 px-4">
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
@@ -41,7 +54,7 @@ export default function Header() {
                     </div>
 
                     {/* Menu */}
-                    <nav className="flex-1 flex justify-center">
+                    <nav className="flex-1 justify-center hidden md:flex">
                         <ul className="flex space-x-7 items-center text-base font-medium">
                             {menuList.map((item) => (
                                 <li key={item.title} className="relative flex items-center p-2">
@@ -77,6 +90,12 @@ export default function Header() {
                         {/* User Icon */}
                         <button className="group flex items-center justify-center w-9 h-9 relative">
                             <FaRegUserCircle className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
+                        </button>
+                        {/* Hamburger - chỉ hiện mobile */}
+                        <button className="ml-2 flex flex-col justify-center items-center w-9 h-9 md:hidden">
+                            <span className="block w-7 h-1 bg-gray-700 mb-1 rounded"></span>
+                            <span className="block w-7 h-1 bg-gray-700 mb-1 rounded"></span>
+                            <span className="block w-7 h-1 bg-gray-700 rounded"></span>
                         </button>
                     </div>
                 </div>
