@@ -1,8 +1,8 @@
 import { Footer, Header } from "~/components/Layouts";
-import Section from "~/components/Layouts/Contact/Section";
-import Banner from "~/components/Layouts/DefaultLayout/customers/Banner";
+import Section from "~/components/Layouts/Blog/Section";
+import Banner from "~/components/Layouts/DefaultLayout/Customers/Banner";
 
-export default function Contact() {
+export default function Blog() {
     return (
         <div>
             <Header />

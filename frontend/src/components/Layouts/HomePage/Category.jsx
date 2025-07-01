@@ -4,7 +4,7 @@ const categories = [
     {
         title: "Women",
         subtitle: "Spring 2018",
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/d1b1796b71a94f6fae31bb058e2cdcf9~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=4058a708&x-expires=1751299200&x-signature=4I89ENmzKBOJKi7n9KbT8MYY9II%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://p9-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/734b4575eacc32bb407257378e2136ea~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=647b808d&x-expires=1751385600&x-signature=ephpXmszXdI9EcVnJUUddlAHnH4%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
     },
     {
         title: "Men",
