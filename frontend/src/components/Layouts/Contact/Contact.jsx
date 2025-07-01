@@ -1,6 +1,6 @@
 import { FiMail, FiMapPin, FiPhone } from "react-icons/fi";
 
-export default function Section() {
+export default function Contact() {
     return (
         <div className="flex flex-col md:flex-row max-w-screen-2xl mx-auto my-16 border rounded-md bg-white">
             {/* Form */}
