@@ -7,7 +7,7 @@ const Products = [
         showSlider: true,
     },
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/5e2e0663ed7b47d25bf746cb39b14640~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=b1047bcf&x-expires=1751385600&x-signature=WlB3OSgZlpBqsdFSQ0OGr8j7d1c%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/cda5d97f02a611b9db1c82f92b239ace~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=755bb9ba&x-expires=1751518800&x-signature=civarPR2KPDCd%2Bd6TJ6iJGi5qaQ%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my",
         name: "Fashion Blog",
         h1: "Latest Trends & Stories",
         button: "READ BLOG",
@@ -21,7 +21,7 @@ const Products = [
         showSlider: false,
     },
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/b30a4d6e847b2dec4f1567b0c2916f6f~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=66a2e319&x-expires=1751385600&x-signature=DsLQYLcTcQrDeQAQZwYKWxemiRM%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
         name: "Contact",
         h1: "Get In Touch",
         button: "CONTACT US",
@@ -31,7 +31,7 @@ const Products = [
 
 const categoryProducts = [
     {
-        name: "AllProducts"
+        name: "All Products"
     },
     {
         name: "Women"
@@ -72,11 +72,11 @@ export default function Product() {
                     </div>
                 </div>
                 <div className="flex gap-4 md:mt-0 items-center">
-                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-gray-100">
+                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500">
                         <svg width="18" height="18" fill="none" stroke="currentColor"><path d="M3 6h12M6 9h6M9 12h0" strokeWidth="2" strokeLinecap="round" /></svg>
                         Filter
                     </button>
-                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-gray-100">
+                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500">
                         <svg width="18" height="18" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6" strokeWidth="2" /><line x1="14" y1="14" x2="17" y2="17" strokeWidth="2" strokeLinecap="round" /></svg>
                         Search
                     </button>

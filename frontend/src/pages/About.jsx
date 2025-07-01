@@ -4,7 +4,6 @@ import { OurMission, OurStory } from "~/components/Layouts/About";
 // Layout
 import Banner from "~/components/Layouts/DefaultLayout/customers/Banner";
 
-
 export default function About() {
     return (
         <div>

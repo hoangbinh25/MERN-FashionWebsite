@@ -1,9 +1,10 @@
 import { Footer, Header } from "~/components/Layouts";
+import Product from "~/components/Layouts/HomePage/Product";
 
 export default function Shop() {
     return (<div>
         <Header />
-        <h1 className="text-9xl">Shop</h1>
+        <Product />
         <Footer />
     </div>);
 }

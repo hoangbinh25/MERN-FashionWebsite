@@ -5,14 +5,13 @@ import Blog from '~/pages/Blog';
 import About from '~/pages/About';
 import Contact from '~/pages/Contact';
 
-const publicRoutes = [
-    { path: '/', component: HomePage },
-    { path: '/shop', component: Shop },
-    { path: '/features', component: Features },
-    { path: '/blog', component: Blog },
-    { path: '/about', component: About },
-    { path: '/contact', component: Contact },
-
+const routes = [
+    { path: '/', element: <HomePage />, label: 'Home' },
+    { path: '/shop', element: <Shop />, label: 'Shop' },
+    { path: '/features', element: <Features />, label: 'Features' },
+    { path: '/blog', element: <Blog />, label: 'Blog' },
+    { path: '/about', element: <About />, label: 'About' },
+    { path: '/contact', element: <Contact />, label: 'Contact' },
 ]
 
-export { publicRoutes };
+export default routes;
