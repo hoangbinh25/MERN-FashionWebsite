@@ -1,57 +1,98 @@
-📦 FashionWebsite - MERN Stack Project
+# 👗 FashionWebsite - MERN Stack Project
 
-Fullstack ứng dụng web thời trang sử dụng MERN Stack (MongoDB, Express, React, NodeJS)
+FashionWebsite là ứng dụng web thời trang hiện đại, xây dựng với MERN Stack (MongoDB, Express, React, NodeJS). Dự án cung cấp các tính năng mua sắm, blog, quản lý người dùng, và nhiều tiện ích khác cho khách hàng cũng như quản trị viên.
 
-⚙️ Yêu cầu cài đặt:
+---
 
-  Node.js >= 18.x
-  
-  MongoDB (hoặc MongoDB Atlas)
-  
-  NPM hoặc Yarn
+## 🚀 Tính năng chính
 
-🚀 Cách chạy project:
+-   Xem và tìm kiếm sản phẩm thời trang
+-   Đặt hàng, quản lý giỏ hàng
+-   Đăng ký, đăng nhập, phân quyền người dùng
+-   Trang blog, tin tức, liên hệ
+-   Quản trị sản phẩm, đơn hàng (admin)
 
-1️⃣ Clone repository
+---
 
-    git clone https://github.com/your-username/FashionWebsite.git
-    cd FashionWebsite
+## ⚙️ Yêu cầu hệ thống
 
-2️⃣ Cài đặt dependencies
+-   Node.js >= 18.x
+-   MongoDB (cài local hoặc dùng MongoDB Atlas)
+-   NPM hoặc Yarn
 
-Backend
+---
 
-    cd backend
-    npm install
+## 📦 Cài đặt & Khởi động dự án
 
-Frontend
+### 1. Clone repository
 
-    cd ../frontend
-    npm install
+```bash
+git clone https://github.com/your-username/FashionWebsite.git
+cd FashionWebsite
+```
 
+### 2. Cài đặt dependencies
 
-3️⃣ Tạo file .env
+**Backend**
 
-📍 Backend (/backend/.env)
-    
-    PORT=3000
-    MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/your-db
+```bash
+cd backend
+npm install
+```
 
-📍 Frontend (/frontend/.env)
+**Frontend**
 
-    VITE_API_URL=http://localhost:3000/api
+```bash
+cd ../frontend
+npm install
+```
 
-4️⃣ Chạy project
+### 3. Tạo file cấu hình môi trường `.env`
+
+**Backend** (`/backend/.env`):
+
+```
+PORT=3000
+MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/your-db
+```
+
+**Frontend** (`/frontend/.env`):
+
+```
+VITE_API_URL=http://localhost:3000/api
+```
+
+### 4. Chạy project
 
 Mở 2 terminal:
 
-Terminal 1 – Backend:
-
+-   **Terminal 1 – Backend:**
+    ```bash
     cd backend
     npm run dev
-
-Terminal 2 – Frontend:
-    
+    ```
+-   **Terminal 2 – Frontend:**
+    ```bash
     cd frontend
     npm run dev
+    ```
 
+---
+
+## 📁 Cấu trúc thư mục
+
+```
+MERN-FashionWebsite/
+  ├── backend/      # Server Node.js, Express, MongoDB
+  └── frontend/     # Ứng dụng React, TailwindCSS
+```
+
+---
+
+## 📞 Liên hệ & Hỗ trợ
+
+Nếu bạn gặp vấn đề hoặc cần hỗ trợ, vui lòng tạo issue trên GitHub hoặc liên hệ qua email: [contact@example.com](mailto:contact@example.com)
+
+---
+
+Chúc bạn code vui vẻ và thành công với FashionWebsite! ✨
