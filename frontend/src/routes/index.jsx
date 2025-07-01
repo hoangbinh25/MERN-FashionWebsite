@@ -1,10 +1,10 @@
-import HomePage from '~/pages/customers/HomePage';
-import Login from '~/pages/customers/LoginPage';
-import Register from '~/pages/customers/RegisterPage';
-import ShopPage from '~/pages/customers/ShopPage';
-import BlogPage from '~/pages/customers/BlogPage';
-import AboutPage from '~/pages/customers/AboutPage';
-import ContactPage from '~/pages/customers/ContactPage';
+import HomePage from '~/pages/customers/HomePage.jsx';
+import Login from '~/pages/customers/LoginPage.jsx';
+import Register from '~/pages/customers/RegisterPage.jsx';
+import ShopPage from '~/pages/customers/ShopPage.jsx';
+import BlogPage from '~/pages/customers/BlogPage.jsx';
+import AboutPage from '~/pages/customers/AboutPage.jsx';
+import ContactPage from '~/pages/customers/ContactPage.jsx';
 
 const routes = [
     // customers
