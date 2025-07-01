@@ -1,4 +1,5 @@
 import { Footer, Header } from "~/components/Layouts";
+import Section from "~/components/Layouts/Blog/Section";
 import Banner from "~/components/Layouts/DefaultLayout/customers/Banner";
 
 export default function Blog() {
@@ -6,6 +7,7 @@ export default function Blog() {
         <div>
             <Header />
             <Banner heightClass="h-[240px]" />
+            <Section />
             <Footer />
         </div>
     );

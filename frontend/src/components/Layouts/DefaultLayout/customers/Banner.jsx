@@ -9,7 +9,7 @@ const bannerConfigs = {
         showSlider: true,
     },
     blog: {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/5e2e0663ed7b47d25bf746cb39b14640~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=b1047bcf&x-expires=1751385600&x-signature=WlB3OSgZlpBqsdFSQ0OGr8j7d1c%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/42e2ed6d79038f63f25006a8bccf73f6~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=843d35d6&x-expires=1751385600&x-signature=tEPuaNoLWmL1rjXHLFg%2BTBhUioU%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
         h4: "Fashion Blog",
         h1: "Latest Trends & Stories",
         button: "READ BLOG",
@@ -23,7 +23,7 @@ const bannerConfigs = {
         showSlider: false,
     },
     contact: {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/b30a4d6e847b2dec4f1567b0c2916f6f~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=66a2e319&x-expires=1751385600&x-signature=DsLQYLcTcQrDeQAQZwYKWxemiRM%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/3b5e7d8d546387e734816b13a8eb2a15~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=eea69e22&x-expires=1751385600&x-signature=xa1%2BypO8y6TrRzZGz%2FOU0p6xMAo%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
         h4: "Contact",
         h1: "Get In Touch",
         button: "CONTACT US",
@@ -39,13 +39,13 @@ function getBannerConfig(pathname) {
     return bannerConfigs.home;
 }
 
-export default function Banner({ heightClass = "h-[500px]" }) {
+export default function Banner({ heightClass = "h-[1000px]" }) {
     const location = useLocation();
     const config = getBannerConfig(location.pathname);
 
 
     return (
-        <section className={`relative w-full ${heightClass} flex items-center bg-blue-200 overflow-hidden `}>
+        <section className={`relative w-full ${heightClass} flex items-center  overflow-hidden`}>
             {/* Ảnh nền */}
             <img
                 src={config.img}
@@ -54,7 +54,7 @@ export default function Banner({ heightClass = "h-[500px]" }) {
                 style={{ zIndex: 1 }}
             />
             {/* Overlay xanh nhạt */}
-            <div className="absolute inset-0 bg-blue-200 opacity-70 m" style={{ zIndex: 2 }}></div>
+            <div className="absolute inset-0 opacity-70" style={{ zIndex: 2 }}></div>
             {/* Nội dung */}
             <div className="relative z-10 flex flex-col items-start justify-center h-full max-w-7xl pl-56">
                 <h4 className="text-2xl md:text-3xl text-gray-600 mb-2">{config.h4}</h4>
