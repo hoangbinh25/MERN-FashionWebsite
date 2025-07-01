@@ -1,5 +1,3 @@
-import BtnGoToTop from "~/components/Button/BtnGoToTop";
-import { Footer, Header } from "~/components/Layouts";
 import Product from "~/components/Layouts/HomePage/Product";
 
 export default function Shop() {
