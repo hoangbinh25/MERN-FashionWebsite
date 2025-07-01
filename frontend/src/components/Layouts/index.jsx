@@ -1,3 +1,3 @@
-export { default as DefaultLayout } from './DefaultLayout/Customers';
-export { default as Footer } from './DefaultLayout/Customers/Footer';
-export { default as Header } from './DefaultLayout/Customers/Header';
+export { default as DefaultLayout } from './DefaultLayout/customers';
+export { default as Footer } from './DefaultLayout/customers/Footer';
+export { default as Header } from './DefaultLayout/customers/Header';
