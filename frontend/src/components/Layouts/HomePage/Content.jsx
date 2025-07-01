@@ -3,9 +3,10 @@ import Category from "~/components/Layouts/HomePage/Category";
 import Product from "~/components/Layouts/HomePage/Product";
 
 export default function Content() {
-    return <div>
-        <Banner />
-        <Category />
-        <Product />
-    </div>;
+    return (
+        <div>
+            <Category />
+            <Product />
+        </div>
+    );
 }

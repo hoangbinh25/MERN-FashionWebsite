@@ -1,3 +1,5 @@
+import { act, useState } from "react";
+
 const Products = [
     {
         img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/42e2ed6d79038f63f25006a8bccf73f6~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=843d35d6&x-expires=1751385600&x-signature=tEPuaNoLWmL1rjXHLFg%2BTBhUioU%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
@@ -51,19 +53,27 @@ const categoryProducts = [
 ]
 
 export default function Product() {
+    const [activeCategory, setActiveCategory] = useState("All Products")
+    const [showFilter, setShowFilter] = useState(false);
+
     return (
         <div className="max-w-screen-2xl mx-auto my-16">
             {/* Header Product Overview */}
             <h1 className="text-4xl font-bold mb-4 md:mb-0">PRODUCT OVERVIEW</h1>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12 ">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
                     <div className="flex text-xl gap-8">
                         {categoryProducts.map((cat, index) => {
                             return (
                                 <button
                                     key={index}
-                                    className="text-gray-500 hover:text-gray-800 hover:underline hover:underline-offset-4 transition-all duration-200"
-
+                                    className={
+                                        "transition-all duration-200 " +
+                                        (activeCategory === cat.name
+                                            ? "text-gray-500 underline underline-offset-4 font-semibold"
+                                            : "text-gray-500 hover:text-gray-800 hover:underline hover:underline-offset-4")
+                                    }
+                                    onClick={() => setActiveCategory(cat.name)}
                                 >
                                     {cat.name}
                                 </button>
@@ -72,7 +82,10 @@ export default function Product() {
                     </div>
                 </div>
                 <div className="flex gap-4 md:mt-0 items-center">
-                    <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500">
+                    <button
+                        className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500"
+                        onClick={() => setShowFilter((prev) => !prev)}
+                    >
                         <svg width="18" height="18" fill="none" stroke="currentColor"><path d="M3 6h12M6 9h6M9 12h0" strokeWidth="2" strokeLinecap="round" /></svg>
                         Filter
                     </button>
@@ -81,7 +94,63 @@ export default function Product() {
                         Search
                     </button>
                 </div>
+
             </div>
+
+            <div className={`
+                w-full bg-gray-100 rounded shadow mb-8
+                transition-all duration-700 ease-in-out overflow-hidden
+                ${showFilter ? "max-h-[500px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-8"}
+  `}
+                style={{ willChange: "max-height, opacity, transform" }}>
+                {/* Nội dung filter: Sort By, Price, Color, Tags */}
+                <div className="grid grid-cols-4 gap-8">
+                    <div>
+                        <h3 className="font-bold mb-2">Sort By</h3>
+                        <ul>
+                            <li>Default</li>
+                            <li>Popularity</li>
+                            <li>Average rating</li>
+                            <li>Newness</li>
+                            <li>Price: Low to High</li>
+                            <li>Price: High to Low</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-bold mb-2">Price</h3>
+                        <ul>
+                            <li>All</li>
+                            <li>$0.00 - $50.00</li>
+                            <li>$50.00 - $100.00</li>
+                            <li>$100.00 - $150.00</li>
+                            <li>$150.00 - $200.00</li>
+                            <li>$200.00+</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-bold mb-2">Color</h3>
+                        <ul>
+                            <li>Black</li>
+                            <li>Blue</li>
+                            <li>Grey</li>
+                            <li>Green</li>
+                            <li>Red</li>
+                            <li>White</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-bold mb-2">Tags</h3>
+                        <div className="flex flex-wrap gap-2">
+                            <span className="px-3 py-1 border rounded-full">Fashion</span>
+                            <span className="px-3 py-1 border rounded-full">Lifestyle</span>
+                            <span className="px-3 py-1 border rounded-full">Denim</span>
+                            <span className="px-3 py-1 border rounded-full">Streetstyle</span>
+                            <span className="px-3 py-1 border rounded-full">Crafts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className="flex gap-8 flex-wrap justify-between">
                 {Products.map((product, idx) => (
                     <div key={idx} className="group relative w-[315px] bg-white overflow-hidden">

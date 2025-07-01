@@ -13,21 +13,19 @@ const menuList = [
 
 export default function Header() {
     const location = useLocation();
-    const [isFixed, setIsFixed] = useState();
+    const [isFixed, setIsFixed] = useState(false);
 
+    // Event Scroll
     useEffect(() => {
         const handleScroll = () => {
             setIsFixed(window.scrollY > 20);
         }
         window.addEventListener("scroll", handleScroll);
-
-        // remove 
         return () => window.removeEventListener("scroll", handleScroll)
     }, []);
 
-
     return (
-        <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
+     <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
 
             {/* Main Navbar */}
             <div className={`bg-[#f3f1ef] ${isFixed ? "bg-white shadow" : ""}`}>

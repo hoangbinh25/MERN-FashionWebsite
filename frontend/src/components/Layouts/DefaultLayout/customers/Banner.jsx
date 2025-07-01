@@ -39,18 +39,17 @@ function getBannerConfig(pathname) {
     return bannerConfigs.home;
 }
 
-export default function Banner({ heightClass = "h-[1000px]" }) {
+export default function Banner({ bannerHeight }) {
     const location = useLocation();
     const config = getBannerConfig(location.pathname);
 
-
     return (
-        <section className={`relative w-full ${heightClass} flex items-center  overflow-hidden`}>
+        <section className={`relative w-full ${bannerHeight} flex items-center  overflow-hidden`}>
             {/* Ảnh nền */}
             <img
                 src={config.img}
                 alt="Banner"
-                className="absolute inset-0 w-full h-full object-contain"
+                className="absolute inset-0 w-full h-full object-cover"
                 style={{ zIndex: 1 }}
             />
             {/* Overlay xanh nhạt */}
