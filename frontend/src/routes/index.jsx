@@ -5,6 +5,7 @@ import ShopPage from '~/pages/Customers/ShopPage.jsx';
 import BlogPage from '~/pages/Customers/BlogPage.jsx';
 import AboutPage from '~/pages/Customers/AboutPage.jsx';
 import ContactPage from '~/pages/Customers/ContactPage.jsx';
+import NotFoundPage from '~/pages/NotFoundPage';
 
 const routes = [
     // customers
@@ -18,6 +19,8 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/register', component: Register },
 
+    // Not fount 
+    { path: '*', component: NotFoundPage }
 ]
 
 export default routes;
