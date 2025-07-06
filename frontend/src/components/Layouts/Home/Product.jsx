@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const Products = [
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/42e2ed6d79038f63f25006a8bccf73f6~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=843d35d6&x-expires=1751385600&x-signature=tEPuaNoLWmL1rjXHLFg%2BTBhUioU%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
         name: "Men New-Season",
         h1: "JACKETS & COATS",
         button: "SHOP NOW",
@@ -16,7 +16,7 @@ const Products = [
         showSlider: false,
     },
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/3b5e7d8d546387e734816b13a8eb2a15~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=eea69e22&x-expires=1751385600&x-signature=xa1%2BypO8y6TrRzZGz%2FOU0p6xMAo%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
         name: "About Us",
         h1: "Our Story & Mission",
         button: "LEARN MORE",
