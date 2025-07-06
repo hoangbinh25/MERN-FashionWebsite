@@ -1,0 +1,57 @@
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+dotenv.config()
+
+const generalAccessToken = async (payload) => {
+    const access_token = jwt.sign({
+        payload
+    }, process.env.ACCESS_TOKEN, { expiresIn: '7h' })
+
+    return access_token
+}
+
+const generalRefreshToken = async (payload) => {
+    const refresh_token = jwt.sign({
+        payload
+    }, process.env.REFRESH_TOKEN, { expiresIn: '7d' })
+
+    return refresh_token
+}
+
+const refreshTokenJwt = async (token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Kiểm tra tính hợp lệ của refresh_token
+            jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
+                if (err) {
+                    resolve({
+                        status: 'Error',
+                        message: 'Token expired'
+                    })
+                }
+                // Nếu token hợp lệ, lấy thông tin user từ token
+                const { payload } = user
+                // Tạo access_token mới dựa trên thông tin user
+                const access_token = await generalAccessToken({
+                    id: payload.id,
+                    isAdmin: payload.isAdmin
+                })
+                console.log('access_token: ', access_token)
+                // Trả về access_token mới cho client
+                resolve({
+                    status: 'OK',
+                    message: 'Success',
+                    access_token
+                })
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+module.exports = {
+    generalAccessToken,
+    generalRefreshToken,
+    refreshTokenJwt
+}
