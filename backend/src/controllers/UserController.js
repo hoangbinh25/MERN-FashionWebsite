@@ -1,41 +1,68 @@
 const UserService = require('../services/UserService');
 
-// [GET] /user
-exports.getAllUser = async (req, res) => {
+// [GET] /user/getUsers
+const getUsers = async (req, res) => {
     try {
-        const users = await UserService.getAllUser();
-        res.json(users)
+        const user = await UserService.getUsers();
+        res.json(user)
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
 };
 
-// [POST /user/create
-exports.createUser = async (req, res) => {
+
+// [GET] /user/getUser/:id
+const getUserById = async (req, res) => {
     try {
-        // register user
+        const userId = req.params.id
+
+        if (!userId) {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'userId not found'
+            })
+        }
+
+        const user = await UserService.getUserById(userId);
+        res.json(user)
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+};
+
+
+
+// [POST] /user/create
+const createUser = async (req, res) => {
+    try {
+        // Get data from req
         const { firstName, lastName, userName, email, password, confirmPassword, phone } = req.body;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isCheckEmail = emailRegex.test(email);
+
+        // Check data input
         if (!firstName || !lastName || !userName || !email || !password || !confirmPassword || !phone) {
-            return res.status(200).json({
+            return res.status(400).json({
                 status: 'Error',
                 message: 'The input is required'
             })
 
+            // Check email 
         } else if (!isCheckEmail) {
             return res.status(200).json({
                 status: 'Error',
                 message: 'The input is email'
             })
 
+            // Check password
         } else if (password !== confirmPassword) {
-            return res.status(200).json({
+            return res.status(400).json({
                 status: 'Error',
                 message: 'The input password not equal confirm password'
             })
         }
 
+        // Create new user
         const newUser = await UserService.createUser(req.body);
         res.json(newUser)
     } catch (e) {
@@ -43,23 +70,59 @@ exports.createUser = async (req, res) => {
     }
 };
 
-// [PUT] /user/update
-
-exports.updateUser = async (req, res) => {
+// [PUT] /user/update/:id
+const updateUser = async (req, res) => {
     try {
+        // Get ID from URL
         const userId = req.params.id
         const data = req.body
         if (!userId) {
-            return res.status(200).json({
+            return res.status(400).json({
                 status: 'Error',
-                message: 'The userId is required'
+                message: 'The userId is not found'
             })
         }
-        console.log('userId: ', userId);
-        const response = await UserService.updateUser(userId, data)
-        return res.status(200).json(response)
+
+        const updateUser = await UserService.updateUser(userId, data)
+
+        if (!updateUser) {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'The userId not found'
+            })
+        }
+        return res.status(200).json(updateUser)
 
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
+}
+
+// [DELETE] /user/delete/:id
+
+const deleteUser = async (req, res) => {
+    try {
+        const userId = req.params.id
+
+        if (!userId) {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'The userId not found'
+            })
+        }
+
+        const response = await UserService.deleteUser(userId)
+        return res.status(200).json(response);
+
+    } catch (error) {
+        return res.status(404).json({ error: error.message })
+    }
+}
+
+module.exports = {
+    getUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser,
 }
