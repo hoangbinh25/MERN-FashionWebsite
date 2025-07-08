@@ -1,65 +1,150 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import logo from '~/assets/img/Logo_TBN.ico';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaRegUserCircle, FaSearch } from "react-icons/fa";
+import { FaCartShopping } from "react-icons/fa6";
+import { useEffect, useRef, useState } from "react";
 
+const menuList = [
+    { title: 'Home', path: '/home' },
+    { title: 'Shop', path: '/shop' },
+    { title: 'Blog', path: '/blog' },
+    { title: 'About', path: '/about' },
+    { title: 'Contact', path: '/contact' },
+];
 
-function Header() {
-    const navItems = ['HÀNG MỚI', 'SẢN PHẨM', 'SALE'];
-    const [activeType, setActiveType] = useState('');
-    const navigate = useNavigate();
+export default function Header() {
+    const location = useLocation();
+    const [isFixed, setIsFixed] = useState(false);
+    const [user, setUser] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef()
+    const navigate = useNavigate()
 
-    const handleClick = (type) => {
-        setActiveType(type)
-
-        switch (type) {
-            case 'HÀNG MỚI':
-                navigate('/new')
-                break;
-            case 'SẢN PHẨM':
-                navigate('/products')
-            case 'SALE':
-                navigate('/sale')
-
-            default:
-                break;
+    useEffect(() => {
+        const userData = localStorage.getItem("user");
+        if (userData && userData !== "undefined") {
+            try {
+                setUser(JSON.parse(userData));
+            } catch (e) {
+                setUser(null);
+                localStorage.removeItem("user"); // Xóa giá trị lỗi để tránh lặp lại
+            }
         }
+    }, []);
+
+    // Dropdown when user login
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setShowDropdown(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
+
+    // Event Scroll
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsFixed(window.scrollY > 20);
+        }
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, []);
+
+    // Handle logout
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("user")
+        setUser(null)
+        navigate("/login")
     }
 
     return (
-        <header className="flex gap-4 px-6 py-4 shadow-md items-center">
-            <a href="#" className="w-[10%] h-16 ">
-                <img className='h-full w-full object-contain' src={logo} alt="Bleubird" />
-            </a>
-            <ul className="w-[70%] flex">
-                {navItems.map((item, index) => (
-                    <li key={index} className="mx-2 text-sm">
-                        <a className=''>
-                            {item}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-            <div className="flex m-auto">
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
+        <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
 
-                </span>
-                <a href=''>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>
+            {/* Main Navbar */}
+            <div className={`bg-[#f3f1ef] ${isFixed ? "bg-white shadow" : ""}`}>
+                <div className="max-w-screen-2xl mx-auto flex items-center justify-between h-20 px-4">
+                    {/* Logo */}
+                    <div className="flex items-center space-x-2">
+                        <span className="text-2xl font-bold tracking-wide text-gray-800">TBN</span>
+                        <span className="text-2xl font-light tracking-wide text-gray-600">STORE</span>
+                    </div>
 
-                </a>
-                <a href=''>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                    </svg>
-                </a>
+                    {/* Menu */}
+                    <nav className="flex-1 justify-center hidden md:flex">
+                        <ul className="flex space-x-7 items-center text-base font-medium">
+                            {menuList.map((item) => (
+                                <li key={item.title} className="relative flex items-center p-2">
+                                    <Link to={item.path}
+                                        className={
+                                            location.pathname === item.path
+                                                ?
+                                                "text-indigo-500 text-2xl p-2"
+                                                : "text-gray-700 hover:text-indigo-500 transition p-2"}
+                                    >
+                                        {item.title}
+
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+
+                    {/* Icons */}
+                    <div className="flex items-center space-x-6">
+                        {/* Search Icon */}
+                        <button className="group flex items-center justify-center w-9 h-9 relative">
+                            <FaSearch className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
+                        </button>
+                        {/* Cart Icon */}
+                        <button className="group flex items-center justify-center w-9 h-9 relative">
+                            <FaCartShopping className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
+                            <span className="absolute -top-1.5 -right-1 bg-indigo-400 text-white text-xs font-bold px-1.5 rounded-full">2</span>
+                        </button>
+                        {/* User Icon */}
+                        {user ? (
+                            <div className="relative" ref={dropdownRef}>
+                                <button
+                                    className="flex items-center space-x-2"
+                                    onClick={() => setShowDropdown((prev) => !prev)}
+                                >
+                                    <FaRegUserCircle className="w-7 h-7 text-gray-700" />
+                                    <span className="font-medium">{user.userName || user.email}</span>
+                                </button>
+                                {showDropdown && (
+                                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-50">
+                                        <Link
+                                            to="/profile"
+                                            className="block px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => setShowDropdown(false)}
+                                        >
+                                            Xem hồ sơ
+                                        </Link>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={handleLogout}
+                                        >
+                                            Đăng xuất
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link to="/login" className="group flex items-center justify-center w-9 h-9 relative">
+                                <FaRegUserCircle className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
+                            </Link>
+                        )}
+                        {/* Hamburger - chỉ hiện mobile */}
+                        <button className="ml-2 flex flex-col justify-center items-center w-9 h-9 md:hidden">
+                            <span className="block w-7 h-1 bg-gray-700 mb-1 rounded"></span>
+                            <span className="block w-7 h-1 bg-gray-700 mb-1 rounded"></span>
+                            <span className="block w-7 h-1 bg-gray-700 rounded"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </header>
     );
 }
-
-export default Header;
