@@ -1,10 +1,10 @@
-import { Link, Links, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaSearch } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const menuList = [
-    { title: 'Home', path: '/' },
+    { title: 'Home', path: '/home' },
     { title: 'Shop', path: '/shop' },
     { title: 'Blog', path: '/blog' },
     { title: 'About', path: '/about' },
@@ -14,6 +14,33 @@ const menuList = [
 export default function Header() {
     const location = useLocation();
     const [isFixed, setIsFixed] = useState(false);
+    const [user, setUser] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const userData = localStorage.getItem("user");
+        if (userData && userData !== "undefined") {
+            try {
+                setUser(JSON.parse(userData));
+            } catch (e) {
+                setUser(null);
+                localStorage.removeItem("user"); // Xóa giá trị lỗi để tránh lặp lại
+            }
+        }
+    }, []);
+
+    // Dropdown when user login
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setShowDropdown(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
 
     // Event Scroll
     useEffect(() => {
@@ -23,6 +50,15 @@ export default function Header() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll)
     }, []);
+
+    // Handle logout
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("user")
+        setUser(null)
+        navigate("/login")
+    }
 
     return (
         <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
@@ -68,9 +104,38 @@ export default function Header() {
                             <span className="absolute -top-1.5 -right-1 bg-indigo-400 text-white text-xs font-bold px-1.5 rounded-full">2</span>
                         </button>
                         {/* User Icon */}
-                        <Link to="/login" className="group flex items-center justify-center w-9 h-9 relative">
-                            <FaRegUserCircle className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
-                        </Link>
+                        {user ? (
+                            <div className="relative" ref={dropdownRef}>
+                                <button
+                                    className="flex items-center space-x-2"
+                                    onClick={() => setShowDropdown((prev) => !prev)}
+                                >
+                                    <FaRegUserCircle className="w-7 h-7 text-gray-700" />
+                                    <span className="font-medium">{user.userName || user.email}</span>
+                                </button>
+                                {showDropdown && (
+                                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-50">
+                                        <Link
+                                            to="/profile"
+                                            className="block px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => setShowDropdown(false)}
+                                        >
+                                            Xem hồ sơ
+                                        </Link>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={handleLogout}
+                                        >
+                                            Đăng xuất
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link to="/login" className="group flex items-center justify-center w-9 h-9 relative">
+                                <FaRegUserCircle className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
+                            </Link>
+                        )}
                         {/* Hamburger - chỉ hiện mobile */}
                         <button className="ml-2 flex flex-col justify-center items-center w-9 h-9 md:hidden">
                             <span className="block w-7 h-1 bg-gray-700 mb-1 rounded"></span>

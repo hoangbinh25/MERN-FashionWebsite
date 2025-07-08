@@ -9,6 +9,8 @@ export default function RegisterForm() {
         confirmPassword: '',
     });
 
+    const [showPassword, setShowPassword] = useState(false);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -18,6 +20,7 @@ export default function RegisterForm() {
     };
 
     const handleSubmit = (e) => {
+
         e.preventDefault();
         // Handle registration logic
         console.log(formData);
@@ -85,17 +88,23 @@ export default function RegisterForm() {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                     Password
                 </label>
-                <div className="mt-1">
+                <div className="relative mt-1">
                     <input
                         id="password"
                         name="password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         autoComplete="new-password"
                         required
                         value={formData.password}
                         onChange={handleChange}
                         className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
+                    <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                    >
+                        {showPassword ? "🙈" : "👁️"}
+                    </span>
                 </div>
             </div>
 
@@ -103,17 +112,23 @@ export default function RegisterForm() {
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                     Confirm Password
                 </label>
-                <div className="mt-1">
+                <div className="relative mt-1">
                     <input
                         id="confirmPassword"
                         name="confirmPassword"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         autoComplete="new-password"
                         required
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
+                    <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                    >
+                        {showPassword ? "🙈" : "👁️"}
+                    </span>
                 </div>
             </div>
 

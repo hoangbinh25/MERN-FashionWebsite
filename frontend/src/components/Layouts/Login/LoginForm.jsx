@@ -1,14 +1,33 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "~/services/authService.";
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.prevenDefault();
-        console.log({ email, password });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        try {
+            const res = await login(email, password)
+            console.log('res', res);
 
+            if (res.status === "OK") {
+                localStorage.setItem('access_token', res.access_token)
+                localStorage.setItem('refresh_token', res.refresh_token)
+                localStorage.setItem('user', JSON.stringify(res.user))
+                window.location.href = "/home"
+                navigate("/home");
+            } else {
+                alert(res.message || "Login failed");
+            }
+        } catch (error) {
+            alert("Error when login");
+        }
     }
 
     return (
@@ -35,17 +54,23 @@ export default function LoginForm() {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                     Password
                 </label>
-                <div className="mt-1">
+                <div className="relative mt-1">
                     <input
                         id="password"
                         name="password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         autoComplete="current-password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
+                    <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                    >
+                        {showPassword ? "🙈" : "👁️"}
+                    </span>
                 </div>
             </div>
 

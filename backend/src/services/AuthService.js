@@ -42,6 +42,15 @@ const loginUser = async (userLogin) => {
                 message: "SUCCESS",
                 access_token,
                 refresh_token,
+                user: {
+                    id: checkUser.id,
+                    firstName: checkUser.firstName,
+                    lastName: checkUser.lastName,
+                    userName: checkUser.userName,
+                    email: checkUser.email,
+                    address: checkUser.address,
+                    phone: checkUser.phone,
+                }
             })
 
         } catch (error) {

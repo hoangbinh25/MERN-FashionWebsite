@@ -1,4 +1,5 @@
 const UserService = require('../services/UserService');
+const jwt = require('jsonwebtoken')
 
 // [GET] /user/getUsers
 const getUsers = async (req, res) => {
@@ -83,7 +84,21 @@ const updateUser = async (req, res) => {
             })
         }
 
-        const updateUser = await UserService.updateUser(userId, data)
+        // Get infor user from token verified
+        const token = req.headers.token.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
+        const { payload } = decoded;
+
+        if (!payload?.isAdmin) {
+            const fieldUpdate = ["firstName", "lastName", "userName", "address", "phone"]
+            Object.keys(data).forEach(key => {
+                if (!fieldUpdate.includes(key)) {
+                    delete data[key];
+                }
+            })
+        }
+
+        const updateUser = await UserService.updateUser(userId, data);
 
         if (!updateUser) {
             return res.status(404).json({

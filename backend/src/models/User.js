@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema({
     address: { type: String, require: false },
     password: { type: String, require: true },
     confirmPassword: { type: String, require: true },
-    role: { type: Boolean, default: false },
     phone: { type: String, require: true },
+    role: { type: Boolean, default: false },
     isActive: { type: Boolean }
 
 }, {
