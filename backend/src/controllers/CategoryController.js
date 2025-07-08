@@ -3,15 +3,46 @@ const CategoryService = require('../services/CategoryService');
 // [GET] category/getCategories
 const getCategories = async (req, res) => {
     try {
-        const categories = await CategoryService.getCategories();
-        res.json(categories)
+        const {
+            page = 1,
+            limit = 5,
+            sort = 'nameCategory',
+            order = 'asc',
+            search = ''
+        } = req.query;
+
+        const query = search
+            ? { nameCategory: { $regex: search, $options: 'i' } }
+            : {};
+
+        const options = {
+            page: parseInt(page),
+            limit: parseInt(limit),
+            sort: { [sort]: order === 'desc' ? -1 : 1 }
+        };
+
+        const categories = await CategoryService.getCategories(query, options);
+
+        res.json({
+            status: 'OK',
+            message: 'Success',
+            data: categories.docs,
+            pagination: {
+                totalItems: categories.totalDocs,
+                totalPages: categories.totalPages,
+                currentPage: categories.page,
+                hasNextPage: categories.hasNextPage,
+                hasPrevPage: categories.hasPrevPage
+            }
+        });
     } catch (error) {
-        return res.status(400).json({
-            status: 'Error',
-            message: 'Get All Category failure'
-        })
+        res.status(500).json({
+            status: 'ERROR',
+            message: 'Get Categories failure',
+            error: error.message
+        });
     }
-}
+};
 
 // [GET] category/getCategory/:id
 const getCategoryById = async (req, res) => {
@@ -22,7 +53,8 @@ const getCategoryById = async (req, res) => {
     } catch (error) {
         return res.status(400).json({
             status: 'Error',
-            message: 'Id Category not found'
+            message: 'Id Category not found',
+            error: error.message
         })
     }
 }
@@ -34,7 +66,8 @@ const createCategory = async (req, res) => {
         if (!nameCategory) {
             return res.status(400).json({
                 status: 'Error',
-                message: 'The name category is required'
+                message: 'The name category is required',
+                error: error.message
             })
         }
 
@@ -45,7 +78,8 @@ const createCategory = async (req, res) => {
     } catch (error) {
         return res.status(400).json({
             status: 'Error',
-            message: 'Create category failure'
+            message: 'Create category failure',
+            error: error.message
         })
     }
 
@@ -59,7 +93,9 @@ const updateCategory = async (req, res) => {
         if (!idCategory) {
             return res.status(400).json({
                 status: 'Error',
-                message: 'Id Category not found'
+                message: 'Id Category not found',
+                error: error.message
+
             })
         }
         const updateCategory = await CategoryService.updateCategory(idCategory, data)
@@ -67,7 +103,9 @@ const updateCategory = async (req, res) => {
     } catch (error) {
         return res.status(400).json({
             status: 'Error',
-            message: 'Id Category not found'
+            message: 'Id Category not found',
+            error: error.message
+
         })
     }
 }
@@ -79,7 +117,8 @@ const deleteCategory = async (req, res) => {
         if (!idCategory) {
             return res.status(400).json({
                 status: 'Error',
-                message: 'Id Category not found'
+                message: 'Id Category not found',
+                error: error.message
             })
         }
         const deleteCategory = await CategoryService.deleteCategory(idCategory)
@@ -87,7 +126,8 @@ const deleteCategory = async (req, res) => {
     } catch (error) {
         return res.status(400).json({
             status: 'Error',
-            message: 'Id Category not found'
+            message: 'Id Category not found',
+            error: error.message
         })
     }
 }

@@ -1,20 +1,30 @@
 const Category = require('../models/Category')
 
 // Get all categories
-const getCategories = async () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const getAll = await Category.find()
-            resolve({
-                status: 'OK',
-                message: 'Success',
-                data: getAll
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
-}
+const getCategories = async (query, options) => {
+    try {
+        const page = options.page || 1;
+        const limit = options.limit || 5;
+        const skip = (page - 1) * limit;
+
+        const totalDocs = await Category.countDocuments(query);
+        const docs = await Category.find(query)
+            .sort(options.sort)
+            .skip(skip)
+            .limit(limit);
+
+        return {
+            docs,
+            totalDocs,
+            totalPages: Math.ceil(totalDocs / limit),
+            page,
+            hasNextPage: skip + docs.length < totalDocs,
+            hasPrevPage: page > 1
+        };
+    } catch (error) {
+        throw error;
+    }
+};
 
 // Get category by id
 const getCategoryById = async (idCategory) => {
