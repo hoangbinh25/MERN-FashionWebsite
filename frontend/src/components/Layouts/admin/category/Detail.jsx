@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import { updateCategory } from "~/services/categoriesService"; 
 
-export default function CategoryDetail({ category, onClose, onSave }) {
+export default function Detail({ category, onClose, onSave }) {
   const [form, setForm] = useState(
     category
       ? {
-          id: category.id,
-          name: category.name,
+          _id: category._id,
+          nameCategory: category.nameCategory,
         }
-      : { id: "", name: "" }
+      : { _id: "", nameCategory: "" }
   );
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,10 +21,19 @@ export default function CategoryDetail({ category, onClose, onSave }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSave) onSave({ ...category, ...form });
-    onClose();
+    try {
+      setLoading(true);
+      const res = await updateCategory(form._id, { nameCategory: form.nameCategory });
+      if (onSave) onSave(res); // Gọi callback để reload danh sách
+      onClose();
+    } catch (err) {
+      console.error("Update category failed:", err);
+      setError(err?.response?.data?.message || "Update failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,47 +46,46 @@ export default function CategoryDetail({ category, onClose, onSave }) {
         >
           ×
         </button>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-4 sm:gap-6"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
           <h2 className="text-xl font-semibold text-gray-800">Category Details</h2>
-          <div className="flex flex-col gap-3">
-            <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">ID</label>
-              <input
-                type="text"
-                name="id"
-                value={form.id}
-                onChange={handleChange}
-                className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                required
-                disabled
-              />
-            </div>
-            <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                required
-              />
-            </div>
+
+          <div>
+            <label className="text-sm text-gray-600">ID</label>
+            <input
+              type="text"
+              name="_id"
+              value={form._id}
+              disabled
+              className="mt-1 border rounded px-3 py-2 w-full bg-gray-100 text-sm"
+            />
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
+
+          <div>
+            <label className="text-sm text-gray-600">Name</label>
+            <input
+              type="text"
+              name="nameCategory"
+              value={form.nameCategory}
+              onChange={handleChange}
+              className="mt-1 border rounded px-3 py-2 w-full text-sm focus:ring-2 focus:ring-indigo-400"
+              required
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <div className="flex gap-3 mt-4">
             <button
               type="submit"
-              className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold"
+              disabled={loading}
             >
-              Save
+              {loading ? "Saving..." : "Save"}
             </button>
             <button
               type="button"
-              className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold text-sm"
               onClick={onClose}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-lg text-sm font-semibold"
             >
               Cancel
             </button>
