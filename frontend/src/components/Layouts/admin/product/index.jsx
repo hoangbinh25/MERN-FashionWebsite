@@ -1,79 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Filter as FilterIcon, Plus } from "lucide-react";
 import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import Filter from "../../DefaultLayout/admin/Filter";
 import ProductDetail from "./ProductDetail";
 import ProductCreate from "./ProductCreate";
+import { getAllProducts } from "~/services/productsService";
 
 export default function ProductTable() {
-  const allProducts = [
-    // Dữ liệu giữ nguyên, không thay đổi
-    {
-      id: 1,
-      name: "T-Shirt",
-      price: 19.99,
-      quantity: 120,
-      store: "TBN Fashion",
-      category: "Clothing",
-      image: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-    },
-    {
-      id: 2,
-      name: "Sneakers",
-      price: 59.99,
-      quantity: 45,
-      store: "TBN Fashion",
-      category: "Shoes",
-      image: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-    },
-    {
-      id: 3,
-      name: "Hat",
-      price: 9.99,
-      quantity: 30,
-      store: "Summer Store",
-      category: "Accessories",
-      image: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-    },
-    ...Array.from({ length: 27 }, (_, i) => ({
-      id: i + 4,
-      name: `Product ${i + 4}`,
-      price: Math.floor(Math.random() * 100),
-      quantity: Math.floor(Math.random() * 100),
-      store: "TBN Fashion",
-      category: "Clothing",
-      image: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/anh-den-ngau.jpeg",
-    })),
-  ];
-
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedStore, setSelectedStore] = useState("All");
-  const [sortBy, setSortBy] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showCreate, setShowCreate] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [showFilter, setShowFilter] = useState(false);
-  const itemsPerPage = 5;
-
-  const uniqueCategories = ["All", ...new Set(allProducts.map((p) => p.category))];
-  const uniqueStores = ["All", ...new Set(allProducts.map((p) => p.store))];
-
-  const filteredProducts = allProducts.filter((product) => {
-    const matchCategory = selectedCategory === "All" || product.category === selectedCategory;
-    const matchStore = selectedStore === "All" || product.store === selectedStore;
-    return matchCategory && matchStore;
+  const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0
   });
+  const [page, setPage] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [sort, setSort] = useState("");
+  const [order, setOrder] = useState("desc");
+  const [nameProduct, setNameProduct] = useState("");
+  const [category, setCategory] = useState("");
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
-  if (sortBy === "price-asc") filteredProducts.sort((a, b) => a.price - b.price);
-  else if (sortBy === "price-desc") filteredProducts.sort((a, b) => b.price - a.price);
-  else if (sortBy === "name") filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-  else if (sortBy === "quantity") filteredProducts.sort((a, b) => b.quantity - a.quantity);
+  const [selectedProduct, setSelectedProduct] = useState("All");
+  const [sortBy, setSortBy] = useState("");
+  const [showCreate, setShowCreate] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllProducts({
+        page: currentPage,
+        limit: 10,
+        sort: "",
+        order: "desc",
+        nameProduct,
+        category: "",
+        color: "",
+        size: "",
+        minPrice,
+        maxPrice
+      });
+      console.log("Fetched :", response);
+      console.log("Fetched products:", response.data);
+      setProducts(response.data);
+      setPagination({
+        currentPage: response.data.pageCurrent,
+        totalPages: response.data.totalPage,
+        totalItems: response.data.totalProduct
+      });
+    } catch (error) {
+      console.error("Failed to fetch :", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [
+    currentPage,
+    limit,
+    sort,
+    order,
+    nameProduct,
+    category,
+    color,
+    size,
+    minPrice,
+    maxPrice
+  ]);
 
   return (
     <div className="bg-white shadow-xl rounded-2xl p-2 sm:p-4 md:p-6">
@@ -104,12 +105,7 @@ export default function ProductTable() {
       {/* Bộ lọc: mobile ẩn/hiện, desktop luôn hiện */}
       <div className={`${showFilter ? "block" : "hidden"} md:block`}>
         <Filter
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          uniqueCategories={uniqueCategories}
-          selectedStore={selectedStore}
-          setSelectedStore={setSelectedStore}
-          uniqueStores={uniqueStores}
+          
           sortBy={sortBy}
           setSortBy={setSortBy}
         />
@@ -214,5 +210,6 @@ export default function ProductTable() {
         />
       )}
     </div>
+
   );
 }

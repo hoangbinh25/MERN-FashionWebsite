@@ -14,7 +14,7 @@ export default function CategoryTable() {
     totalItems: 0
   });
   const [sortBy, setSortBy] = useState("nameCategory");
-  const [order, setOrder] = useState("asc");
+  const [order, setOrder] = useState("desc");
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
