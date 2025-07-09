@@ -15,6 +15,7 @@ import Category from '~/pages/Admin/Category';
 import Order from '~/pages/Admin/Order';
 import User from '~/pages/Admin/User';
 import Store from '~/pages/Admin/Store';
+import ProfilePage from '~/pages/Customers/ProfilePage';
 
 
 const routes = [
