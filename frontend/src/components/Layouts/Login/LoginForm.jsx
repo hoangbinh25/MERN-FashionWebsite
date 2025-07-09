@@ -20,7 +20,7 @@ export default function LoginForm() {
                 localStorage.setItem('access_token', res.access_token)
                 localStorage.setItem('refresh_token', res.refresh_token)
                 localStorage.setItem('user', JSON.stringify(res.user))
-                window.location.href = "/home"
+                window.location.href = "/home" || "/";
                 navigate("/home");
             } else {
                 alert(res.message || "Login failed");
