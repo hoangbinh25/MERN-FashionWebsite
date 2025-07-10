@@ -1,5 +1,5 @@
-import AuthLayout from "~/components/Layouts/Login/AuthLayout";
-import OTPverification from "~/components/Layouts/Login/OTPverification";
+import AuthLayout from "~/components/Layouts/customers/Auth/AuthLayout";
+import OTPverification from "~/components/Layouts/customers/Auth/OTPverification";
 
 export default function OTPVerificationPage() {
     return (

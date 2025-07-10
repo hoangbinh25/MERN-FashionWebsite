@@ -1,8 +1,8 @@
 const User = require('../models/User');
 const Otp = require('../models/OtpModel')
-const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const { generalAccessToken, generalRefreshToken, refreshTokenJwt } = require('./JwtService');
+const { generalAccessToken, generalRefreshToken } = require('./JwtService');
+const { sendMail } = require('../utils/mailer');
 
 
 const loginUser = async (userLogin) => {
@@ -72,18 +72,9 @@ const loginUser = async (userLogin) => {
 
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-});
-
 const registerUser = async (userRegister) => {
     return new Promise(async (resolve, reject) => {
         const { firstName, lastName, email, password, confirmPassword } = userRegister;
-
         try {
             // Validation
             if (!firstName || !lastName || !email || !password || !confirmPassword) {
@@ -108,26 +99,24 @@ const registerUser = async (userRegister) => {
             const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 phút
 
             // Lưu user chưa xác minh
-            // const user = new User({
-            //     firstName,
-            //     lastName,
-            //     email,
-            //     userName: email.split('@')[0],
-            //     password: hashedPassword,
-            //     isVerified: false
-            // });
-            // await user.save();
+            const user = new User({
+                firstName,
+                lastName,
+                email,
+                userName: email.split('@')[0],
+                password: hashedPassword,
+                isVerified: false
+            });
+            await user.save();
 
-            // // Lưu OTP
-            // await Otp.create({ email, otp, expiresAt });
+            // Lưu OTP
+            await Otp.create({ email, otp, expiresAt });
 
-            // // Gửi OTP
-            // await transporter.sendMail({
-            //     from: `"TBN Store" <${process.env.EMAIL_USER}>`,
-            //     to: email,
-            //     subject: "Confirm account TBN Store",
-            //     text: `Your verification OTP code is: ${otp}. This code will expire in 5 minutes.`,
-            // });
+            await sendMail({
+                to: email,
+                subject: "Confirm account TBN Store",
+                text: `Your verification OTP code is: ${otp}. This code will expire in 5 minutes.`,
+            })
 
             resolve({ status: 200, message: 'Register successfully! Please check your email to enter the OTP code' });
         } catch (error) {
@@ -175,35 +164,31 @@ const resendOTP = async (email) => {
             if (!user) {
                 return reject({ status: 400, message: 'User not found' });
             }
+            if (user.isVerified) {
+                return reject({ status: 400, message: 'Email already verified' });
+            } else {
 
-            // Kiểm tra user đã xác minh chưa
-            const checkEmail = await User.findOne({ email });
-            if (checkEmail) {
-                if (user.isVerified) {
-                    return reject({ status: 400, message: 'Email already verified' });
-                } else {
-
-                }
-                // Xóa OTP cũ nếu có
-                await Otp.deleteMany({ email });
-
-                // Tạo OTP mới
-                const otp = generateOTP();
-                const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 phút
-
-                // Lưu OTP mới
-                await Otp.create({ email, otp, expiresAt });
-
-                // Gửi OTP mới
-                await transporter.sendMail({
-                    from: `"TBN Store" <${process.env.EMAIL_USER}>`,
-                    to: email,
-                    subject: "Resend OTP - TBN Store",
-                    text: `Your new verification OTP code is: ${otp}. This code will expire in 5 minutes.`,
-                });
-
-                return resolve({ status: 200, message: 'OTP resent successfully! Please check your email.' });
             }
+            // Xóa OTP cũ nếu có
+            await Otp.deleteMany({ email });
+
+            // Tạo OTP mới
+            const otp = generateOTP();
+            const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 phút
+
+            // Lưu OTP mới
+            await Otp.create({ email, otp, expiresAt });
+
+            // Gửi OTP mới
+            await transporter.sendMail({
+                from: `"TBN Store" <${process.env.EMAIL_USER}>`,
+                to: email,
+                subject: "Resend OTP - TBN Store",
+                text: `Your new verification OTP code is: ${otp}. This code will expire in 5 minutes.`,
+            });
+
+            return resolve({ status: 200, message: 'OTP resent successfully! Please check your email.' });
+
 
         } catch (error) {
             console.error(error);

@@ -7,19 +7,15 @@ export const login = async (email, password) => {
 }
 
 export const register = async (firstName, lastName, email, password, confirmPassword) => {
-    const res = await axios.post(`${API_URL}/auth/register`, { firstName, lastName, email, password, confirmPassword });
-    console.log('res:" ', res)
-    return res.data
+    return await axios.post(`${API_URL}/auth/register`, { firstName, lastName, email, password, confirmPassword });
 }
 
 export const verifyOTP = async (email, otp) => {
-    const res = await axios.post(`${API_URL}/auth/verify-otp`, { email, otp });
-    return res.data
+    return await axios.post(`${API_URL}/auth/verify-otp`, { email, otp });
 }
 
 export const resendOTP = async (email) => {
-    const res = await axios.post(`${API_URL}/auth/resend-otp`, { email });
-    return res.data
+    return await axios.post(`${API_URL}/auth/resend-otp`, { email });
 }
 
 export const refreshAccessToken = async (refreshToken) => {

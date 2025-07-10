@@ -47,7 +47,7 @@ export default function Banner({ bannerHeight }) {
         <section className={`relative w-full ${bannerHeight} flex items-center  overflow-hidden`}>
             {/* Ảnh nền */}
             <img
-                src={config.img}
+                src="https://themewagon.github.io/cozastore/images/slide-02.jpg"
                 alt="Banner"
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ zIndex: 1 }}

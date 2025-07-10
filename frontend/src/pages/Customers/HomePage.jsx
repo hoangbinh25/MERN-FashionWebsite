@@ -1,4 +1,4 @@
-import Home from "~/components/Layouts/Home/Home";
+import Home from "~/components/Layouts/customers/Home/Home";
 
 export default function HomePage() {
   return (

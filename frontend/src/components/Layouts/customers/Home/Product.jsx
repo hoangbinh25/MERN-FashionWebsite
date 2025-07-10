@@ -2,28 +2,28 @@ import { useState } from "react";
 
 const Products = [
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://themewagon.github.io/cozastore/images/product-01.jpg",
         name: "Men New-Season",
         h1: "JACKETS & COATS",
         button: "SHOP NOW",
         showSlider: true,
     },
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/cda5d97f02a611b9db1c82f92b239ace~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=755bb9ba&x-expires=1751518800&x-signature=civarPR2KPDCd%2Bd6TJ6iJGi5qaQ%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my",
+        img: "https://themewagon.github.io/cozastore/images/product-02.jpg",
         name: "Fashion Blog",
         h1: "Latest Trends & Stories",
         button: "READ BLOG",
         showSlider: false,
     },
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://themewagon.github.io/cozastore/images/product-03.jpg",
         name: "About Us",
         h1: "Our Story & Mission",
         button: "LEARN MORE",
         showSlider: false,
     },
     {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://themewagon.github.io/cozastore/images/product-04.jpg",
         name: "Contact",
         h1: "Get In Touch",
         button: "CONTACT US",
@@ -59,8 +59,8 @@ export default function Product() {
     return (
         <div className="max-w-screen-2xl mx-auto my-16">
             {/* Header Product Overview */}
-            <h1 className="text-4xl font-bold mb-4 md:mb-0">PRODUCT OVERVIEW</h1>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+            <h1 className="text-4xl font-bold mb-4 pb-3 md:mb-0">PRODUCT OVERVIEW</h1>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between my-4">
                 <div>
                     <div className="flex text-xl gap-8">
                         {categoryProducts.map((cat, index) => {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { resendOTP, verifyOTP } from "~/services/authService.";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function OTPverification() {
 
@@ -9,16 +10,16 @@ export default function OTPverification() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [countdown, setCountdown] = useState(0);
-    const [email, setEmail] = useState('');
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    const email = location.state?.email || "";
 
     useEffect(() => {
-        const savedEmail = localStorage.getItem('pendingVerificationEmail');
-        if (savedEmail) {
-            setEmail(savedEmail)
-        } else {
-            // window.location.href = '/auth/register'
+        if (email) {
+            localStorage.setItem('pendingVerificationEmail', email);
         }
-    }, []);
+    }, [email]);
 
     useEffect(() => {
         let timer;
@@ -51,7 +52,6 @@ export default function OTPverification() {
     };
 
     const handleVerifyOTP = async () => {
-
         const otpString = otp.join('');
         if (otpString.length !== 6) {
             setError('Please enter a 6-digit OTP');
@@ -63,21 +63,21 @@ export default function OTPverification() {
         setSuccess('');
 
         try {
-            const response = await verifyOTP(email, otpString);
-            if (response.status === 200) {
-                setSuccess(response.message);
+            const res = await verifyOTP(email, otpString);
+            if (res.status === 200) {
+                setSuccess(res.data.message);
                 // Xóa email pending
                 localStorage.removeItem('pendingVerificationEmail');
                 // Redirect to login sau 2 giây
                 setTimeout(() => {
-                    window.location.href = '/auth/login';
+                    navigate('/auth/login')
                 }, 2000);
             } else {
-                setError(response.message || 'Verification failed');
+                setError(res.data.message || 'Verification failed');
             }
         } catch (error) {
-            setError(error.response?.data?.message || 'Verification failed');
-            console.log(error.response?.data);
+            setError(error.res?.data?.message || 'Verification failed');
+            console.log(error.res?.data);
 
         } finally {
             setLoading(false);
@@ -170,7 +170,7 @@ export default function OTPverification() {
 
                 <div className="text-center">
                     <button
-                        onClick={() => window.location.href = '/auth/register'}
+                        onClick={() => navigate('/auth/register')}
                         className="text-gray-600 hover:text-gray-500 text-sm"
                     >
                         ← Back to Register

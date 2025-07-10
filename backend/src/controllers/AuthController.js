@@ -31,12 +31,8 @@ const loginUser = async (req, res) => {
 const registerUser = async (req, res) => {
     try {
         const result = await AuthService.registerUser(req.body);
-        console.log("result: ", result);
 
-        return res.status(result.status).json({
-            message: result.message,
-            result
-        });
+        return res.status(result.status).json({ message: result.message });
     } catch (error) {
         return res.status(error.status || 500).json({ message: error.message || 'Internal error' });
     }

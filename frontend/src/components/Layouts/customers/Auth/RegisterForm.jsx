@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { register } from "~/services/authService.";
 
 export default function RegisterForm() {
@@ -15,18 +16,21 @@ export default function RegisterForm() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: value
         }));
-        console.log('formData: ', formData);
-
     };
+
+    console.log("Submitting:", formData);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true)
         try {
             const res = await register(
                 formData.firstName,
@@ -35,24 +39,27 @@ export default function RegisterForm() {
                 formData.password,
                 formData.confirmPassword
             );
+            console.log("Response from register API:", res);
             if (res.status === 200) {
-                setSuccess(res.message)
+                setSuccess(res.data.message);
+                console.log('Redirecting to verify OTP with email:', formData.email);
 
-                // Save email have use verify OTP
-                localStorage.setItem('pendingVerificationEmail', formData.email);
-                console.log("Redirect to /auth/verify-otp");
-
-                window.location.href = '/auth/verify-otp';
+                setTimeout(() => {
+                    navigate('/auth/verify-otp',
+                        {
+                            state: { email: formData.email }
+                        });
+                }, 300);
             } else {
-                setError(res.message || 'Registration failed');
+                setError(res.data.message || 'Registration failed');
             }
 
         } catch (error) {
+            console.log(error.response?.data || error);
             setError('Registration failed');
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-
     };
 
     return (
