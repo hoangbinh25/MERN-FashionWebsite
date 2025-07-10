@@ -1,3 +1,4 @@
+// User
 import HomePage from '~/pages/Customers/HomePage';
 import Login from '~/pages/Customers/LoginPage';
 import Register from '~/pages/Customers/RegisterPage';
@@ -6,16 +7,16 @@ import BlogPage from '~/pages/Customers/BlogPage';
 import AboutPage from '~/pages/Customers/AboutPage';
 import ContactPage from '~/pages/Customers/ContactPage';
 import ProfilePage from '~/pages/Customers/ProfilePage';
-
+import OTPverification from '~/components/Layouts/Login/OTPverification';
 import NotFoundPage from '~/pages/NotFoundPage';
 
+// Admin
 import Index from '~/pages/Admin/Index';
 import Product from '~/pages/Admin/Product';
 import Category from '~/pages/Admin/Category';
 import Order from '~/pages/Admin/Order';
 import User from '~/pages/Admin/User';
 import Store from '~/pages/Admin/Store';
-import ProfilePage from '~/pages/Customers/ProfilePage';
 
 
 const routes = [
@@ -28,8 +29,9 @@ const routes = [
     { path: '/user/profile', component: ProfilePage, content: 'Profile', showBanner: false },
 
     // auth
-    { path: '/login', component: Login },
-    { path: '/register', component: Register },
+    { path: '/auth/login', component: Login },
+    { path: '/auth/register', component: Register },
+    { path: '/auth/verify-otp', component: OTPverification },
 
     //admin
     { path: '/admin', component: Index, content: 'Admin' },

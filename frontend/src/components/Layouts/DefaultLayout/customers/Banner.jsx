@@ -32,10 +32,10 @@ const bannerConfigs = {
 };
 
 function getBannerConfig(pathname) {
-    if (pathname === "/" || pathname === "/home") return bannerConfigs.home;
-    if (pathname.startsWith("/blog")) return bannerConfigs.blog;
-    if (pathname.startsWith("/about")) return bannerConfigs.about;
-    if (pathname.startsWith("/contact")) return bannerConfigs.contact;
+    if (pathname === "/" || pathname === "/user/home") return bannerConfigs.home;
+    if (pathname.startsWith("/user/blog")) return bannerConfigs.blog;
+    if (pathname.startsWith("/user/about")) return bannerConfigs.about;
+    if (pathname.startsWith("/user/contact")) return bannerConfigs.contact;
     return bannerConfigs.home;
 }
 

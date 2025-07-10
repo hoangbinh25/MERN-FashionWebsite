@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "~/context/AuthContext";
 import { login } from "~/services/authService.";
 
 export default function LoginForm() {
@@ -9,19 +10,19 @@ export default function LoginForm() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    const { login: setAuthUser } = useAuth();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         try {
             const res = await login(email, password)
-            console.log('res', res);
 
             if (res.status === "OK") {
+                setAuthUser(res.user);
                 localStorage.setItem('access_token', res.access_token)
                 localStorage.setItem('refresh_token', res.refresh_token)
-                localStorage.setItem('user', JSON.stringify(res.user))
-                window.location.href = "/home" || "/";
-                navigate("/home");
+                navigate("/user/home");
             } else {
                 alert(res.message || "Login failed");
             }

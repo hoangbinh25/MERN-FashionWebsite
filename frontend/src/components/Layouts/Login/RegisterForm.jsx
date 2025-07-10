@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { register } from "~/services/authService.";
 
 export default function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -10,6 +11,9 @@ export default function RegisterForm() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,17 +21,54 @@ export default function RegisterForm() {
             ...prev,
             [name]: value
         }));
+        console.log('formData: ', formData);
+
     };
 
-    const handleSubmit = (e) => {
-
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle registration logic
-        console.log(formData);
+        try {
+            const res = await register(
+                formData.firstName,
+                formData.lastName,
+                formData.email,
+                formData.password,
+                formData.confirmPassword
+            );
+            if (res.status === 200) {
+                setSuccess(res.message)
+
+                // Save email have use verify OTP
+                localStorage.setItem('pendingVerificationEmail', formData.email);
+                console.log("Redirect to /auth/verify-otp");
+
+                window.location.href = '/auth/verify-otp';
+            } else {
+                setError(res.message || 'Registration failed');
+            }
+
+        } catch (error) {
+            setError('Registration failed');
+        } finally {
+            setLoading(false)
+        }
+
     };
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                    {error}
+                </div>
+            )}
+
+            {success && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+                    {success}
+                </div>
+            )}
+
             <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
@@ -135,9 +176,10 @@ export default function RegisterForm() {
             <div>
                 <button
                     type="submit"
+                    disabled={loading}
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Register
+                    {loading ? 'Registering...' : 'Register'}
                 </button>
             </div>
         </form>

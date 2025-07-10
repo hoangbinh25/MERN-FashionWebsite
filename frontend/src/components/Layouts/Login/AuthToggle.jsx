@@ -17,14 +17,14 @@ export default function AuthToggle({ isLogin }) {
             <div className="mt-6">
                 {isLogin ? (
                     <Link
-                        to="/register"
+                        to="/auth/register"
                         className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         Create new account
                     </Link>
                 ) : (
                     <Link
-                        to="/login"
+                        to="/auth/login"
                         className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         Sign in to your account

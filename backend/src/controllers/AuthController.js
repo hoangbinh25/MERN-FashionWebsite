@@ -29,7 +29,47 @@ const loginUser = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
+    try {
+        const result = await AuthService.registerUser(req.body);
+        console.log("result: ", result);
 
+        return res.status(result.status).json({
+            message: result.message,
+            result
+        });
+    } catch (error) {
+        return res.status(error.status || 500).json({ message: error.message || 'Internal error' });
+    }
+}
+
+const verifyOTP = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        if (!email || !otp) {
+            return res.status(400).json({ message: 'Email and OTP are required' });
+        }
+
+        const result = await AuthService.verifyOTP(email, otp);
+        return res.status(result.status).json({ message: result.message });
+    } catch (error) {
+        return res.status(error.status || 500).json({ message: error.message || 'Internal error' });
+    }
+}
+
+const resendOTP = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        const result = await AuthService.resendOTP(email);
+        return res.status(result.status).json({ message: result.message });
+    } catch (error) {
+        return res.status(error.status || 500).json({ message: error.message || 'Internal error' });
+    }
 }
 
 const refreshToken = async (req, res) => {
@@ -52,9 +92,13 @@ const refreshToken = async (req, res) => {
     }
 }
 
+
+
 module.exports = {
     loginUser,
     registerUser,
     refreshToken,
+    verifyOTP,
+    resendOTP
 }
 

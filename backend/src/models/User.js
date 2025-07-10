@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     confirmPassword: { type: String, require: true },
     phone: { type: String, require: true },
     role: { type: Boolean, default: false },
-    isActive: { type: Boolean }
+    isActive: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false }
 
 }, {
     timestamps: true

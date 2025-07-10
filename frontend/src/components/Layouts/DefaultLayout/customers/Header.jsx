@@ -2,34 +2,26 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaSearch } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "~/context/AuthContext";
+
 
 const menuList = [
-    { title: 'Home', path: '/home' },
-    { title: 'Shop', path: '/shop' },
-    { title: 'Blog', path: '/blog' },
-    { title: 'About', path: '/about' },
-    { title: 'Contact', path: '/contact' },
+    { title: 'Home', path: '/user/home' },
+    { title: 'Shop', path: '/user/shop' },
+    { title: 'Blog', path: '/user/blog' },
+    { title: 'About', path: '/user/about' },
+    { title: 'Contact', path: '/user/contact' }
+
 ];
 
 export default function Header() {
     const location = useLocation();
     const [isFixed, setIsFixed] = useState(false);
-    const [user, setUser] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
+    const { user, logout } = useAuth();
+
     const dropdownRef = useRef()
     const navigate = useNavigate()
-
-    useEffect(() => {
-        const userData = localStorage.getItem("user");
-        if (userData && userData !== "undefined") {
-            try {
-                setUser(JSON.parse(userData));
-            } catch (e) {
-                setUser(null);
-                localStorage.removeItem("user"); // Xóa giá trị lỗi để tránh lặp lại
-            }
-        }
-    }, []);
 
     // Dropdown when user login
     useEffect(() => {
@@ -50,15 +42,6 @@ export default function Header() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll)
     }, []);
-
-    // Handle logout
-    const handleLogout = () => {
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
-        localStorage.removeItem("user")
-        setUser(null)
-        navigate("/login")
-    }
 
     return (
         <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
@@ -111,12 +94,14 @@ export default function Header() {
                                     onClick={() => setShowDropdown((prev) => !prev)}
                                 >
                                     <FaRegUserCircle className="w-7 h-7 text-gray-700" />
-                                    <span className="font-medium">{user.userName || user.email}</span>
+                                    <span className="font-medium">
+                                        {user?.userName || user?.firstName || user?.email || "Account"}
+                                    </span>
                                 </button>
                                 {showDropdown && (
                                     <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-50">
                                         <Link
-                                            to="/profile"
+                                            to="/user/profile"
                                             className="block px-4 py-2 hover:bg-gray-100"
                                             onClick={() => setShowDropdown(false)}
                                         >
@@ -124,15 +109,17 @@ export default function Header() {
                                         </Link>
                                         <button
                                             className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                            onClick={handleLogout}
-                                        >
+                                            onClick={() => {
+                                                logout();
+                                                navigate("/auth/login")
+                                            }}>
                                             Đăng xuất
                                         </button>
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            <Link to="/login" className="group flex items-center justify-center w-9 h-9 relative">
+                            <Link to="/auth/login" className="group flex items-center justify-center w-9 h-9 relative">
                                 <FaRegUserCircle className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
                             </Link>
                         )}
