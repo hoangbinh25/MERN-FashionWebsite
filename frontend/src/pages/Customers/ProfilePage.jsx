@@ -1,42 +1,57 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { updateUserProfile } from "~/services/usersService";
 
 export default function ProfilePage() {
-    const [form, setForm] = useState({
-        firstName: "",
-        lastName: "",
-        userName: "",
-        email: "",
-        address: "",
-        phone: ""
-    });
-    const [message, setMessage] = useState("");
+    const userToForm = (user) => ({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        userName: user.userName || "",
+        email: user.email || "",
+        address: user.address || "",
+        phone: user.phone || "",
+    })
 
-    useEffect(() => {
-        const userData = localStorage.getItem("user");
-        if (userData && userData !== "undefined") {
+    const getUserFromLocalStorage = () => {
+        const userData = localStorage.getItem('user')
+        if (userData && userData !== 'undefined') {
             try {
-                const user = JSON.parse(userData);
-                setForm({
-                    firstName: user.firstName || "",
-                    lastName: user.lastName || "",
-                    userName: user.userName || "",
-                    email: user.email || "",
-                    address: user.address || "",
-                    phone: user.phone || "",
-                });
-            } catch (e) { }
+                return JSON.parse(userData);
+            } catch (error) {
+                console.log(error.message);
+            }
         }
-    }, []);
+        return {};
+    }
+
+    const [form, setForm] = useState(userToForm(getUserFromLocalStorage()));
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate();
+
+    // If localStorage not exists user -> /login
+    useEffect(() => {
+        const user = localStorage.getItem("user");
+        if (!user) {
+            navigate("/auth/login")
+        }
+    }, [navigate]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Sau khi cập nhật thành công:
-        localStorage.setItem("user", JSON.stringify(form));
-        setMessage("Cập nhật thông tin thành công!");
+        try {
+            const user = JSON.parse(localStorage.getItem('user'))
+            const updateUser = await updateUserProfile(user?._id || user?.id, form);
+
+            localStorage.setItem('user', JSON.stringify(updateUser.data));
+            setForm(userToForm(updateUser.data));
+            setMessage("Update user successfull!");
+        } catch (error) {
+            setMessage("Error when update user profile");
+        }
     };
 
     return (
@@ -82,7 +97,7 @@ export default function ProfilePage() {
                         value={form.email}
                         onChange={handleChange}
                         className="border rounded px-3 py-2 w-full"
-                        disabled // Email thường không cho sửa
+                        disabled
                     />
                 </div>
                 <div>

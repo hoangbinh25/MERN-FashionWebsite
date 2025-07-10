@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const catSchema = new mongoose.Schema({
-    nameCategory: { type: String, require: true }
+    nameCategory: { type: String, required: true }
 }, {
     timestamps: true
 })

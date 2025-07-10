@@ -1,4 +1,4 @@
-import About from "~/components/Layouts/About/About";
+import About from "~/components/Layouts/customers/About/About";
 
 export default function AboutPage() {
     return (

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { register } from "~/services/authService.";
 
 export default function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -10,6 +12,11 @@ export default function RegisterForm() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,15 +26,56 @@ export default function RegisterForm() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    console.log("Submitting:", formData);
 
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle registration logic
-        console.log(formData);
+        setLoading(true)
+        try {
+            const res = await register(
+                formData.firstName,
+                formData.lastName,
+                formData.email,
+                formData.password,
+                formData.confirmPassword
+            );
+            console.log("Response from register API:", res);
+            if (res.status === 200) {
+                setSuccess(res.data.message);
+                console.log('Redirecting to verify OTP with email:', formData.email);
+
+                setTimeout(() => {
+                    navigate('/auth/verify-otp',
+                        {
+                            state: { email: formData.email }
+                        });
+                }, 300);
+            } else {
+                setError(res.data.message || 'Registration failed');
+            }
+
+        } catch (error) {
+            console.log(error.response?.data || error);
+            setError('Registration failed');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                    {error}
+                </div>
+            )}
+
+            {success && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+                    {success}
+                </div>
+            )}
+
             <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
@@ -135,9 +183,10 @@ export default function RegisterForm() {
             <div>
                 <button
                     type="submit"
+                    disabled={loading}
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Register
+                    {loading ? 'Registering...' : 'Register'}
                 </button>
             </div>
         </form>

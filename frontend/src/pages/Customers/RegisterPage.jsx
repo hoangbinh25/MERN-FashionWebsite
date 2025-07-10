@@ -1,8 +1,9 @@
 // RegisterPage.js
-import AuthLayout from "~/components/Layouts/Login/AuthLayout";
-import AuthToggle from "~/components/Layouts/Login/AuthToggle";
-import RegisterForm from '~/components/Layouts/Login/RegisterForm';
-import SocialAuth from "~/components/Layouts/Login/SocialAuth";
+import AuthLayout from "~/components/Layouts/customers/Auth/AuthLayout";
+import AuthToggle from "~/components/Layouts/customers/Auth/AuthToggle";
+import OTPverification from "~/components/Layouts/customers/Auth/OTPverification";
+import RegisterForm from '~/components/Layouts/customers/Auth/RegisterForm';
+import SocialAuth from "~/components/Layouts/customers/Auth/SocialAuth";
 
 
 export default function RegisterPage() {

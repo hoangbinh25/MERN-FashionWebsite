@@ -11,7 +11,6 @@ const getUsers = async (req, res) => {
     }
 };
 
-
 // [GET] /user/getUser/:id
 const getUserById = async (req, res) => {
     try {
@@ -30,8 +29,6 @@ const getUserById = async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 };
-
-
 
 // [POST] /user/create
 const createUser = async (req, res) => {
@@ -71,7 +68,7 @@ const createUser = async (req, res) => {
     }
 };
 
-// [PUT] /user/update/:id
+// [PUT] /user/profile/:id
 const updateUser = async (req, res) => {
     try {
         // Get ID from URL
@@ -114,7 +111,6 @@ const updateUser = async (req, res) => {
 }
 
 // [DELETE] /user/delete/:id
-
 const deleteUser = async (req, res) => {
     try {
         const userId = req.params.id

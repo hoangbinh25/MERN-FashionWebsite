@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const orderSchema = new mongoose.Schema({
     idUser: { type: Schema.Types.ObjectId, ref: 'User' },
     product: { type: Schema.Types.ObjectId, ref: 'Product' },
-    address: { type: String, require: true },
-    statusPayment: { type: String, require: true },
+    address: { type: String, required: true },
+    statusPayment: { type: String, required: true },
     statusOrder: { type: String, default: 'pending' },
     orderDetail: [{ type: Schema.Types.ObjectId, ref: 'OrderDetail' }],
-    total: { type: Number, require: true },
+    total: { type: Number, required: true },
 }, {
     timestamps: true
 })
