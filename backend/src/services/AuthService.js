@@ -272,6 +272,10 @@ const generateGoogleToken = async (user) => {
     return await generalAccessToken({
         id: user.id,
         isAdmin: user.role,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName
     });
 };
 
@@ -279,6 +283,10 @@ const generateGoogleRefreshToken = async (user) => {
     return await generalRefreshToken({
         id: user.id,
         isAdmin: user.role,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName
     });
 };
 

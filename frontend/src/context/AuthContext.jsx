@@ -15,8 +15,10 @@ export const AuthProvider = ({ children }) => {
     }, [])
 
     const login = (userData) => {
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+        // Nếu userData có payload (tức là login Google), lấy payload làm user
+        const normalizedUser = userData?.payload ? userData.payload : userData;
+        localStorage.setItem('user', JSON.stringify(normalizedUser));
+        setUser(normalizedUser);
     };
 
     const logout = () => {

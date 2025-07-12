@@ -2,6 +2,13 @@ const AuthService = require('../services/AuthService');
 const JwtService = require('../services/JwtService')
 const passport = require('../config/googlePassport');
 
+const login = async (req, res) => {
+    if (req.query.error === 'oauth') {
+        return res.status(401).json({ error: 'Google OAuth failed. Please try again' });
+    }
+    res.status(200).json({ message: 'Login endpoint. Use /auth/google for Google OAuth.' });
+}
+
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -126,7 +133,15 @@ const googleAuth = (req, res) => {
 const googleCallback = (req, res) => {
     try {
         passport.authenticate('google', { failureRedirect: '/auth/login', session: false }, async (err, user) => {
-            if (err || !user) return res.redirect('/auth/login?error=oauth');
+            if (err || !user) {
+                // console.error('Error in Google Callback:', err);
+                return res.redirect('/auth/login?error=oauth');
+            }
+            if (!user) {
+                // console.error('User not found in Google Callback');
+                return res.redirect('/auth/login?error=oauth');
+            }
+
             try {
                 const access_token = await AuthService.generateGoogleToken(user);
                 const refresh_token = await AuthService.generateGoogleRefreshToken(user);
@@ -142,6 +157,7 @@ const googleCallback = (req, res) => {
 };
 
 module.exports = {
+    login,
     loginUser,
     registerUser,
     refreshToken,

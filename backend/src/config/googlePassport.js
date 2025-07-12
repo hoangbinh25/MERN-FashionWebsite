@@ -7,7 +7,8 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK_URL,
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log(process.env.GOOGLE_CALLBACK_URL)
+        // console.log('Google profile:', profile);
+        // console.log(process.env.GOOGLE_CALLBACK_URL)
         // Tìm hoặc tạo user
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
@@ -35,6 +36,7 @@ passport.deserializeUser(async (id, done) => {
         const user = await User.findById(id);
         done(null, user);
     } catch (err) {
+        // console.error('Error in GoogleStrategy:', err);
         done(err, null);
     }
 });
