@@ -6,3 +6,17 @@ export const updateUserProfile = async (userId, data) => {
     const res = await api.put(`${API_URL}/user/profile/${userId}`, data);
     return res.data
 };
+
+export const sendContactMail = async (email, message) => {
+    const token = localStorage.getItem('access_token');
+    const res = await axios.post(`${API_URL}/contact/send-mail`,
+        {
+            email, message
+        },
+        {
+            headers: {
+                token: `Bearer ${token}`
+            }
+        });
+    return res.data;
+};
