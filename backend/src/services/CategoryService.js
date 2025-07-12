@@ -4,7 +4,7 @@ const Category = require('../models/Category')
 const getCategories = async (query, options) => {
     try {
         const page = options.page || 1;
-        const limit = options.limit || 5;
+        const limit = options.limit ;
         const skip = (page - 1) * limit;
 
         const totalDocs = await Category.countDocuments(query);

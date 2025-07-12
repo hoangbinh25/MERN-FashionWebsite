@@ -99,17 +99,7 @@ export default function CategoryTable() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             />
           </div>
-          <div className="flex-1 w-full md:w-1/3">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Sort by</label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            >
-              <option value="nameCategory">Name</option>
-              <option value="createdAt">Created Date</option>
-            </select>
-          </div>
+         
           <div className="flex-1 w-full md:w-1/3">
             <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Order</label>
             <select
