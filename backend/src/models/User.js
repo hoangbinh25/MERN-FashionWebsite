@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     phone: { type: String },
     role: { type: Boolean, default: false },
     isActive: { type: Boolean, default: false },
-    isVerified: { type: Boolean, default: false }
+    isVerified: { type: Boolean, default: false },
+    googleId: { type: String }
 
 }, {
     timestamps: true

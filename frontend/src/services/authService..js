@@ -18,6 +18,10 @@ export const resendOTP = async (email) => {
     return await axios.post(`${API_URL}/auth/resend-otp`, { email });
 }
 
+export const forgotPassword = async (email) => {
+    return await axios.post(`${API_URL}/auth/forgot-password`, { email });
+}
+
 export const refreshAccessToken = async (refreshToken) => {
     const res = await axios.post(`${API_URL}/auth/refresh-token`,
         {},
@@ -28,6 +32,10 @@ export const refreshAccessToken = async (refreshToken) => {
         }
     );
     return res.data;
+}
+
+export const resetPassword = async (token, newPassword) => {
+    return await axios.post(`${API_URL}/auth/reset-password`, { token, newPassword });
 }
 
 const api = axios.create({

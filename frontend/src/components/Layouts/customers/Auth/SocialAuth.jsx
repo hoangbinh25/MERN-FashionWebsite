@@ -1,4 +1,10 @@
+import React from 'react';
+const API_URL = import.meta.env.VITE_API_URL_BACKEND;
+
 export default function SocialAuth() {
+    const handleGoogleLogin = () => {
+        window.location.href = `${API_URL}/auth/google`;
+    };
     return (
         <div className="mt-6">
             <div className="relative">
@@ -33,6 +39,7 @@ export default function SocialAuth() {
                     <button
                         type="button"
                         className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                        onClick={handleGoogleLogin}
                     >
                         <span className="sr-only">Sign in with Google</span>
                         <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
