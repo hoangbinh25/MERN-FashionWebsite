@@ -21,7 +21,6 @@ import Order from '~/pages/Admin/Order';
 import User from '~/pages/Admin/User';
 import Store from '~/pages/Admin/Store';
 
-
 const routes = [
     // customers
     { path: '/', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
