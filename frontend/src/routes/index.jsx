@@ -8,6 +8,9 @@ import AboutPage from '~/pages/Customers/AboutPage';
 import ContactPage from '~/pages/Customers/ContactPage';
 import ProfilePage from '~/pages/Customers/ProfilePage';
 import OTPVerificationPage from '~/pages/Customers/OTPVerificationPage';
+import ForgotPasswordPage from '~/components/Layouts/customers/Auth/ForgotPasswordPage';
+import ResetPasswordPage from '~/pages/Customers/ResetPasswordPage';
+
 import NotFoundPage from '~/pages/NotFoundPage';
 
 // Admin
@@ -21,6 +24,7 @@ import Store from '~/pages/Admin/Store';
 
 const routes = [
     // customers
+    { path: '/', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
     { path: '/user/home', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
     { path: '/user/shop', component: ShopPage, content: 'Shop', showBanner: false },
     { path: '/user/blog', component: BlogPage, content: 'Blog', showBanner: true, bannerHeight: 'h-[400px]' },
@@ -32,6 +36,8 @@ const routes = [
     { path: '/auth/login', component: LoginPage },
     { path: '/auth/register', component: RegisterPage },
     { path: '/auth/verify-otp', component: OTPVerificationPage },
+    { path: '/auth/forgot-password', component: ForgotPasswordPage },
+    { path: '/auth/reset-password', component: ResetPasswordPage },
 
     //admin
     { path: '/admin', component: Index, content: 'Admin' },
