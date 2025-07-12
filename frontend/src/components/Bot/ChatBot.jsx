@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 import { BsChatDots } from "react-icons/bs";
+import { chatbot } from "~/services/chatbotService";
 
 export default function ChatBotModal() {
     const [show, setShow] = useState(false);
@@ -21,8 +22,8 @@ export default function ChatBotModal() {
         setLoading(true);
 
         try {
-            const res = await axios.post('http://localhost:3001/chat/ask', { message: input });
-            const botMessage = { sender: 'bot', text: res.data.reply };
+            const data = await chatbot(input);
+            const botMessage = { sender: 'bot', text: data.reply };
             setMessages(prev => [...prev, botMessage]);
         } catch (err) {
             setMessages(prev => [...prev, { sender: 'bot', text: 'Lỗi khi phản hồi. Vui lòng thử lại.' }]);
