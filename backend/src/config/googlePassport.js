@@ -18,6 +18,7 @@ passport.use(new GoogleStrategy({
                 firstName: profile.name.givenName,
                 lastName: profile.name.familyName,
                 userName: profile.emails[0].value.split('@')[0],
+                provider: "google",
                 isVerified: true,
             });
         }

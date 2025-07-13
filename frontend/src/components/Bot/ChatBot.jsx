@@ -77,6 +77,7 @@ export default function ChatBotModal() {
                             type="text"
                             placeholder="Nhập câu hỏi..."
                             value={input}
+                            spellCheck={false}
                             onChange={(e) => setInput(e.target.value)}
                             className="flex-1 px-2 py-1 border rounded text-sm focus:outline-none"
                         />

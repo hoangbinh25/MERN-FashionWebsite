@@ -26,9 +26,9 @@ const routes = [
     { path: '/', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
     { path: '/user/home', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
     { path: '/user/shop', component: ShopPage, content: 'Shop', showBanner: false },
-    { path: '/user/blog', component: BlogPage, content: 'Blog', showBanner: true, bannerHeight: 'h-[400px]' },
-    { path: '/user/about', component: AboutPage, content: 'About', showBanner: true, bannerHeight: 'h-[400px]' },
-    { path: '/user/contact', component: ContactPage, content: 'Contact', showBanner: true, bannerHeight: 'h-[400px]' },
+    { path: '/user/blog', component: BlogPage, content: 'Blog', showBanner: true, bannerHeight: 'h-[240px]' },
+    { path: '/user/about', component: AboutPage, content: 'About', showBanner: true, bannerHeight: 'h-[240px]' },
+    { path: '/user/contact', component: ContactPage, content: 'Contact', showBanner: true, bannerHeight: 'h-[240px]' },
     { path: '/user/profile', component: ProfilePage, content: 'Profile', showBanner: false },
 
     // auth
