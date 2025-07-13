@@ -82,10 +82,10 @@ export default function Header() {
                             <FaSearch className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
                         </button>
                         {/* Cart Icon */}
-                        <button className="group flex items-center justify-center w-9 h-9 relative">
+                        <Link to="/user/cart" className="group flex items-center justify-center w-9 h-9 relative">
                             <FaCartShopping className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
                             <span className="absolute -top-1.5 -right-1 bg-indigo-400 text-white text-xs font-bold px-1.5 rounded-full">2</span>
-                        </button>
+                        </Link>
                         {/* User Icon */}
                         {user ? (
                             <div className="relative" ref={dropdownRef}>
@@ -101,11 +101,18 @@ export default function Header() {
                                 {showDropdown && (
                                     <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-50">
                                         <Link
+                                            to="/user/order"
+                                            className="block px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => setShowDropdown(false)}
+                                        >
+                                            Order History
+                                        </Link>
+                                        <Link
                                             to="/user/profile"
                                             className="block px-4 py-2 hover:bg-gray-100"
                                             onClick={() => setShowDropdown(false)}
                                         >
-                                            Xem hồ sơ
+                                            View Profile
                                         </Link>
                                         <button
                                             className="block w-full text-left px-4 py-2 hover:bg-gray-100"
@@ -113,7 +120,7 @@ export default function Header() {
                                                 logout();
                                                 navigate("/auth/login")
                                             }}>
-                                            Đăng xuất
+                                            Logout
                                         </button>
                                     </div>
                                 )}

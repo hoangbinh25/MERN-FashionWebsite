@@ -1,6 +1,6 @@
 export default function NotFoundPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+        <div className="min-h-screen bg-white flex items-center justify-center px-4">
             <div className="max-w-md w-full text-center">
                 {/* 40 */}
                 <div className="mb-8">
@@ -14,11 +14,11 @@ export default function NotFoundPage() {
 
                 {/* Error Message */}
                 <h1 className="text-3xl font-bold text-gray-800 mb-4">
-                    Trang không tồn tại
+                    Page Not Found
                 </h1>
 
                 <p className="text-gray-600 mb-8 leading-relaxed">
-                    Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển.
+                    Sorry, the page you are looking for does not exist or has been moved.
                 </p>
 
                 {/* Action Buttons */}
@@ -27,14 +27,14 @@ export default function NotFoundPage() {
                         onClick={() => window.history.back()}
                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg"
                     >
-                        Quay lại trang trước
+                        Go Back
                     </button>
 
                     <button
                         onClick={() => window.location.href = '/'}
                         className="w-full bg-white hover:bg-gray-50 text-indigo-600 font-semibold py-3 px-6 rounded-lg border-2 border-indigo-600 transition duration-300 transform hover:scale-105 shadow-md"
                     >
-                        Về trang chủ
+                        Go to Homepage
                     </button>
                 </div>
 
