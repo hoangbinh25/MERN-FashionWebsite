@@ -15,7 +15,7 @@ const bannerConfigs = {
     },
     about: {
         img: "https://themewagon.github.io/cozastore/images/bg-01.jpg",
-        h1: "About Us",
+        h1: "About TBN Store",
         showSlider: false,
     },
     contact: {
