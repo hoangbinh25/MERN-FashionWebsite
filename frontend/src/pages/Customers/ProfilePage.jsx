@@ -113,7 +113,7 @@ export default function ProfilePage() {
                 <div>
                     <label className="font-semibold block mb-1">Số điện thoại:</label>
                     <input
-                        type="number"
+                        type="text"
                         name="phone"
                         value={form.phone}
                         onChange={handleChange}

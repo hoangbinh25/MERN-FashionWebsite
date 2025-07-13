@@ -1,117 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getAllUsers } from "~/services/usersService";
 import { Filter as FilterIcon, Plus } from "lucide-react";
 import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import UserDetail from "./Detail"; // Adjust path as needed
 import UserCreate from "./Create"; // Adjust path as needed
 
+
 export default function UserTable() {
-  // Dữ liệu mẫu người dùng dựa trên class User
-  const [allUsers, setAllUsers] = useState([
-    {
-      idUser: 1,
-      name: "Nguyen Van A",
-      username: "nguyenvana",
-      password: "hashedpassword1",
-      email: "a@gmail.com",
-      role: "Admin",
-      phone: "0901234567",
-      address: "123 Đường Láng, Hà Nội",
-      enableUser: true,
-      createdAt: "2025-01-01T10:00:00Z",
-    },
-    {
-      idUser: 2,
-      name: "Tran Thi B",
-      username: "tranthib",
-      password: "hashedpassword2",
-      email: "b@gmail.com",
-      role: "Customer",
-      phone: "0912345678",
-      address: "456 Lê Lợi, TP.HCM",
-      enableUser: true,
-      createdAt: "2025-02-01T12:00:00Z",
-    },
-    {
-      idUser: 3,
-      name: "Le Van C",
-      username: "levanc",
-      password: "hashedpassword3",
-      email: "c@gmail.com",
-      role: "Customer",
-      phone: "0987654321",
-      address: "789 Trần Phú, Đà Nẵng",
-      enableUser: false,
-      createdAt: "2025-03-01T15:00:00Z",
-    },
-    ...Array.from({ length: 17 }, (_, i) => ({
-      idUser: i + 4,
-      name: `User ${i + 4}`,
-      username: `user${i + 4}`,
-      password: `hashedpassword${i + 4}`,
-      email: `user${i + 4}@gmail.com`,
-      role: i % 2 === 0 ? "Admin" : "Customer",
-      phone: `09${Math.floor(10000000 + Math.random() * 89999999)}`,
-      address: `Address ${i + 4}, Vietnam`,
-      enableUser: i % 3 !== 0,
-      createdAt: `2025-04-${String(i + 1).padStart(2, "0")}T10:00:00Z`,
-    })),
-  ]);
+  const [users, setUsers] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   const [selectedRole, setSelectedRole] = useState("All");
   const [selectedEnableUser, setSelectedEnableUser] = useState("All");
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
   const [selectedUser, setSelectedUser] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
   const itemsPerPage = 5;
+  const [loading, setLoading] = useState(false);
 
-  const uniqueRoles = ["All", ...new Set(allUsers.map((u) => u.role))];
+  // Lấy danh sách role từ users
+  const uniqueRoles = ["All", ...new Set(users.map((u) => u.role))];
   const uniqueEnableUser = ["All", "Enabled", "Disabled"];
 
-  const filteredUsers = allUsers.filter((user) => {
-    const matchRole = selectedRole === "All" || user.role === selectedRole;
-    const matchEnableUser =
-      selectedEnableUser === "All" ||
-      (selectedEnableUser === "Enabled" && user.enableUser) ||
-      (selectedEnableUser === "Disabled" && !user.enableUser);
-    return matchRole && matchEnableUser;
-  });
-
-  if (sortBy === "name") filteredUsers.sort((a, b) => a.name.localeCompare(b.name));
-  else if (sortBy === "enableUser")
-    filteredUsers.sort((a, b) => Number(b.enableUser) - Number(a.enableUser));
-  else if (sortBy === "createdAt")
-    filteredUsers.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handleEditUser = (updatedUser) => {
-    setAllUsers((prevUsers) =>
-      prevUsers.map((user) =>
-        user.idUser === updatedUser.idUser ? { ...user, ...updatedUser } : user
-      )
-    );
-    setSelectedUser(null);
-  };
-
-  const handleCreateUser = (newUser) => {
-    const newId = Math.max(...allUsers.map((u) => u.idUser)) + 1;
-    setAllUsers((prevUsers) => [
-      ...prevUsers,
-      { ...newUser, idUser: newId }
-    ]);
-    setShowCreate(false);
-  };
-
-  const handleDeleteUser = (idUser) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      setAllUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== idUser));
+  // Hàm fetchUsers để có thể gọi lại sau khi đóng modal
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      let roleParam = selectedRole === "All" ? "" : selectedRole;
+      let statusParam = "";
+      if (selectedEnableUser === "Enabled") statusParam = true;
+      else if (selectedEnableUser === "Disabled") statusParam = false;
+      let sortByParam = sortBy === "createdAt" ? "createdAt" : "";
+      const params = {
+        page: currentPage,
+        limit: itemsPerPage,
+        sortBy: sortByParam,
+        role: roleParam,
+        isActive: statusParam,
+      };
+      const res = await getAllUsers(params);
+      setUsers(res.data || []);
+      setTotalPages(res.totalPage || 1);
+      setTotalUsers(res.totalUsers || 0);
+    } catch (error) {
+      setUsers([]);
+      setTotalPages(1);
+      setTotalUsers(0);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    // eslint-disable-next-line
+  }, [selectedRole, selectedEnableUser, sortBy, currentPage]);
+
+  const handleEditUser = () => {
+    setSelectedUser(null);
+    fetchUsers();
+  };
+
+  const handleCreateUser = () => {
+    setShowCreate(false);
+    fetchUsers();
+  };
+
+  const handleDeleteUser = () => {
+    setSelectedUser(null);
+    fetchUsers();
   };
 
   return (
@@ -148,13 +108,13 @@ export default function UserTable() {
               onChange={(e) => setSelectedRole(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             >
-              {uniqueRoles.map((role, idx) => (
-                <option key={idx} value={role}>{role}</option>
-              ))}
+              <option value="">All Role</option>
+              <option value="true">Admin</option>
+              <option value="false">Customer</option>
             </select>
           </div>
           <div className="flex-1">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Status</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">IsActive</label>
             <select
               value={selectedEnableUser}
               onChange={(e) => setSelectedEnableUser(e.target.value)}
@@ -173,9 +133,8 @@ export default function UserTable() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             >
               <option value="">-- Select --</option>
-              <option value="name">Name</option>
-              <option value="enableUser">Status</option>
-              <option value="createdAt">Created At</option>
+              <option value="createdAt">Latest</option>
+              <option value="">Oldest</option>
             </select>
           </div>
         </div>
@@ -183,42 +142,48 @@ export default function UserTable() {
 
       {/* Thẻ cho mobile */}
       <div className="block md:hidden">
-        {paginatedUsers.map((user, index) => (
-          <div
-            key={user.idUser}
-            className="border border-gray-200 rounded-lg p-3 mb-3 hover:bg-gray-50 transition cursor-pointer"
-            onClick={() => setSelectedUser(user)}
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex-1">
-                <h3 className="text-sm font-medium text-gray-800">{user.name}</h3>
-                <p className="text-xs text-gray-600">{user.email} | {user.phone}</p>
-                <p className="text-xs text-gray-500">{user.role} | {user.enableUser ? "Enabled" : "Disabled"}</p>
-                <p className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleDateString()}</p>
-              </div>
-              <div className="flex flex-col gap-1">
-                <button
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded-lg text-xs"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedUser(user);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-xs"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteUser(user.idUser);
-                  }}
-                >
-                  Delete
-                </button>
+        {loading ? (
+          <p>Loading...</p>
+        ) : users.length === 0 ? (
+          <p>No users found.</p>
+        ) : (
+          users.map((user, index) => (
+            <div
+              key={user._id}
+              className="border border-gray-200 rounded-lg p-3 mb-3 hover:bg-gray-50 transition cursor-pointer"
+              onClick={() => setSelectedUser(user)}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex-1">
+                  <h3 className="text-sm font-medium text-gray-800">{user.firstName} {user.lastName}</h3>
+                  <p className="text-xs text-gray-600">{user.email} | {user.phone}</p>
+                  <p className="text-xs text-gray-500">{user.role ? "Admin" : "Customer"} | {user.isActive ? "Enabled" : "Disabled"}</p>
+                  <p className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleDateString()}</p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <button
+                    className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded-lg text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedUser(user);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteUser(user._id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Bảng cho desktop */}
@@ -239,45 +204,51 @@ export default function UserTable() {
             </tr>
           </thead>
           <tbody>
-            {paginatedUsers.map((user, index) => (
-              <tr
-                key={user.idUser}
-                className="hover:bg-gray-50 transition cursor-pointer"
-                onClick={() => setSelectedUser(user)}
-              >
-                <td className="px-2 py-3 border-b">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                <td className="px-2 py-3 border-b break-words">{user.name}</td>
-                <td className="px-2 py-3 border-b">{user.username}</td>
-                <td className="px-2 py-3 border-b">{user.email}</td>
-                <td className="px-2 py-3 border-b">{user.phone}</td>
-                <td className="px-2 py-3 border-b">{user.address}</td>
-                <td className="px-2 py-3 border-b">{user.role}</td>
-                <td className="px-2 py-3 border-b">{user.enableUser ? "Enabled" : "Disabled"}</td>
-                <td className="px-2 py-3 border-b">{new Date(user.createdAt).toLocaleDateString()}</td>
-                <td className="px-2 py-3 border-b text-center">
-                  <div className="flex justify-center gap-2">
-                    <button
-                      className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded-lg text-sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedUser(user);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteUser(user.idUser);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {loading ? (
+              <tr><td colSpan={10} className="text-center py-8 text-gray-400">Loading...</td></tr>
+            ) : users.length === 0 ? (
+              <tr><td colSpan={10} className="text-center py-8 text-gray-400">No users found.</td></tr>
+            ) : (
+              users.map((user, index) => (
+                <tr
+                  key={user._id}
+                  className="hover:bg-gray-50 transition cursor-pointer"
+                  onClick={() => setSelectedUser(user)}
+                >
+                  <td className="px-2 py-3 border-b">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td className="px-2 py-3 border-b break-words">{user.firstName} {user.lastName}</td>
+                  <td className="px-2 py-3 border-b">{user.userName}</td>
+                  <td className="px-2 py-3 border-b">{user.email}</td>
+                  <td className="px-2 py-3 border-b">{user.phone}</td>
+                  <td className="px-2 py-3 border-b">{user.address}</td>
+                  <td className="px-2 py-3 border-b">{user.role ? "Admin" : "Customer"}</td>
+                  <td className="px-2 py-3 border-b">{user.isActive ? "Enabled" : "Disabled"}</td>
+                  <td className="px-2 py-3 border-b">{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td className="px-2 py-3 border-b text-center">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded-lg text-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedUser(user);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteUser(user._id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -292,7 +263,8 @@ export default function UserTable() {
       {selectedUser && (
         <UserDetail
           user={selectedUser}
-          onClose={() => setSelectedUser(null)}
+          onClose={() => setSelectedUser(null)
+          }
           onSave={handleEditUser}
         />
       )}

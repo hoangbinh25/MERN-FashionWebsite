@@ -4,11 +4,14 @@
     "description": "",
     "main": "server.js",
     "scripts": {
+        "dev": "nodemon src/server.js",
         "start": "nodemon src/server.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@chatui/core": "^3.0.1",
+        "axios": "^1.10.0",
         "bcrypt": "^6.0.0",
         "cors": "^2.8.5",
         "dotenv": "^16.5.0",

@@ -198,26 +198,7 @@ export default function Aside({ show, onClose }) {
               </span>
             </Link>
           </li>
-          <li
-            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${
-              collapsed ? "justify-center" : "gap-2"
-            }`}
-          >
-            <Link
-              to="/admin/store"
-              className="flex items-center w-full"
-            >
-              <Store className="text-green-500 transition-all duration-300" />
-              <span
-                className={`transition-opacity duration-500 ${
-                  collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                }`}
-                style={{ overflow: "hidden", display: "inline-block" }}
-              >
-                Store
-              </span>
-            </Link>
-          </li>
+          
         </ul>
       </aside>
     </>

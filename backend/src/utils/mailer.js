@@ -8,11 +8,10 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Gửi OTP
-exports.sendMail = async ({ to, subject, text }) =>
-    await transporter.sendMail({
-        from: `"TBN Store" <${process.env.EMAIL_USER}>`,
-        to,
-        subject,
-        text
-    });
+exports.sendMail = async ({ to, subject, text, html }) => {
+    try {
+        return await transporter.sendMail({ from: process.env.MAIL_USER, to, subject, text, html });
+    } catch (err) {
+        throw err;
+    }
+};

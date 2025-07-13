@@ -1,16 +1,20 @@
+
 import React, { useState } from "react";
+import { createUser } from "~/services/usersService";
 
 export default function UserCreate({ onClose, onSave }) {
   const [form, setForm] = useState({
-    name: "",
-    username: "",
-    password: "",
+    firstName: "",
+    lastName: "",
+    userName: "",
     email: "",
-    role: "Customer",
+    password: "",
+    confirmPassword: "",
     phone: "",
-    address: "",
-    enableUser: true,
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -20,10 +24,29 @@ export default function UserCreate({ onClose, onSave }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSave) onSave({ ...form, createdAt: new Date().toISOString() });
-    onClose();
+    setLoading(true);
+    setError("");
+    try {
+      // Gửi dữ liệu tạo user lên backend
+      const newUser = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        userName: form.userName,
+        email: form.email,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        phone: form.phone,
+      };
+      await createUser(newUser);
+      if (onSave) onSave();
+      onClose();
+    } catch (err) {
+      setError("Create user failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,13 +64,25 @@ export default function UserCreate({ onClose, onSave }) {
           className="flex flex-col gap-4 sm:gap-6"
         >
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Create User</h2>
+          {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">First Name</label>
               <input
                 type="text"
-                name="name"
-                value={form.name}
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+                className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={form.lastName}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 required
@@ -57,19 +92,8 @@ export default function UserCreate({ onClose, onSave }) {
               <label className="text-xs sm:text-sm font-semibold text-gray-600">Username</label>
               <input
                 type="text"
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                required
-              />
-            </div>
-            <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={form.password}
+                name="userName"
+                value={form.userName}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 required
@@ -87,17 +111,26 @@ export default function UserCreate({ onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Role</label>
-              <select
-                name="role"
-                value={form.role}
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 required
-              >
-                <option value="Admin">Admin</option>
-                <option value="Customer">Customer</option>
-              </select>
+              />
+            </div>
+            <div>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Confirm Password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
+                required
+              />
             </div>
             <div>
               <label className="text-xs sm:text-sm font-semibold text-gray-600">Phone</label>
@@ -110,39 +143,20 @@ export default function UserCreate({ onClose, onSave }) {
                 required
               />
             </div>
-            <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={form.address}
-                onChange={handleChange}
-                className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                required
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="enableUser"
-                checked={form.enableUser}
-                onChange={handleChange}
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-400 border-gray-300 rounded"
-              />
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Enable User</label>
-            </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
             <button
               type="submit"
               className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm"
+              disabled={loading}
             >
-              Create
+              {loading ? "Creating..." : "Create"}
             </button>
             <button
               type="button"
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold text-sm"
               onClick={onClose}
+              disabled={loading}
             >
               Cancel
             </button>
