@@ -9,10 +9,12 @@ export const AuthProvider = ({ children }) => {
     // App load first -> get user from localStorage 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
+        if (storedUser && storedUser !== "undefined") {
             setUser(JSON.parse(storedUser));
+        } else {
+            setUser(null);
         }
-    }, [])
+    }, []);
 
     const login = (userData) => {
         // Nếu userData có payload (tức là login Google), lấy payload làm user
