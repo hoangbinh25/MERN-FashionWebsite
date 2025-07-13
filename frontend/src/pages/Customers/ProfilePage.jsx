@@ -106,6 +106,7 @@ export default function ProfilePage() {
                         type="text"
                         name="address"
                         value={form.address}
+                        spellCheck={false}
                         onChange={handleChange}
                         className="border rounded px-3 py-2 w-full"
                     />

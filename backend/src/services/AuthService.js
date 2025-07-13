@@ -22,6 +22,13 @@ const loginUser = async (userLogin) => {
                 })
             }
 
+            if (checkUser.provider === "google") {
+                resolve({
+                    status: 'OK',
+                    message: 'This account can only be signed in with Google'
+                });
+            }
+
             // Kiểm tra user đã xác minh email chưa
             if (!checkUser.isVerified) {
                 resolve({

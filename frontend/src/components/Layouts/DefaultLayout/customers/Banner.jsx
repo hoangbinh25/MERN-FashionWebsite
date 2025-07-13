@@ -2,31 +2,25 @@ import { useLocation } from "react-router-dom";
 
 const bannerConfigs = {
     home: {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
+        img: "https://themewagon.github.io/cozastore/images/slide-02.jpg",
         h4: "Men New-Season",
         h1: "JACKETS & COATS",
         button: "SHOP NOW",
         showSlider: true,
     },
     blog: {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
-        h4: "Fashion Blog",
-        h1: "Latest Trends & Stories",
-        button: "READ BLOG",
+        img: "https://themewagon.github.io/cozastore/images/bg-02.jpg",
+        h1: "Fashion Blog",
         showSlider: false,
     },
     about: {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
-        h4: "About Us",
-        h1: "Our Story & Mission",
-        button: "LEARN MORE",
+        img: "https://themewagon.github.io/cozastore/images/bg-01.jpg",
+        h1: "About Us",
         showSlider: false,
     },
     contact: {
-        img: "https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f31fa69dd7edf46442b9f3f9f8d5d209~tplv-tiktokx-cropcenter:720:720.jpeg?dr=14579&refresh_token=0523e347&x-expires=1751518800&x-signature=DJrGJJ%2BIxY3OAdTLJb6vIl0CpxE%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2",
-        h4: "Contact",
-        h1: "Get In Touch",
-        button: "CONTACT US",
+        img: "https://themewagon.github.io/cozastore/images/bg-01.jpg",
+        h1: "Contact",
         showSlider: false,
     }
 };
@@ -47,7 +41,7 @@ export default function Banner({ bannerHeight }) {
         <section className={`relative w-full ${bannerHeight} flex items-center  overflow-hidden`}>
             {/* Ảnh nền */}
             <img
-                src="https://themewagon.github.io/cozastore/images/slide-02.jpg"
+                src={config.img}
                 alt="Banner"
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ zIndex: 1 }}
@@ -55,14 +49,26 @@ export default function Banner({ bannerHeight }) {
             {/* Overlay xanh nhạt */}
             <div className="absolute inset-0 opacity-70" style={{ zIndex: 2 }}></div>
             {/* Nội dung */}
-            <div className="relative z-10 flex flex-col items-start justify-center h-full max-w-7xl pl-56">
-                <h4 className="text-2xl md:text-3xl text-gray-600 mb-2">{config.h4}</h4>
-                <h1 className="text-5xl md:text-7xl font-bold text-gray-700 mb-8" style={{ fontFamily: 'Playfair Display, serif' }}>
-                    {config.h1}
-                </h1>
-                <button className="bg-indigo-400 hover:bg-indigo-500 text-white font-semibold px-10 py-3 rounded-full text-lg transition">
-                    {config.button}
-                </button>
+            <div
+                className={`relative z-10 flex flex-col items-${config.showSlider ? "start" : "center"} justify-center h-full max-w-7xl ${config.showSlider ? "pl-56" : "mx-auto text-center"}`}
+                style={{ width: "100%" }}
+            >
+                <h4 className={`text-2xl md:text-3xl mb-2 ${config.showSlider ? "text-gray-600" : "text-white"}`}>
+                    {config.h4}
+                </h4>
+                {config.h1 && (
+                    <h1
+                        className={`text-5xl md:text-7xl font-bold mb-8 ${config.showSlider ? "text-gray-700" : "text-white"}`}
+                        style={{ fontFamily: 'Playfair Display, serif' }}
+                    >
+                        {config.h1}
+                    </h1>
+                )}
+                {config.showSlider && config.button && (
+                    <button className="bg-indigo-400 hover:bg-indigo-500 text-white font-semibold px-10 py-3 rounded-full text-lg transition">
+                        {config.button}
+                    </button>
+                )}
             </div>
             {/* Nút chuyển slider chỉ hiện ở home */}
             {config.showSlider && (

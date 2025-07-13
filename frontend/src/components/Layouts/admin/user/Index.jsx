@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllUsers } from "~/services/usersService";
+import { getAllUsers, deleteUser } from "~/services/usersService";
 import { Filter as FilterIcon, Plus } from "lucide-react";
 import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import UserDetail from "./Detail"; // Adjust path as needed
@@ -69,9 +69,15 @@ export default function UserTable() {
     fetchUsers();
   };
 
-  const handleDeleteUser = () => {
-    setSelectedUser(null);
-    fetchUsers();
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    try {
+      await deleteUser(userId);
+      setSelectedUser(null);
+      fetchUsers();
+    } catch (error) {
+      alert("Delete user failed!");
+    }
   };
 
   return (
@@ -226,15 +232,7 @@ export default function UserTable() {
                   <td className="px-2 py-3 border-b">{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td className="px-2 py-3 border-b text-center">
                     <div className="flex justify-center gap-2">
-                      <button
-                        className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded-lg text-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedUser(user);
-                        }}
-                      >
-                        Edit
-                      </button>
+
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-sm"
                         onClick={(e) => {
