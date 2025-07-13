@@ -8,12 +8,22 @@ const getAllCategory = async ({
     order = "desc",
     search = ""
 }) => {
-    const datatest = `${API_URL}/category/getCategories`;
-    console.log("getAllCategory datatest: ", datatest);
     const response = await axios.get(`${API_URL}/category/getCategories`, {
         params: { page, limit, sort, order, search }
     });
-    console.log("getAllCategory response: ", response.data);
+    return response.data;
+};
+
+const getAllCategoryBy = async ({
+    page = 1,
+    limit,
+    sort = "nameCategory",
+    order = "desc",
+    search = ""
+}) => {
+    const response = await axios.get(`${API_URL}/category/getCategories`, {
+        params: { page, limit, sort, order, search }
+    });
     return response.data;
 };
 
@@ -41,6 +51,7 @@ export {
     getCategoryById,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getAllCategoryBy
 };
 

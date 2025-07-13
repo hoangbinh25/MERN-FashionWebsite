@@ -30,12 +30,12 @@ const getProducts = async (limit, page, sort, nameProduct, category, color, size
             const totalProduct = await Product.countDocuments(objectFilter)
             let objectSort = { nameProduct: 1 };
             if (sort) {
-                const [sortField, sortOrder] = sort.split(',')
-                objectSort = { [sortField]: sortOrder === 'desc' ? -1 : 1 } // 1: tăng dần, -1: giảm dần
+                const [sortField, sortOrder] = sort.split('-')
+                objectSort = { [sortField]: sortOrder === 'desc' ? -1 : 1 } 
             }
             const getAllProduct = await Product.find(objectFilter)
                 .limit(limit)
-                .skip(page * limit)
+                .skip((page - 1) * limit)
                 .populate('category', 'nameCategory')
                 .sort(objectSort)
             resolve({
@@ -43,7 +43,7 @@ const getProducts = async (limit, page, sort, nameProduct, category, color, size
                 message: 'Success',
                 data: getAllProduct,
                 totalProduct,
-                pageCurrent: Number(page + 1),
+                pageCurrent: Number(page),
                 totalPage: Math.ceil(totalProduct / limit)
             })
         } catch (error) {

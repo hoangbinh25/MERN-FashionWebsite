@@ -17,7 +17,7 @@ const getProducts = async (req, res) => {
 
         const products = await ProductService.getProducts(
             Number(limit) || 8,
-            Number(page) || 0,
+            Number(page) || 1,
             sort,
             nameProduct,
             category,
