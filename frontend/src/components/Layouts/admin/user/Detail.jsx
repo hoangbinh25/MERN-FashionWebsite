@@ -1,22 +1,37 @@
+
 import React, { useState } from "react";
+import { updateUser } from "~/services/usersService";
 
 export default function UserDetail({ user, onClose, onSave }) {
-  const [form, setForm] = useState(
-    user
-      ? {
-          idUser: user.idUser,
-          name: user.name,
-          username: user.username,
-          password: user.password,
-          email: user.email,
-          role: user.role,
-          phone: user.phone,
-          address: user.address,
-          enableUser: user.enableUser,
-          createdAt: user.createdAt,
-        }
-      : {}
-  );
+  const emptyForm = {
+    _id: "",
+    firstName: "",
+    lastName: "",
+    userName: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+    role: false,
+    isActive: false,
+    createdAt: "",
+  };
+  const [form, setForm] = useState(user ? {
+    _id: user._id || "",
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
+    userName: user.userName || "",
+    email: user.email || "",
+    password: "",
+    phone: user.phone || "",
+    address: user.address || "",
+    role: user.role ?? false,
+    isActive: user.isActive ?? false,
+    createdAt: user.createdAt || "",
+  } : emptyForm);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,10 +41,32 @@ export default function UserDetail({ user, onClose, onSave }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (onSave) onSave({ ...user, ...form });
-    onClose();
+    setLoading(true);
+    setError("");
+    try {
+      // Gửi dữ liệu cập nhật lên backend
+      const updateData = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        userName: form.userName,
+        email: form.email,
+        password: form.password ? form.password : undefined,
+        phone: form.phone,
+        address: form.address,
+        role: form.role,
+        isActive: form.isActive,
+      };
+      await updateUser(form._id, updateData);
+      if (onSave) onSave();
+      
+      onClose();
+    } catch (err) {
+      setError("Update failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!user) return null;
@@ -49,23 +86,35 @@ export default function UserDetail({ user, onClose, onSave }) {
           className="flex flex-col gap-4 sm:gap-6"
         >
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800">User Details</h2>
+          {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-xs sm:text-sm font-semibold text-gray-600">ID</label>
               <input
                 type="text"
-                name="idUser"
-                value={form.idUser}
+                name="_id"
+                value={form._id}
                 disabled
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full bg-gray-100 mt-1 text-sm"
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">First Name</label>
               <input
                 type="text"
-                name="name"
-                value={form.name}
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+                className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={form.lastName}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 required
@@ -75,8 +124,8 @@ export default function UserDetail({ user, onClose, onSave }) {
               <label className="text-xs sm:text-sm font-semibold text-gray-600">Username</label>
               <input
                 type="text"
-                name="username"
-                value={form.username}
+                name="userName"
+                value={form.userName}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 required
@@ -90,7 +139,7 @@ export default function UserDetail({ user, onClose, onSave }) {
                 value={form.password}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                required
+                placeholder="Leave blank to keep current password"
               />
             </div>
             <div>
@@ -113,8 +162,8 @@ export default function UserDetail({ user, onClose, onSave }) {
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 required
               >
-                <option value="Admin">Admin</option>
-                <option value="Customer">Customer</option>
+                <option value={true}>Admin</option>
+                <option value={false}>Customer</option>
               </select>
             </div>
             <div>
@@ -142,8 +191,8 @@ export default function UserDetail({ user, onClose, onSave }) {
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                name="enableUser"
-                checked={form.enableUser}
+                name="isActive"
+                checked={form.isActive}
                 onChange={handleChange}
                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-400 border-gray-300 rounded"
               />
@@ -154,7 +203,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               <input
                 type="text"
                 name="createdAt"
-                value={new Date(form.createdAt).toLocaleString()}
+                value={form.createdAt ? new Date(form.createdAt).toLocaleString() : ""}
                 disabled
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full bg-gray-100 mt-1 text-sm"
               />
@@ -164,13 +213,15 @@ export default function UserDetail({ user, onClose, onSave }) {
             <button
               type="submit"
               className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm"
+              disabled={loading}
             >
-              Save
+              {loading ? "Saving..." : "Save"}
             </button>
             <button
               type="button"
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold text-sm"
               onClick={onClose}
+              disabled={loading}
             >
               Cancel
             </button>

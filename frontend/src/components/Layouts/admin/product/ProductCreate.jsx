@@ -16,6 +16,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
     images: ["https://example.com/image1.jpg"],
   });
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,24 +28,30 @@ export default function ProductCreate({ categories, onClose, onSave }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      // Note: API may expect file uploads instead of base64 strings for images
-      const productData = {
-        nameProduct: form.nameProduct,
-        description: form.description,
-        price: form.price,
-        quantity: form.quantity,
-        size: form.size,
-        color: form.color,
-        category: form.category, // Assumes category is ID
-        image: form.image, // Main image URL or base64
-        images: form.images // Array of image URLs or base64
-      };
-      await createProduct(productData);
+      // Build FormData for file upload
+      const formData = new FormData();
+      formData.append("nameProduct", form.nameProduct);
+      formData.append("description", form.description);
+      formData.append("price", form.price);
+      formData.append("quantity", form.quantity);
+      formData.append("size", form.size);
+      formData.append("color", form.color);
+      formData.append("category", form.category);
+      // Chỉ truyền field 'images' (mảng file)
+      if (form.imagesFiles && form.imagesFiles.length > 0) {
+        for (let i = 0; i < form.imagesFiles.length; i++) {
+          formData.append("images", form.imagesFiles[i]);
+        }
+      }
+      await createProduct(formData);
       onSave();
     } catch (error) {
       console.error("Failed to create product:", error);
       setError(error.response?.data?.message || "Failed to create product");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,9 +161,20 @@ export default function ProductCreate({ categories, onClose, onSave }) {
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="submit"
-                className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm"
+                className={`bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm flex items-center justify-center ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                disabled={loading}
               >
-                Create
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                    Đang lưu...
+                  </span>
+                ) : (
+                  'Create'
+                )}
               </button>
               <button
                 type="button"
@@ -169,11 +187,40 @@ export default function ProductCreate({ categories, onClose, onSave }) {
           </div>
           <div className="flex-1 flex flex-col items-center justify-center gap-4">
             <div className="w-40 h-40 sm:w-56 sm:h-56 mb-2 relative flex flex-col items-center">
-              <img
-                src={form.image}
-                alt={form.nameProduct}
-                className="w-full h-full object-cover rounded-lg border"
-              />
+              {/* Hiển thị ảnh đầu tiên nếu có */}
+              {form.imagesFiles && form.imagesFiles.length > 0 ? (
+                <img
+                  src={URL.createObjectURL(form.imagesFiles[0])}
+                  alt={form.nameProduct}
+                  className="w-full h-full object-cover rounded-lg border"
+                />
+              ) : (
+                <img
+                  src={form.image}
+                  alt={form.nameProduct}
+                  className="w-full h-full object-cover rounded-lg border"
+                />
+              )}
+              <label className="mt-2 w-full flex flex-col items-center cursor-pointer">
+                <span className="inline-block bg-indigo-100 text-indigo-700 px-2 sm:px-3 py-1 rounded font-medium text-xs hover:bg-indigo-200 transition mb-1">
+                  Thêm nhiều ảnh sản phẩm
+                </span>
+                <input
+                  type="file"
+                  accept={IMAGE_TYPES}
+                  multiple
+                  onChange={e => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setForm(prev => ({
+                        ...prev,
+                        imagesFiles: Array.from(e.target.files),
+                        images: Array.from(e.target.files).map(file => URL.createObjectURL(file))
+                      }));
+                    }
+                  }}
+                  className="hidden"
+                />
+              </label>
             </div>
             <div className="flex gap-2 mt-2 flex-wrap justify-center overflow-x-auto">
               {(form.images || []).map((img, idx) => (

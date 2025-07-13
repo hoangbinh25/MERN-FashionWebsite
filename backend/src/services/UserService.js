@@ -1,15 +1,28 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt')
 
-// Get all user
-const getUsers = async () => {
+// Get all user with filter, sort, pagination
+const getUsers = async (filter = {}, sortBy = '', page = 1, limit = 10) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const getAll = await User.find()
+            let sortObj = {};
+            if (sortBy === 'createdAt') {
+                sortObj = { createdAt: -1 };
+            }
+            // Tính tổng số user
+            const totalUsers = await User.countDocuments(filter);
+            // Lấy danh sách user theo phân trang, lọc, sắp xếp
+            const users = await User.find(filter)
+                .sort(sortObj)
+                .skip((page - 1) * limit)
+                .limit(limit);
             resolve({
                 status: 'OK',
                 message: 'Success',
-                data: getAll
+                data: users,
+                totalUsers,
+                pageCurrent: page,
+                totalPage: Math.ceil(totalUsers / limit)
             })
         } catch (error) {
             reject(error)

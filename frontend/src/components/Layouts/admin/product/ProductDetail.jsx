@@ -31,27 +31,20 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
   );
   const [mainIndex, setMainIndex] = useState(0);
   const [error, setError] = useState(null);
+  const [imagesFiles, setImagesFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   if (!product) return null;
 
   const handleImagesFile = (e) => {
     const files = Array.from(e.target.files);
-    const readers = files.map(
-      (file) =>
-        new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (ev) => resolve(ev.target.result);
-          reader.readAsDataURL(file);
-        })
-    );
-    Promise.all(readers).then((images) => {
-      setForm((prev) => ({
-        ...prev,
-        images: [...(prev.images || []), ...images],
-        image: images[0] || prev.image,
-      }));
-      setMainIndex(0);
-    });
+    setImagesFiles(files);
+    setForm((prev) => ({
+      ...prev,
+      images: files.map(file => URL.createObjectURL(file)),
+      image: files[0] ? URL.createObjectURL(files[0]) : prev.image,
+    }));
+    setMainIndex(0);
   };
 
   const handleSetMain = (idx) => {
@@ -84,24 +77,30 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      // Note: API may expect file uploads instead of base64 strings for images
-      const productData = {
-        nameProduct: form.nameProduct,
-        description: form.description,
-        price: form.price,
-        quantity: form.quantity,
-        size: form.size,
-        color: form.color,
-        category: form.category,
-        image: form.image,
-        images: form.images
-      };
-      await updateProduct(product._id, productData);
+      // Build FormData for file upload (giống ProductCreate)
+      const formData = new FormData();
+      formData.append("nameProduct", form.nameProduct);
+      formData.append("description", form.description);
+      formData.append("price", form.price);
+      formData.append("quantity", form.quantity);
+      formData.append("size", form.size);
+      formData.append("color", form.color);
+      formData.append("category", form.category);
+      // Truyền file ảnh mới nếu có
+      if (imagesFiles && imagesFiles.length > 0) {
+        for (let i = 0; i < imagesFiles.length; i++) {
+          formData.append("images", imagesFiles[i]);
+        }
+      }
+      await updateProduct(product._id, formData);
       onSave();
     } catch (error) {
       console.error("Failed to update product:", error);
       setError(error.response?.data?.message || "Failed to update product");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -211,9 +210,20 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
               <button
                 type="submit"
-                className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm"
+                className={`bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm flex items-center justify-center ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                disabled={loading}
               >
-                Save
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                    Đang lưu...
+                  </span>
+                ) : (
+                  'Save'
+                )}
               </button>
               <button
                 type="button"
@@ -234,7 +244,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
             </div>
             <label className="mt-2 w-full flex flex-col items-center cursor-pointer">
               <span className="inline-block bg-indigo-100 text-indigo-700 px-2 sm:px-3 py-1 rounded font-medium text-xs hover:bg-indigo-200 transition mb-1">
-                Add Multiple Images
+                Thêm nhiều ảnh sản phẩm
               </span>
               <input
                 type="file"

@@ -10,7 +10,6 @@ import ProfilePage from '~/pages/Customers/ProfilePage';
 import OTPVerificationPage from '~/pages/Customers/OTPVerificationPage';
 import ForgotPasswordPage from '~/components/Layouts/customers/Auth/ForgotPasswordPage';
 import ResetPasswordPage from '~/pages/Customers/ResetPasswordPage';
-
 import NotFoundPage from '~/pages/NotFoundPage';
 
 // Admin
@@ -20,6 +19,8 @@ import Category from '~/pages/Admin/Category';
 import Order from '~/pages/Admin/Order';
 import User from '~/pages/Admin/User';
 import Store from '~/pages/Admin/Store';
+import CartPage from '~/pages/Customers/CartPage';
+import OrderHistoryPage from '~/pages/Customers/OrderHistoryPage';
 
 const routes = [
     // customers
@@ -30,6 +31,8 @@ const routes = [
     { path: '/user/about', component: AboutPage, content: 'About', showBanner: true, bannerHeight: 'h-[240px]' },
     { path: '/user/contact', component: ContactPage, content: 'Contact', showBanner: true, bannerHeight: 'h-[240px]' },
     { path: '/user/profile', component: ProfilePage, content: 'Profile', showBanner: false },
+    { path: '/user/cart', component: CartPage, content: 'Cart'},
+    { path: '/user/order', component: OrderHistoryPage, content: 'Order History'},
 
     // auth
     { path: '/auth/login', component: LoginPage },
