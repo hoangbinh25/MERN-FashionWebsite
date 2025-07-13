@@ -5,10 +5,11 @@ import SocialAuth from "~/components/Layouts/customers/Auth/SocialAuth";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from "~/services/authService.";
+import { useAuth } from "~/context/AuthContext";
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const accessToken = params.get('access_token');
