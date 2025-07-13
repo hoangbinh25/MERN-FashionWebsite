@@ -28,14 +28,36 @@ const getProductById = async (id) => {
 }
 
 const createProduct = async (data) => {
-    const response = await axios.post(`${API_URL}/product/create`, data);
-    return response.data;
-}   
+    // Nếu data là FormData (có ảnh), gửi multipart/form-data
+    let config = {};
+    let payload = data;
+    if (data instanceof FormData) {
+        config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+    try {
+        const response = await axios.post(`${API_URL}/product/create`, payload, config);
+        return response.data;
+    } catch (error) {
+        console.log('createProduct error:', error);
+        throw error;
+    }
+}
 
 const updateProduct = async (id, data) => {
-    const response = await axios.put(`${API_URL}/product/update/${id}`, data);
-    return response.data;
-}   
+    // Nếu data là FormData (có ảnh), gửi multipart/form-data
+    let config = {};
+    let payload = data;
+    if (data instanceof FormData) {
+        config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+    try {
+        const response = await axios.put(`${API_URL}/product/update/${id}`, payload, config);
+        return response.data;
+    } catch (error) {
+        console.log('updateProduct error:', error);
+        throw error;
+    }
+}
 const deleteProduct = async (id) => {
     const response = await axios.delete(`${API_URL}/product/delete/${id}`);
     return response.data;
