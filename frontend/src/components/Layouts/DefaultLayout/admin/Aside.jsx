@@ -24,9 +24,8 @@ export default function Aside({ show, onClose }) {
     <>
       {/* Overlay cho mobile */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden transition-opacity ${
-          show ? "block" : "hidden"
-        }`}
+        className={`fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden transition-opacity ${show ? "block" : "hidden"
+          }`}
         onClick={onClose}
       />
       <aside
@@ -46,9 +45,8 @@ export default function Aside({ show, onClose }) {
       >
         {/* Nút ẩn/hiện chỉ hiện khi hover */}
         <div
-          className={`absolute top-4 -right-4 z-50 md:block hidden transition-opacity duration-300 ${
-            showToggle ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
+          className={`absolute top-4 -right-4 z-50 md:block hidden transition-opacity duration-300 ${showToggle ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            }`}
         >
           <button
             className="bg-white border border-gray-200 rounded-full shadow p-1 hover:bg-indigo-100 transition"
@@ -60,15 +58,13 @@ export default function Aside({ show, onClose }) {
           </button>
         </div>
         <div
-          className={`text-xl font-semibold mb-6 flex items-center transition-all duration-500 ${
-            collapsed ? "justify-center" : "gap-2"
-          }`}
+          className={`text-xl font-semibold mb-6 flex items-center transition-all duration-500 ${collapsed ? "justify-center" : "gap-2"
+            }`}
         >
           <LayoutDashboard className="text-indigo-500 transition-all duration-500" />
           <span
-            className={`transition-opacity duration-500 ${
-              collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-            }`}
+            className={`transition-opacity duration-500 ${collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+              }`}
             style={{ overflow: "hidden", display: "inline-block" }}
           >
             TBN Dashboard
@@ -92,16 +88,12 @@ export default function Aside({ show, onClose }) {
             >
               Đóng
             </button>
-            <button className="text-sm font-medium border border-gray-300 rounded py-2">
-              Sign In
-            </button>
           </div>
         </div>
         <ul className={`space-y-4 text-gray-700 ${collapsed ? "flex flex-col items-center" : ""}`}>
           <li
-            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${
-              collapsed ? "justify-center" : "gap-2"
-            }`}
+            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${collapsed ? "justify-center" : "gap-2"
+              }`}
           >
             <Link
               to="/admin"
@@ -109,9 +101,8 @@ export default function Aside({ show, onClose }) {
             >
               <BarChart3 className="text-green-500 transition-all duration-300" />
               <span
-                className={`transition-opacity duration-500 ${
-                  collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                }`}
+                className={`transition-opacity duration-500 ${collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+                  }`}
                 style={{ overflow: "hidden", display: "inline-block" }}
               >
                 DashBoard
@@ -119,9 +110,8 @@ export default function Aside({ show, onClose }) {
             </Link>
           </li>
           <li
-            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${
-              collapsed ? "justify-center" : "gap-2"
-            }`}
+            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${collapsed ? "justify-center" : "gap-2"
+              }`}
           >
             <Link
               to="/admin/category"
@@ -129,9 +119,8 @@ export default function Aside({ show, onClose }) {
             >
               <CalendarDays className="text-red-500 transition-all duration-300" />
               <span
-                className={`transition-opacity duration-500 ${
-                  collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                }`}
+                className={`transition-opacity duration-500 ${collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+                  }`}
                 style={{ overflow: "hidden", display: "inline-block" }}
               >
                 Category
@@ -139,9 +128,8 @@ export default function Aside({ show, onClose }) {
             </Link>
           </li>
           <li
-            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${
-              collapsed ? "justify-center" : "gap-2"
-            }`}
+            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${collapsed ? "justify-center" : "gap-2"
+              }`}
           >
             <Link
               to="/admin/product"
@@ -149,9 +137,8 @@ export default function Aside({ show, onClose }) {
             >
               <Boxes className="text-yellow-500 transition-all duration-300" />
               <span
-                className={`transition-opacity duration-500 ${
-                  collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                }`}
+                className={`transition-opacity duration-500 ${collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+                  }`}
                 style={{ overflow: "hidden", display: "inline-block" }}
               >
                 Product
@@ -159,9 +146,8 @@ export default function Aside({ show, onClose }) {
             </Link>
           </li>
           <li
-            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${
-              collapsed ? "justify-center" : "gap-2"
-            }`}
+            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${collapsed ? "justify-center" : "gap-2"
+              }`}
           >
             <Link
               to="/admin/user"
@@ -169,9 +155,8 @@ export default function Aside({ show, onClose }) {
             >
               <User2 className="text-blue-500 transition-all duration-300" />
               <span
-                className={`transition-opacity duration-500 ${
-                  collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                }`}
+                className={`transition-opacity duration-500 ${collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+                  }`}
                 style={{ overflow: "hidden", display: "inline-block" }}
               >
                 User
@@ -179,9 +164,8 @@ export default function Aside({ show, onClose }) {
             </Link>
           </li>
           <li
-            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${
-              collapsed ? "justify-center" : "gap-2"
-            }`}
+            className={`flex items-center hover:text-indigo-600 cursor-pointer transition-all duration-300 ${collapsed ? "justify-center" : "gap-2"
+              }`}
           >
             <Link
               to="/admin/order"
@@ -189,16 +173,15 @@ export default function Aside({ show, onClose }) {
             >
               <ReceiptText className="text-purple-500 transition-all duration-300" />
               <span
-                className={`transition-opacity duration-500 ${
-                  collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                }`}
+                className={`transition-opacity duration-500 ${collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+                  }`}
                 style={{ overflow: "hidden", display: "inline-block" }}
               >
                 Order
               </span>
             </Link>
           </li>
-          
+
         </ul>
       </aside>
     </>

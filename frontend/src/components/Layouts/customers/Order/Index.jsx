@@ -44,7 +44,7 @@ export default function OrderHistoryPage() {
     const [selectedOrder, setSelectedOrder] = useState(null);
 
     return (
-        <div className="max-w-6xl mx-auto py-10 px-2 md:px-4">
+        <div className="max-w-6xl mx-auto py-10 px-2 md:px-4 min-h-screen">
             <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Order History</h2>
             {selectedOrder ? (
                 <OrderDetail order={selectedOrder} onBack={() => setSelectedOrder(null)} />

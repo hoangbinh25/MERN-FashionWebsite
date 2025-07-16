@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 import { BsChatDots } from "react-icons/bs";
 import { chatbot } from "~/services/chatbotService";
@@ -8,7 +7,10 @@ export default function ChatBotModal() {
     const [show, setShow] = useState(false);
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([
-        { sender: 'bot', text: 'Xin chào! Tôi là stylist AI. Hãy nhập chiều cao, cân nặng, giới tính,... để được tư vấn thời trang nhé!' }
+        {
+            sender: 'bot',
+            text: 'Xin chào! Tôi là stylist AI. Hãy nhập chiều cao, cân nặng, giới tính,... để được tư vấn thời trang nhé!'
+        }
     ]);
     const [loading, setLoading] = useState(false);
 

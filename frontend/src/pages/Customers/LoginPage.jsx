@@ -30,7 +30,11 @@ export default function LoginPage() {
             window.history.replaceState({}, document.title, window.location.pathname);
 
             // Redirect
-            navigate('/user/home');
+            if (normalizedUser?.role === true) {
+                navigate('/admin');
+            } else {
+                navigate('/user/home');
+            }
         }
     }, [navigate]);
     return (

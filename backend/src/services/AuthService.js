@@ -9,7 +9,7 @@ const OtpModel = require('../models/OtpModel');
 
 const loginUser = async (userLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { firstName, lastName, userName, email, password, phone } = userLogin
+        const { firstName, lastName, userName, email, password, phone, role } = userLogin
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -70,6 +70,7 @@ const loginUser = async (userLogin) => {
                     email: checkUser.email,
                     address: checkUser.address,
                     phone: checkUser.phone,
+                    role: checkUser.role
                 }
             })
 

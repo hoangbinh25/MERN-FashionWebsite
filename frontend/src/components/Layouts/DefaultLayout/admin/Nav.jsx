@@ -20,7 +20,6 @@ export default function Nav({ onMenuClick }) {
                         className="px-4 py-2 rounded-full bg-white text-sm focus:outline-none w-60"
                     />
                 </div>
-                <button className="text-white text-sm font-medium">Sign In</button>
                 <Bell className="text-white" />
                 <User className="text-white" />
             </div>
