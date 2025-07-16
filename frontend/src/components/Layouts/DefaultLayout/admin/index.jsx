@@ -1,9 +1,8 @@
-import { Fragment } from "react";
 import { useState } from "react";
 import Aside from "~/components/Layouts/DefaultLayout/admin/Aside";
 import Nav from "~/components/Layouts/DefaultLayout/admin/Nav";
 
-export default function Index({children}) {
+export default function Index({ children }) {
     const [showAside, setShowAside] = useState(false);
 
     return (

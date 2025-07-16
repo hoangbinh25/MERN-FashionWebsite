@@ -6,7 +6,7 @@ const { authMiddleware, authUserMiddleware } = require('../middleware/authMiddle
 
 router.get('/getUsers', authMiddleware, UserController.getUsers);
 router.get('/getUser/:id', authUserMiddleware, UserController.getUserById)
-router.post('/create', UserController.createUser);
+router.post('/create', authMiddleware, UserController.createUser);
 
 // Update Profile
 router.put('/profile/:id', authUserMiddleware, UserController.updateUser)

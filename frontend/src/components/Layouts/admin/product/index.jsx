@@ -177,21 +177,25 @@ export default function ProductTable() {
           </div>
           <div className="flex-1 w-full md:w-1/4">
             <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Size</label>
-            <input
-              type="text"
+            <select
               value={size}
               onChange={(e) => {
                 setSize(e.target.value);
                 setPagination(prev => ({ ...prev, currentPage: 1 }));
               }}
-              placeholder="Size..."
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            />
+            >
+              <option value="">Choose size</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="XXL">XXL</option>
+            </select>
           </div>
           <div className="flex-1 w-full md:w-1/4">
             <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Color</label>
-            <input
-              type="text"
+            <select
               value={color}
               onChange={(e) => {
                 setColor(e.target.value);
@@ -199,7 +203,15 @@ export default function ProductTable() {
               }}
               placeholder="Color..."
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            />
+            >
+              <option value="">Choose color</option>
+              <option value="Black">Black</option>
+              <option value="Blue">Blue</option>
+              <option value="Grey">Grey</option>
+              <option value="Green">Green</option>
+              <option value="Red">Red</option>
+              <option value="White">White</option>
+            </select>
           </div>
         </div>
         <div className="flex flex-col md:flex-row gap-4 mt-4">
@@ -302,7 +314,7 @@ export default function ProductTable() {
                   <td className="px-2 py-3 border-b">{(pagination.currentPage - 1) * 5 + index + 1}</td>
                   <td className="px-2 py-3 border-b">
                     <img
-                      src={product.image[0] || "/placeholder.jpg"}
+                      src={product.image[0] || "~/assets/img/slide-02.jpg"}
                       className="w-10 h-10 rounded object-cover"
                       alt={product.nameProduct}
                     />

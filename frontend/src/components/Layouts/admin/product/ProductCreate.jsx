@@ -120,25 +120,38 @@ export default function ProductCreate({ categories, onClose, onSave }) {
             <div className="flex gap-3">
               <div className="flex-1">
                 <label className="text-xs sm:text-sm font-semibold text-gray-600">Size</label>
-                <input
-                  type="text"
+                <select
                   name="size"
                   value={form.size}
                   onChange={handleChange}
                   className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                   required
-                />
+                >
+                  <option value="">Choose size</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+                </select>
               </div>
               <div className="flex-1">
                 <label className="text-xs sm:text-sm font-semibold text-gray-600">Color</label>
-                <input
-                  type="text"
+                <select
                   name="color"
                   value={form.color}
                   onChange={handleChange}
                   className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                   required
-                />
+                >
+                  <option value="">Choose color</option>
+                  <option value="Black">Black</option>
+                  <option value="Blue">Blue</option>
+                  <option value="Grey">Grey</option>
+                  <option value="Green">Green</option>
+                  <option value="Red">Red</option>
+                  <option value="White">White</option>
+                </select>
               </div>
             </div>
             <div>

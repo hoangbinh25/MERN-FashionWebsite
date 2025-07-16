@@ -22,7 +22,11 @@ export default function LoginForm() {
                 setAuthUser(res.user);
                 localStorage.setItem('access_token', res.access_token)
                 localStorage.setItem('refresh_token', res.refresh_token)
-                navigate("/user/home");
+                if (res.user?.role === true) {
+                    navigate("/admin");
+                } else {
+                    navigate("/user/home");
+                }
             } else {
                 alert(res.message || "Login failed");
             }

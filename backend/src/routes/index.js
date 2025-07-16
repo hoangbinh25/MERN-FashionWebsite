@@ -1,4 +1,3 @@
-const homeRouter = require('./HomeRouter');
 const userRouter = require('./UserRouter');
 const authRouter = require('./AuthRouter');
 const productRouter = require('./ProductRouter')
@@ -7,7 +6,6 @@ const contactRouter = require('./ContactRouter')
 const chatRoute = require('./chatRouter');
 
 function router(app) {
-    app.use('/', homeRouter);
     app.use('/user', userRouter);
     app.use('/auth', authRouter);
     app.use('/product', productRouter);
