@@ -47,26 +47,6 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
     setMainIndex(0);
   };
 
-  const handleSetMain = (idx) => {
-    setForm((prev) => ({
-      ...prev,
-      image: prev.images[idx],
-    }));
-    setMainIndex(idx);
-  };
-
-  const handleRemoveImage = (idx) => {
-    setForm((prev) => {
-      const newImages = prev.images.filter((_, i) => i !== idx);
-      return {
-        ...prev,
-        images: newImages,
-        image: newImages[mainIndex === idx ? 0 : mainIndex > idx ? mainIndex - 1 : mainIndex] || "",
-      };
-    });
-    setMainIndex((prevIdx) => (prevIdx > idx ? prevIdx - 1 : prevIdx === idx ? 0 : prevIdx));
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({
@@ -88,11 +68,16 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
       formData.append("size", form.size);
       formData.append("color", form.color);
       formData.append("category", form.category);
-      // Truyền file ảnh mới nếu có
+      // Nếu không có ảnh mới, giữ nguyên ảnh cũ
       if (imagesFiles && imagesFiles.length > 0) {
         for (let i = 0; i < imagesFiles.length; i++) {
           formData.append("images", imagesFiles[i]);
         }
+      } else {
+        // Truyền lại danh sách ảnh cũ (dạng url string)
+        (product.image || []).forEach((img) => {
+          formData.append("imageOld", img);
+        });
       }
       await updateProduct(product._id, formData);
       onSave();
@@ -219,7 +204,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                     </svg>
-                    Đang lưu...
+                    Saving...
                   </span>
                 ) : (
                   'Save'
