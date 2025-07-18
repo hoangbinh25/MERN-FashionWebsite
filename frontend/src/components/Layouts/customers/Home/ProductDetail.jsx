@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { addProductToCart } from "~/services/cartService";
+import { useCart } from "~/context/CartContext";
+
+
 
 export default function ProductDetail({ product, onClose, hideCloseButton }) {
     // Xử lý lấy mảng ảnh đúng chuẩn
@@ -10,7 +14,6 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
     } else if (typeof product.img === 'string' && product.img) {
         images = [product.img];
     }
-    console.log("ProductDetail images:", images);
     const [mainImg, setMainImg] = useState(images[0] || "");
     // Xác định index hiện tại của mainImg
     const currentImgIdx = images.findIndex(img => img === mainImg);
@@ -20,15 +23,26 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
     };
     const handleNextImg = () => {
         if (!images.length) return;
-        setMainImg(images[(currentImgIdx + 1) % images.length]);
+        setMainImg(images[(currentImgIdx + 1) % images.length]); 
     };
     const [size, setSize] = useState("");
     const [color, setColor] = useState("");
     const [quantity, setQuantity] = useState(1);
+    const { fetchCartCount } = useCart();
+
+    const User = JSON.parse(localStorage.getItem('user'));
+    const addToCart = async ({ id, quantity, price }) => {
+        try {
+            await addProductToCart(User._id, id, quantity, price);
+            await fetchCartCount(); 
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+        }
+    };
 
     return (
         <div className="min-w-[320px] max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 sm:gap-8 md:gap-12 relative">
-            {/* Mobile close button (ẩn nếu hideCloseButton=true) */}
+            {/* Mobile close button (ẩn nếu hideC      loseButton=true) */}
             {!hideCloseButton && (
                 <button
                     className="block md:hidden absolute top-4 right-4 z-20 bg-white rounded-full p-2 sm:p-3 shadow text-xl font-bold"
@@ -113,7 +127,19 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                         <input type="number" value={quantity} min={1} readOnly className="w-12 xs:w-14 sm:w-16 text-center border rounded py-1 sm:py-2" />
                         <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => q + 1)}>+</button>
                     </div>
-                    <button className="w-full bg-indigo-500 text-white font-semibold py-3 sm:py-4 rounded mt-4 sm:mt-6 hover:bg-indigo-600 transition">ADD TO CART</button>
+                    <button className="w-full bg-indigo-500 text-white font-semibold py-3 sm:py-4 rounded mt-4 sm:mt-6 hover:bg-indigo-600 transition"
+                        onClick={async () => {
+                            addToCart({
+                                id: product.id,
+                                quantity,
+                                price: product.price,
+                            });
+                            await fetchCartCount(); 
+                            if (typeof onClose === 'function') {
+                                onClose();
+                            }
+                        }}
+                    >ADD TO CART</button>
                 </div>
             </div>
         </div>

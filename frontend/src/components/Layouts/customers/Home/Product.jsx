@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import ProductDetail from "./ProductDetail";
 import { getAllProducts } from "~/services/productsService";
+import { addProductToCart } from "~/services/cartService";
 import Paginate from "../../DefaultLayout/admin/Paginate";
+import { useCart } from "~/context/CartContext";
+
 
 const categoryProducts = [
     { name: "All Products" },
@@ -25,6 +28,8 @@ export default function Product() {
     const [showDetail, setShowDetail] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const limit = 12;
+
+    const { fetchCartCount } = useCart();
 
     const loadProducts = async (page = 1) => {
         setLoading(true);
@@ -62,6 +67,16 @@ export default function Product() {
             setPagination({ currentPage: 1, totalPages: 1, totalItems: 0 });
         } finally {
             setLoading(false);
+        }
+    };
+
+    const User = JSON.parse(localStorage.getItem('user'));
+    const addToCart = async (product) => {
+        try {
+            await addProductToCart(User._id, product.id, 1, product.price);
+            await fetchCartCount();
+        } catch (error) {
+            console.error("Error adding to cart:", error);
         }
     };
 
@@ -204,7 +219,7 @@ export default function Product() {
                                 <div className="text-gray-700 text-base">{product.name}</div>
                                 <div className="text-gray-500 text-sm">${product.price}</div>
                             </div>
-                            <button className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500" onClick={e => e.stopPropagation()}>
+                            <button className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500" onClick={e => { e.stopPropagation(); addToCart(product); }}>
                                 <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="9" cy="21" r="1" />
                                     <circle cx="20" cy="21" r="1" />
@@ -225,7 +240,10 @@ export default function Product() {
                     <div className="bg-white rounded-lg shadow-lg max-w-5xl w-full relative">
                         <button
                             className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl font-bold z-30"
-                            onClick={handleCloseDetail}
+                            onClick={async () => {
+                                await handleCloseDetail();
+                                await fetchCartCount();
+                            }}
                         >
                             x
                         </button>
