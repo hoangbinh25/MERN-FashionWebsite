@@ -7,7 +7,7 @@ export default function TableCart({ cartItems, reloadCart }) {
 
   const plusChange = async (_id, quantity) => {
     try {
-      await updateQuantityInCart(User._id, _id, quantity + 1);
+      await updateQuantityInCart(User._id || User.id, _id, quantity + 1);
       reloadCart(); // Cập nhật toàn bộ
     } catch (error) {
       console.error("Failed to update quantity:", error);
@@ -19,12 +19,12 @@ export default function TableCart({ cartItems, reloadCart }) {
       if (quantity <= 1) {
         const confirmDelete = window.confirm("Do you want to remove this product from cart?");
         if (confirmDelete) {
-          await deleteProductFromCart(User._id, _id);
+          await deleteProductFromCart(User._id || User.id, _id);
           reloadCart();
         }
         return;
       }
-      await updateQuantityInCart(User._id, _id, quantity - 1);
+      await updateQuantityInCart(User._id || User.id, _id, quantity - 1);
       reloadCart();
     } catch (error) {
       console.error("Failed to update quantity:", error);
@@ -57,7 +57,7 @@ export default function TableCart({ cartItems, reloadCart }) {
                 })}
               </p>
               <p className="text-gray-500 text-sm">
-                Size: {item.idProduct.size} | Color: {item.idProduct.color}
+                Size: {item.idProduct.size} 
               </p>
             </div>
           </div>

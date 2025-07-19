@@ -21,6 +21,7 @@ import User from '~/pages/Admin/User';
 import Store from '~/pages/Admin/Store';
 import CartPage from '~/pages/Customers/CartPage';
 import OrderHistoryPage from '~/pages/Customers/OrderHistoryPage';
+import PaySuccessful from '~/pages/PaySuccessful';
 
 const routes = [
     // customers
@@ -49,6 +50,8 @@ const routes = [
     { path: '/admin/user', component: User, content: 'Users Management' },
     { path: '/admin/store', component: Store, content: 'Stores Management' },
 
+    // successful payment
+    { path: '/successful', component: PaySuccessful },
     // Not found
     { path: '*', component: NotFoundPage }
 ]

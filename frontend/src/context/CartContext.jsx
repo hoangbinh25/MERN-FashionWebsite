@@ -11,9 +11,9 @@ export function CartProvider({ children }) {
 
 const fetchCartCount = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  if (user?._id) {
+  if (user?._id || user.id) {
     try {
-      const res = await getCartByUser(user._id); 
+      const res = await getCartByUser(user._id || user.id); 
       const data = Array.isArray(res) ? res : [];
       const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
       setCartCount(totalQuantity);
