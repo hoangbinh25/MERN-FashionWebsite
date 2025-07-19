@@ -1,6 +1,7 @@
 const AuthService = require('../services/AuthService');
 const JwtService = require('../services/JwtService')
 const passport = require('../config/googlePassport');
+const User = require('../models/User');
 
 const login = async (req, res) => {
     if (req.query.error === 'oauth') {
@@ -14,14 +15,17 @@ const loginUser = async (req, res) => {
         const { email, password } = req.body;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isCheckEmail = emailRegex.test(email);
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ status: 'error', message: 'Email does not exist' })
         if (!email || !password) {
-            return res.status(200).json({
+            return res.status(400).json({
                 status: 'Error',
                 message: 'The input is required'
             })
 
         } else if (!isCheckEmail) {
-            return res.status(200).json({
+            return res.status(400).json({
                 status: 'Error',
                 message: 'The input is email'
             })

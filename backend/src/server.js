@@ -4,7 +4,6 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv')
 dotenv.config()
-const session = require('express-session');
 const passport = require('./config/googlePassport');
 
 const app = express();
@@ -26,12 +25,12 @@ app.use(express.urlencoded({
 }))
 app.use(express.json())
 
-// Session & Passport
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'secret',
-    resave: false,
-    saveUninitialized: false,
-}));
+// // Session & Passport
+// app.use(session({
+//     secret: process.env.SESSION_SECRET || 'secret',
+//     resave: false,
+//     saveUninitialized: false,
+// }));
 app.use(passport.initialize());
 app.use(passport.session());
 

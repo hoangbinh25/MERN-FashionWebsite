@@ -22,11 +22,12 @@ const refreshTokenJwt = async (token) => {
     return new Promise(async (resolve, reject) => {
         try {
             jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
-                if (err) {
+                if (err || !user) {
                     resolve({
                         status: 'Error',
                         message: 'Token expired'
                     })
+                    return;
                 }
                 // Nếu token hợp lệ, lấy thông tin user từ token
                 const { payload } = user
