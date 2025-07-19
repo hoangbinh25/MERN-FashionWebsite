@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import provincesData from "~/assets/64TinhThanh.json";
 
-export default function AddressCart({ onProceedCheckout }) {
+export default function AddressCart({ cartItems, onProceedCheckout }) {
+  const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const shipping = 0;
+  const total = subtotal + shipping;
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedCommune, setSelectedCommune] = useState("");
@@ -121,15 +124,21 @@ export default function AddressCart({ onProceedCheckout }) {
       <div className="border-t pt-4 space-y-1">
         <div className="flex justify-between text-sm">
           <span>Subtotal:</span>
-          <span className="font-semibold">52,000&nbsp;₫</span>
+          <span className="font-semibold">
+            {subtotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </span>
         </div>
         <div className="flex justify-between text-sm">
           <span>Shipping:</span>
-          <span className="font-semibold">5,000&nbsp;₫</span>
+          <span className="font-semibold">
+            {shipping.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </span>
         </div>
         <div className="flex justify-between text-lg font-bold">
           <span>Total:</span>
-          <span>57,000&nbsp;₫</span>
+          <span>
+            {total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+          </span>
         </div>
       </div>
 

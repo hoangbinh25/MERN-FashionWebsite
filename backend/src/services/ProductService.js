@@ -1,3 +1,28 @@
+// Update isActive status for product
+const updateProductIsActive = async (productId, isActive) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const updatedProduct = await Product.findByIdAndUpdate(
+        productId,
+        { isActive },
+        { new: true }
+      ).populate('category', 'nameCategory');
+      if (!updatedProduct) {
+        return reject({
+          status: 'Error',
+          message: 'Product not found',
+        });
+      }
+      resolve({
+        status: 'OK',
+        message: 'isActive updated',
+        data: updatedProduct,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 const Product = require('../models/Product');
 const { cloudinary } = require("../config/cloudinary");
 const fs = require("fs");
@@ -149,29 +174,6 @@ const createProduct = async (newProduct, files) => {
 };
 
 
-// Update product
-// const updateProduct = async (productId, data) => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             const checkProduct = await Product.findOne({
-//                 _id: productId
-//             });
-
-//             const updateProduct = await Product.findByIdAndUpdate(productId, data, { new: true }).populate('category', 'nameCategory')
-//             if (updateProduct) {
-//                 resolve({
-//                     status: "OK",
-//                     message: "Success",
-//                     data: updateProduct
-//                 })
-//             }
-
-//         } catch (error) {
-//             reject(error)
-//         }
-//     })
-// }
-
 
 const updateProduct = async (productId, data, files) => {
   return new Promise(async (resolve, reject) => {
@@ -186,6 +188,11 @@ const updateProduct = async (productId, data, files) => {
 
       // Mảng ảnh cũ còn giữ lại (từ client gửi về)
       const imageOld = data.imageOld ? JSON.parse(data.imageOld) : [];
+      console.log("imageOld:", imageOld);
+      // Nếu không có ảnh mới, giữ nguyên ảnh cũ
+      if (!files || files.length === 0) {
+        data.image = imageOld;
+      }
 
       // Xóa ảnh không còn giữ
       const imagesToDelete = product.image.filter((img) => !imageOld.includes(img));
@@ -265,4 +272,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    updateProductIsActive,
 };

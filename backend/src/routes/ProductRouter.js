@@ -8,6 +8,8 @@ const { authMiddleware } = require('../middleware/authMiddleware');
 
 router.get('/getProducts', authMiddleware, ProductController.getProducts);
 router.get('/getProduct/:id', authMiddleware, ProductController.getProductById)
+router.put('/update-isActive/:id', ProductController.updateProductIsActive);
+router.delete('/delete/:id', authMiddleware, ProductController.deleteProduct)
 
 router.post(
   "/create",
