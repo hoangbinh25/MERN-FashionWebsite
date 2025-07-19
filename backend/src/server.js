@@ -5,6 +5,8 @@ const connectDB = require('./config/db');
 const dotenv = require('dotenv')
 dotenv.config()
 const passport = require('./config/googlePassport');
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -30,6 +32,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'secret',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URL,
+        collectionName: 'sessions',
+    }),
 }));
 app.use(passport.initialize());
 app.use(passport.session());
