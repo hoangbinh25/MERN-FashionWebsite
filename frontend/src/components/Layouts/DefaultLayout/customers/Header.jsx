@@ -3,6 +3,7 @@ import { FaRegUserCircle, FaSearch } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "~/context/AuthContext";
+import { useCart } from "~/context/CartContext";
 
 
 const menuList = [
@@ -19,6 +20,7 @@ export default function Header() {
     const [isFixed, setIsFixed] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const { user, logout } = useAuth();
+    const { cartCount } = useCart();
 
     const dropdownRef = useRef()
     const navigate = useNavigate()
@@ -84,7 +86,7 @@ export default function Header() {
                         {/* Cart Icon */}
                         <Link to="/user/cart" className="group flex items-center justify-center w-9 h-9 relative">
                             <FaCartShopping className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
-                            <span className="absolute -top-1.5 -right-1 bg-indigo-400 text-white text-xs font-bold px-1.5 rounded-full">2</span>
+                            <span className="absolute -top-1.5 -right-1 bg-indigo-400 text-white text-xs font-bold px-1.5 rounded-full cart-count">{cartCount}</span>
                         </Link>
                         {/* User Icon */}
                         {user ? (

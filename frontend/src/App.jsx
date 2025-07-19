@@ -4,6 +4,7 @@ import { DefaultLayout, AdminDefaultLayout } from './components/Layouts';
 import routes from './routes';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { CartProvider } from './context/CartContext';
 
 const App = () => {
     return (
@@ -32,12 +33,14 @@ const App = () => {
                             key={index}
                             path={route.path}
                             element={
+                                <CartProvider>
                                 <DefaultLayout
                                     bannerHeight={route.bannerHeight}
                                     showBanner={route.showBanner}
                                 >
                                     <Page content={route.content} />
                                 </DefaultLayout>
+                                </CartProvider>
                             }
                         />
                     );
