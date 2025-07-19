@@ -277,8 +277,9 @@ const resetPassword = async (token, newPassword) => {
 };
 
 const generateGoogleToken = async (user) => {
+    console.log('id: ', user)
     return await generalAccessToken({
-        id: user.id,
+        id: user._id,
         isAdmin: user.role,
         email: user.email,
         firstName: user.firstName,
@@ -289,7 +290,7 @@ const generateGoogleToken = async (user) => {
 
 const generateGoogleRefreshToken = async (user) => {
     return await generalRefreshToken({
-        id: user.id,
+        id: user._id,
         isAdmin: user.role,
         email: user.email,
         firstName: user.firstName,
