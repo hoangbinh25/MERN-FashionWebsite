@@ -4,10 +4,12 @@ import { DefaultLayout, AdminDefaultLayout } from './components/Layouts';
 import routes from './routes';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
     return (
         <div className="App">
+            <ToastContainer position="top-right" autoClose={3000} />
             <Routes>
                 {routes.map((route, index) => {
                     const Page = route.component;
