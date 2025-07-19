@@ -3,7 +3,7 @@ import { Filter as FilterIcon, Plus } from "lucide-react";
 import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import ProductDetail from "./ProductDetail";
 import ProductCreate from "./ProductCreate";
-import { getAllProducts, deleteProduct } from "~/services/productsService";
+import { getAllProducts, deleteProduct, updateProductIsActive } from "~/services/productsService";
 import { getAllCategory, getAllCategoryBy } from "~/services/categoriesService";
 
 export default function ProductTable() {
@@ -118,6 +118,18 @@ export default function ProductTable() {
     }
   };
 
+  const handleIsActive = async (id, isActive) => {
+    const confirmed = window.confirm(`Are you sure you want to ${isActive ? "activate" : "deactivate"} this product?`);
+    if (!confirmed) return;
+    try {
+      await updateProductIsActive(id, !isActive);
+      fetchProducts();
+    } catch (error) {
+      console.error("Failed to update product status:", error);
+      alert("Update failed!");
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
     fetchProducts();
@@ -177,25 +189,21 @@ export default function ProductTable() {
           </div>
           <div className="flex-1 w-full md:w-1/4">
             <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Size</label>
-            <select
+            <input
+              type="text"
               value={size}
               onChange={(e) => {
                 setSize(e.target.value);
                 setPagination(prev => ({ ...prev, currentPage: 1 }));
               }}
+              placeholder="Size..."
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            >
-              <option value="">Choose size</option>
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-              <option value="XL">XL</option>
-              <option value="XXL">XXL</option>
-            </select>
+            />
           </div>
           <div className="flex-1 w-full md:w-1/4">
             <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Color</label>
-            <select
+            <input
+              type="text"
               value={color}
               onChange={(e) => {
                 setColor(e.target.value);
@@ -203,15 +211,7 @@ export default function ProductTable() {
               }}
               placeholder="Color..."
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            >
-              <option value="">Choose color</option>
-              <option value="Black">Black</option>
-              <option value="Blue">Blue</option>
-              <option value="Grey">Grey</option>
-              <option value="Green">Green</option>
-              <option value="Red">Red</option>
-              <option value="White">White</option>
-            </select>
+            />
           </div>
         </div>
         <div className="flex flex-col md:flex-row gap-4 mt-4">
@@ -314,7 +314,7 @@ export default function ProductTable() {
                   <td className="px-2 py-3 border-b">{(pagination.currentPage - 1) * 5 + index + 1}</td>
                   <td className="px-2 py-3 border-b">
                     <img
-                      src={product.image[0] || "~/assets/img/slide-02.jpg"}
+                      src={product.image[0] || "/placeholder.jpg"}
                       className="w-10 h-10 rounded object-cover"
                       alt={product.nameProduct}
                     />
@@ -322,20 +322,50 @@ export default function ProductTable() {
                   <td className="px-2 py-3 border-b">{product.nameProduct}</td>
                   <td className="px-2 py-3 border-b">{product.color}</td>
                   <td className="px-2 py-3 border-b">{product.size}</td>
-                  <td className="px-2 py-3 border-b">{product.description}</td>
+                  <td className="px-2 py-3 border-b">
+                    <span style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'normal',
+                      maxWidth: 240
+                    }}>
+                      {product.description}
+                    </span>
+                  </td>
                   <td className="px-2 py-3 border-b">{product.price} VND</td>
                   <td className="px-2 py-3 border-b">{product.quantity}</td>
                   <td className="px-2 py-3 border-b">{product.category?.nameCategory || "No Category"}</td>
                   <td className="px-2 py-3 border-b text-center">
-                    <button
-                      className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-sm ml-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(product._id);
-                      }}
-                    >
-                      Delete
-                    </button>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        className={`flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-semibold transition duration-150 shadow-sm ${product.isActive ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-gray-200 text-gray-500 hover:bg-gray-300"}`}
+                        title={product.isActive ? "Deactivate" : "Activate"}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleIsActive(product._id, product.isActive);
+                        }}
+                      >
+                        {product.isActive ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                        )}
+                        {product.isActive ? "Deactivate" : "Activate"}
+                      </button>
+                      <button
+                        className="flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition duration-150 shadow-sm"
+                        title="Delete"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(product._id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))

@@ -115,6 +115,25 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const updateProductIsActive = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const { isActive } = req.body;
+
+        if (!productId) {
+            return res.status(400).json({
+                status: "Error",
+                message: "Product ID is required",
+            });
+        }
+
+        const result = await ProductService.updateProductIsActive(productId, isActive);
+        res.json(result);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+};
+
 
 // [DELETE] /product/delete/:id
 const deleteProduct = async (req, res) => {
@@ -142,4 +161,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    updateProductIsActive
 }

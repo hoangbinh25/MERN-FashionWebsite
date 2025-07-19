@@ -59,6 +59,17 @@ const updateProduct = async (id, data) => {
         throw error;
     }
 }
+
+const updateProductIsActive = async (id, isActive) => {
+    try {
+        const response = await api.put(`${API_URL}/product/update-isActive/${id}`, { isActive });
+        return response.data;
+    } catch (error) {
+        console.error('updateProductIsActive error:', error);
+        throw error;
+    }
+}
+
 const deleteProduct = async (id) => {
     const response = await api.delete(`${API_URL}/product/delete/${id}`);
     return response.data;
@@ -69,6 +80,7 @@ export {
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    updateProductIsActive
 };
 
