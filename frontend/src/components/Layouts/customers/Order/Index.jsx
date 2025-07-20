@@ -36,6 +36,7 @@ export default function OrderHistoryPage() {
                                 <th className="py-2 text-left">Date</th>
                                 <th className="py-2 text-left">Status</th>
                                 <th className="py-2 text-left">Payment Method</th>
+                                <th className="py-2 text-left">Products</th>
                                 <th className="py-2 text-right">Total</th>
                                 <th className="py-2 text-center">Action</th>
                             </tr>
@@ -51,7 +52,17 @@ export default function OrderHistoryPage() {
                                     <td className="py-2">
                                         <span>{order.statusPayment === "cod" ? "Cash on Delivery" : "Online Payment"}</span>
                                     </td>
-                                    <td className="py-2 text-right font-semibold">{order.total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}</td>
+                                    <td className="py-2">
+                                        {order.orderDetail.map((item, idx) => (
+                                            <div key={item._id} className="mb-1">
+                                                <span className="font-medium">{item.Product?.nameProduct}</span>
+                                                <span className="text-gray-400"> x{item.quantity}</span>
+                                            </div>
+                                        ))}
+                                    </td>
+                                    <td className="py-2 text-right font-semibold">
+                                        {order.total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}
+                                    </td>
                                     <td className="py-2 text-center">
                                         <button
                                             className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-semibold"

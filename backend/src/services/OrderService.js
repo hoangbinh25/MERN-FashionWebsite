@@ -3,7 +3,7 @@ const OrderDetail = require('../models/OrderDetail');
 
 const OrderService = {
   // Create a new order
-  async createOrder({ idUser, address, statusPayment, orderDetails, total }) {
+  async createOrder({ idUser, address, fullName, phone, statusPayment, orderDetails, total }) {
     try {
       if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
         throw new Error("orderDetails must be a non-empty array");
@@ -13,6 +13,8 @@ const OrderService = {
       const order = new Order({
         idUser,
         address,
+        fullName,
+        phone,
         statusPayment,
         orderDetail: [],
         total,
@@ -77,13 +79,45 @@ async getOrdersByUser(idUser) {
     }
   },
 
-  // Get all orders (admin)
-  async getAllOrders() {
+
+  // Get all orders (admin) with filters and sorting
+  async getAllOrders({ status, sortBy } = {}) {
     try {
-      return await Order.find().populate({
-        path: 'orderDetail',
-        populate: { path: 'Product', model: 'Product' }
-      });
+      // Convert params to lowercase
+      const statusLower = status ? status.toLowerCase() : "all";
+      const sortByLower = sortBy ? sortBy.toLowerCase() : "date-desc";
+
+      // Build filter object
+      const filter = {};
+      if (statusLower && statusLower !== "all") {
+        filter.statusOrder = { $regex: new RegExp(`^${statusLower}$`, "i") }; // case-insensitive match
+      }
+
+      // Build sort object
+      let sort = {};
+      switch (sortByLower) {
+        case "date-desc":
+          sort = { createdAt: -1 };
+          break;
+        case "date-asc":
+          sort = { createdAt: 1 };
+          break;
+        case "total-desc":
+          sort = { total: -1 };
+          break;
+        case "total-asc":
+          sort = { total: 1 };
+          break;
+        default:
+          sort = { createdAt: -1 };
+      }
+
+      return await Order.find(filter)
+        .sort(sort)
+        .populate({
+          path: 'orderDetail',
+          populate: { path: 'Product', model: 'Product' },
+        });
     } catch (error) {
       throw error;
     }

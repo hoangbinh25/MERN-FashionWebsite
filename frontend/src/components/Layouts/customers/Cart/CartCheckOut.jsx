@@ -18,11 +18,13 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
   const { fetchCartCount } = useCart();
   const navigate = useNavigate();
   const User = JSON.parse(localStorage.getItem("user"));
-  console.log("Cart Items:", cartItems);
+  console.log("Address Info:", addressInfo);
   const handleCreateOrder = async () => {
     const orderData = {
       idUser: User._id || User.id,
       address: address,
+      fullName: addressInfo.fullName,
+      phone: addressInfo.phone,
       statusPayment: paymentMethod, // "cod" hoặc "qr"
       orderDetails: cartItems.map(item => ({
         idProduct: item.idProduct._id,
@@ -31,6 +33,7 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
       })),
       total: total
     };
+    console.log("Order Data:", orderData);
 
     try {
       const result = await createOrder(orderData);

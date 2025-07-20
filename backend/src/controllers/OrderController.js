@@ -4,10 +4,12 @@ const OrderController = {
   // Create a new order
   async createOrder(req, res) {
     try {
-      const { idUser, address, statusPayment, orderDetails, total } = req.body;
+      const { idUser, fullName, phone, address, statusPayment, orderDetails, total } = req.body;
       const missingFields = [];
       if (!idUser) missingFields.push("idUser");
       if (!address) missingFields.push("address");
+      if (!fullName) missingFields.push("fullName");
+      if (!phone) missingFields.push("phone");
       if (!statusPayment) missingFields.push("statusPayment");
       if (!orderDetails || !Array.isArray(orderDetails) || orderDetails.length === 0) missingFields.push("orderDetails");
       if (total == null) missingFields.push("total");
@@ -81,10 +83,11 @@ const OrderController = {
     }
   },
 
-  // Get all orders (admin)
+  // Get all orders (admin) with filters and sorting
   async getAllOrders(req, res) {
     try {
-      const orders = await OrderService.getAllOrders();
+      const { status, sortBy } = req.query;
+      const orders = await OrderService.getAllOrders({ status, sortBy });
       res.json(orders);
     } catch (err) {
       res.status(400).json({ error: err.message });

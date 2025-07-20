@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { getCartByUser, deleteProductFromCart, updateQuantityInCart } from "~/services/cartService";
+import { useCart } from "~/context/CartContext";
 
 
 export default function TableCart({ cartItems, reloadCart }) {
   const User = JSON.parse(localStorage.getItem("user"));
+  const { fetchCartCount } = useCart();
+  
 
   const plusChange = async (_id, quantity) => {
     try {
       await updateQuantityInCart(User._id || User.id, _id, quantity + 1);
+      await fetchCartCount(); // Cập nhật số lượng giỏ hàng
       reloadCart(); // Cập nhật toàn bộ
     } catch (error) {
       console.error("Failed to update quantity:", error);
@@ -20,11 +24,13 @@ export default function TableCart({ cartItems, reloadCart }) {
         const confirmDelete = window.confirm("Do you want to remove this product from cart?");
         if (confirmDelete) {
           await deleteProductFromCart(User._id || User.id, _id);
+          await fetchCartCount(); // Cập nhật số lượng giỏ hàng
           reloadCart();
         }
         return;
       }
       await updateQuantityInCart(User._id || User.id, _id, quantity - 1);
+      await fetchCartCount(); // Cập nhật số lượng giỏ hàng
       reloadCart();
     } catch (error) {
       console.error("Failed to update quantity:", error);

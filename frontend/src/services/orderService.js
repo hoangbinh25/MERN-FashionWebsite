@@ -46,3 +46,20 @@ export const updateOrderStatus = async (orderId, statusOrder) => {
     throw error;
   }
 };
+
+// Get all orders (admin) with filters and sorting
+export const getAllOrders = async ({ status, sortBy }) => {
+  try {
+    const params = {};
+    if (status) params.status = status;
+    if (sortBy) params.sortBy = sortBy;
+
+    const res = await axios.get(`${API_URL}/order/getAllOrders`, { params });
+    return res.data;
+  } catch (error) {
+    console.log("Get all orders error:", error);
+    throw error;
+  }
+};
+
+
