@@ -1,14 +1,40 @@
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom";
+import { getBlogById } from "~/services/blogService";
+
 export default function BlogDetail() {
+    const { id } = useParams();
+    const [blog, setBlog] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchBlog() {
+            try {
+                const data = await getBlogById(id);
+                setBlog(data);
+            } catch (error) {
+                console.log('Error: ', error)
+                setBlog(null)
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchBlog()
+    }, [id])
+
+    if (loading) return <div>Loading...</div>;
+    if (!blog) return <div>Blog not found</div>;
+
     return (
         <div className="bg-white">
             {/* Hero Image Section */}
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden flex justify-center">
                 <img
-                    src="https://themewagon.github.io/cozastore/images/blog-04.jpg"
+                    src={blog.image}
                     alt="Blog"
-                    className="w-full h-[480px] object-cover hover:scale-105 transition-all duration-300"
+                    className="w-[960px] h-[480px] mt-10 object-contain hover:scale-105 transition-all duration-300"
                 />
-                <div className="absolute top-6 left-6 bg-white shadow-lg px-4 py-2 text-center rounded-lg">
+                <div className="absolute top-12 left-[25rem] bg-white shadow-lg px-4 py-2 text-center rounded-lg">
                     <div className="text-3xl font-bold text-indigo-600">22</div>
                     <div className="text-sm text-gray-500">Jan 2018</div>
                 </div>
@@ -19,17 +45,17 @@ export default function BlogDetail() {
                 {/* Article Header */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4 leading-tight">
-                        8 Inspiring Ways to Wear Dresses in the Winter
+                        {blog.titleBlog}
                     </h1>
                     <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                        Discover how to stay stylish and warm during the coldest months with these creative dress styling tips that will transform your winter wardrobe.
+                        {blog.descBlog}
                     </p>
 
                     {/* Author Info */}
                     <div className="flex items-center justify-between border-b border-gray-200 pb-6">
                         <div className="flex items-center space-x-4">
                             <img
-                                src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face"
+                                src={blog.image}
                                 alt="Author"
                                 className="w-12 h-12 rounded-full object-cover"
                             />

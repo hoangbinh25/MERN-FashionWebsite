@@ -17,14 +17,14 @@ const loginUser = async (userLogin) => {
 
             if (checkUser === null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'The user is not defined'
                 })
             }
 
             if (checkUser.provider === "google") {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'This account can only be signed in with Google'
                 });
             }
@@ -32,7 +32,7 @@ const loginUser = async (userLogin) => {
             // Kiểm tra user đã xác minh email chưa
             if (!checkUser.isVerified) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'Please verify your email before logging in'
                 })
             }
@@ -40,7 +40,7 @@ const loginUser = async (userLogin) => {
             const comparePassword = bcrypt.compareSync(password, checkUser.password);
             if (!comparePassword) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'The password or user incorrect'
                 })
             }

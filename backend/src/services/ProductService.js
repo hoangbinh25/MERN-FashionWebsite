@@ -1,3 +1,7 @@
+const Product = require('../models/Product');
+const { cloudinary } = require("../config/cloudinary");
+const fs = require("fs");
+
 // Update isActive status for product
 const updateProductIsActive = async (productId, isActive) => {
   return new Promise(async (resolve, reject) => {
@@ -23,98 +27,97 @@ const updateProductIsActive = async (productId, isActive) => {
     }
   });
 };
-const Product = require('../models/Product');
-const { cloudinary } = require("../config/cloudinary");
-const fs = require("fs");
 
 // Get all product
 const getProducts = async (limit, page, sort, nameProduct, category, color, size, minPrice, maxPrice) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let objectFilter = {};
-            if (nameProduct) {
-                objectFilter.nameProduct = { $regex: nameProduct, $options: 'i' }
-            }
-            if (category) {
-                objectFilter.category = category;
-            }
-            if (color) {
-                objectFilter.color = color;
-            }
-            if (size) {
-                objectFilter.size = size;
-            }
-            if (minPrice || maxPrice) {
-                objectFilter.price = {};
-                if (minPrice) objectFilter.price.$gte = Number(minPrice);
-                if (maxPrice) objectFilter.price.$lte = Number(maxPrice);
-            }
+  return new Promise(async (resolve, reject) => {
+    try {
+      let objectFilter = {};
+      if (nameProduct) {
+        objectFilter.nameProduct = { $regex: nameProduct, $options: 'i' }
+      }
+      if (category) {
+        objectFilter.category = category;
+      }
+      if (color) {
+        objectFilter.color = color;
+      }
+      if (size) {
+        objectFilter.size = size;
+      }
+      if (minPrice || maxPrice) {
+        objectFilter.price = {};
+        if (minPrice) objectFilter.price.$gte = Number(minPrice);
+        if (maxPrice) objectFilter.price.$lte = Number(maxPrice);
+      }
 
-            // Nếu sort là category, dùng aggregation để sort theo category.nameCategory
-            let getAllProduct, totalProduct;
-            if (sort && sort.startsWith('category')) {
-                const sortOrder = sort.endsWith('desc') ? -1 : 1;
-                const pipeline = [
-                    { $match: objectFilter },
-                    { $lookup: {
-                        from: 'categories',
-                        localField: 'category',
-                        foreignField: '_id',
-                        as: 'categoryInfo'
-                    }},
-                    { $unwind: '$categoryInfo' },
-                    { $sort: { 'categoryInfo.nameCategory': sortOrder } },
-                    { $skip: (page - 1) * limit },
-                    { $limit: limit }
-                ];
-                getAllProduct = await Product.aggregate(pipeline);
-                totalProduct = await Product.countDocuments(objectFilter);
-                // Gắn lại category cho giống populate
-                getAllProduct = getAllProduct.map(p => ({
-                    ...p,
-                    category: { _id: p.categoryInfo._id, nameCategory: p.categoryInfo.nameCategory }
-                }));
-            } else {
-                totalProduct = await Product.countDocuments(objectFilter);
-                let objectSort = { nameProduct: 1 };
-                if (sort) {
-                    const [sortField, sortOrder] = sort.split('-');
-                    objectSort = { [sortField]: sortOrder === 'desc' ? -1 : 1 };
-                }
-                getAllProduct = await Product.find(objectFilter)
-                    .limit(limit)
-                    .skip((page - 1) * limit)
-                    .populate('category', 'nameCategory')
-                    .sort(objectSort);
+      // Nếu sort là category, dùng aggregation để sort theo category.nameCategory
+      let getAllProduct, totalProduct;
+      if (sort && sort.startsWith('category')) {
+        const sortOrder = sort.endsWith('desc') ? -1 : 1;
+        const pipeline = [
+          { $match: objectFilter },
+          {
+            $lookup: {
+              from: 'categories',
+              localField: 'category',
+              foreignField: '_id',
+              as: 'categoryInfo'
             }
-            resolve({
-                status: 'OK',
-                message: 'Success',
-                data: getAllProduct,
-                totalProduct,
-                pageCurrent: Number(page),
-                totalPage: Math.ceil(totalProduct / limit)
-            });
-        } catch (error) {
-            reject(error);
+          },
+          { $unwind: '$categoryInfo' },
+          { $sort: { 'categoryInfo.nameCategory': sortOrder } },
+          { $skip: (page - 1) * limit },
+          { $limit: limit }
+        ];
+        getAllProduct = await Product.aggregate(pipeline);
+        totalProduct = await Product.countDocuments(objectFilter);
+        // Gắn lại category cho giống populate
+        getAllProduct = getAllProduct.map(p => ({
+          ...p,
+          category: { _id: p.categoryInfo._id, nameCategory: p.categoryInfo.nameCategory }
+        }));
+      } else {
+        totalProduct = await Product.countDocuments(objectFilter);
+        let objectSort = { nameProduct: 1 };
+        if (sort) {
+          const [sortField, sortOrder] = sort.split('-');
+          objectSort = { [sortField]: sortOrder === 'desc' ? -1 : 1 };
         }
-    });
+        getAllProduct = await Product.find(objectFilter)
+          .limit(limit)
+          .skip((page - 1) * limit)
+          .populate('category', 'nameCategory')
+          .sort(objectSort);
+      }
+      resolve({
+        status: 'OK',
+        message: 'Success',
+        data: getAllProduct,
+        totalProduct,
+        pageCurrent: Number(page),
+        totalPage: Math.ceil(totalProduct / limit)
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
 
 // Get product by id
 const getProductById = async (productId) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const getproduct = await Product.findById(productId).populate('category', 'nameCategory')
-            resolve({
-                status: 'OK',
-                message: 'Success',
-                data: getproduct
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
+  return new Promise(async (resolve, reject) => {
+    try {
+      const getproduct = await Product.findById(productId).populate('category', 'nameCategory')
+      resolve({
+        status: 'OK',
+        message: 'Success',
+        data: getproduct
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
 }
 
 // Create product
@@ -241,36 +244,36 @@ const updateProduct = async (productId, data, files) => {
 
 // Delete product
 const deleteProduct = async (productId) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const checkProduct = await Product.findOne({
-                _id: productId
-            })
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkProduct = await Product.findOne({
+        _id: productId
+      })
 
-            if (!checkProduct) {
-                return reject({
-                    status: 'Error',
-                    message: 'The product is not defined'
-                })
-            }
+      if (!checkProduct) {
+        return reject({
+          status: 'Error',
+          message: 'The product is not defined'
+        })
+      }
 
-            await Product.findByIdAndDelete(productId)
-            resolve({
-                status: 'OK',
-                message: `Delete product with ${productId} success`
-            })
+      await Product.findByIdAndDelete(productId)
+      resolve({
+        status: 'OK',
+        message: `Delete product with ${productId} success`
+      })
 
-        } catch (error) {
-            reject(error)
-        }
-    })
+    } catch (error) {
+      reject(error)
+    }
+  })
 }
 
 module.exports = {
-    getProducts,
-    getProductById,
-    createProduct,
-    updateProduct,
-    deleteProduct,
-    updateProductIsActive,
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  updateProductIsActive,
 };

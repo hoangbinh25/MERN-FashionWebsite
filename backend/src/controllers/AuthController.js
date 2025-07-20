@@ -5,9 +5,9 @@ const User = require('../models/User');
 
 const login = async (req, res) => {
     if (req.query.error === 'oauth') {
-        return res.status(401).json({ error: 'Google OAuth failed. Please try again' });
+        return res.status(400).json({ error: 'Google OAuth failed. Please try again' });
     }
-    res.status(200).json({ message: 'Login endpoint. Use /auth/google for Google OAuth.' });
+    res.status(500).json({ message: 'Login endpoint. Use /auth/google for Google OAuth.' });
 }
 
 const loginUser = async (req, res) => {

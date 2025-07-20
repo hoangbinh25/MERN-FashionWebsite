@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "./authService.";
 const API_URL = import.meta.env.VITE_API_URL_BACKEND;
 
@@ -8,7 +9,7 @@ const getAllCategory = async ({
     order = "desc",
     search = ""
 }) => {
-    const response = await api.get(`${API_URL}/category/getCategories`, {
+    const response = await axios.get(`${API_URL}/category/getCategories`, {
         params: { page, limit, sort, order, search },
 
     });
@@ -22,7 +23,7 @@ const getAllCategoryBy = async ({
     order = "desc",
     search = ""
 }) => {
-    const response = await api.get(`${API_URL}/category/getCategories`, {
+    const response = await axios.get(`${API_URL}/category/getCategories`, {
         params: { page, limit, sort, order, search }
     });
     return response.data;

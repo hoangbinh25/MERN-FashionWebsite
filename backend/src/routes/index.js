@@ -5,6 +5,7 @@ const categoryRouter = require('./CategoryRouter')
 const contactRouter = require('./ContactRouter')
 const chatRoute = require('./chatRouter');
 const CartRouter = require('./CartRoute');
+const blogRouter = require('./BlogRouter');
 const OrderRouter = require('./OrderRouter');
 
 function router(app) {
@@ -15,7 +16,9 @@ function router(app) {
     app.use('/contact', contactRouter);
     app.use('/chat', chatRoute);
     app.use('/cart', CartRouter);
+    app.use('/blog', blogRouter);
     app.use('/order', OrderRouter);
+
 }
 
 module.exports = router;
