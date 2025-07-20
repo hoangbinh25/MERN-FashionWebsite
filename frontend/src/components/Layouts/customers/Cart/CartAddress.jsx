@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import provincesData from "~/assets/64TinhThanh.json";
 
-export default function AddressCart({ cartItems, onProceedCheckout }) {
+export default function AddressCart({ cartItems, onProceedCheckout, onAddressChange }) {
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   const shipping = 0;
   const total = subtotal + shipping;
@@ -10,6 +10,14 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
   const [selectedCommune, setSelectedCommune] = useState("");
   const [districts, setDistricts] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [addressInfo, setAddressInfo] = useState({
+    fullName: "",
+    phone: "",
+    province: "",
+    district: "",
+    commune: "",
+    street: "",
+  });
 
   useEffect(() => {
     if (selectedProvince) {
@@ -43,6 +51,23 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
     }
   }, [selectedDistrict]);
 
+  const handleChange = (field, value) => {
+    setAddressInfo(prev => ({ ...prev, [field]: value }));
+    if (onAddressChange) onAddressChange({ ...addressInfo, [field]: value });
+  };
+
+  const handleProceed = () => {
+    if (onProceedCheckout) onProceedCheckout(addressInfo);
+  };
+
+  const isValidPhone = /^0\d{9,10}$/.test(addressInfo.phone);
+  const isValidFullName = addressInfo.fullName.trim().split(/\s+/).length >= 2;
+
+  const isAddressComplete =
+    Object.values(addressInfo).every(val => val && val.trim() !== "") &&
+    isValidPhone &&
+    isValidFullName;
+
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow space-y-4">
       <h3 className="text-xl font-semibold border-b pb-2">Shipping Address</h3>
@@ -53,8 +78,14 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
           <input
             type="text"
             placeholder="John Doe"
-            className="w-full border px-3 py-2 rounded text-sm mt-1"
+            className={`w-full border px-3 py-2 rounded text-sm mt-1 ${addressInfo.fullName && !isValidFullName ? "border-red-500" : ""}`}
+            onChange={e => handleChange("fullName", e.target.value)}
           />
+          {addressInfo.fullName && !isValidFullName && (
+            <span className="text-xs text-red-500">
+              Full name must be at least 2 words.
+            </span>
+          )}
         </div>
 
         <div>
@@ -62,8 +93,12 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
           <input
             type="text"
             placeholder="0123 456 789"
-            className="w-full border px-3 py-2 rounded text-sm mt-1"
+            className={`w-full border px-3 py-2 rounded text-sm mt-1 ${addressInfo.phone && !isValidPhone ? "border-red-500" : ""}`}
+            onChange={e => handleChange("phone", e.target.value)}
           />
+          {addressInfo.phone && !isValidPhone && (
+            <span className="text-xs text-red-500">Invalid phone number. Please enter a valid format (10-11 digits, starting with 0).</span>
+          )}
         </div>
 
         <div>
@@ -71,7 +106,12 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
           <select
             className="w-full border px-3 py-2 rounded text-sm mt-1"
             value={selectedProvince}
-            onChange={e => setSelectedProvince(e.target.value)}
+            onChange={e => {
+              const selectedId = e.target.value;
+              const selectedName = provincesData.province.find(p => p.idProvince === selectedId)?.name || "";
+              setSelectedProvince(selectedId);
+              handleChange("province", selectedName);
+            }}
           >
             <option value="">Select Province/City</option>
             {provincesData.province.map((p) => (
@@ -85,7 +125,12 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
           <select
             className="w-full border px-3 py-2 rounded text-sm mt-1"
             value={selectedDistrict}
-            onChange={e => setSelectedDistrict(e.target.value)}
+            onChange={e => {
+              const selectedId = e.target.value;
+              const selectedName = districts.find(d => d.idDistrict === selectedId)?.name || "";
+              setSelectedDistrict(selectedId);
+              handleChange("district", selectedName);
+            }}
             disabled={!selectedProvince}
           >
             <option value="">Select District</option>
@@ -100,7 +145,10 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
           <select
             className="w-full border px-3 py-2 rounded text-sm mt-1"
             value={selectedCommune}
-            onChange={e => setSelectedCommune(e.target.value)}
+            onChange={e => {
+              setSelectedCommune(e.target.value);
+              handleChange("commune", e.target.value);
+            }}
             disabled={!selectedDistrict}
           >
             <option value="">Select Commune/Ward</option>
@@ -116,9 +164,9 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
             type="text"
             placeholder="123 Nguyen Trai, Ward 5"
             className="w-full border px-3 py-2 rounded text-sm mt-1"
+            onChange={e => handleChange("street", e.target.value)}
           />
         </div>
-
       </div>
 
       <div className="border-t pt-4 space-y-1">
@@ -143,9 +191,10 @@ export default function AddressCart({ cartItems, onProceedCheckout }) {
       </div>
 
       <button
-        className="w-full mt-4 bg-black hover:bg-gray-800 text-white py-2 rounded text-center text-sm font-semibold"
+        className={`w-full mt-4 bg-black hover:bg-gray-800 text-white py-2 rounded text-center text-sm font-semibold ${!isAddressComplete ? "opacity-50 cursor-not-allowed" : ""}`}
         type="button"
-        onClick={onProceedCheckout}
+        onClick={handleProceed}
+        disabled={!isAddressComplete}
       >
         Proceed to Checkout
       </button>
