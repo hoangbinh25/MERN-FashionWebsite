@@ -1,0 +1,8 @@
+[phases.setup]
+nixpkgsArchive = "https://releases.nixos.org/nixpkgs/nixpkgs-22.11-darwin/nixexprs.tar.xz"
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
