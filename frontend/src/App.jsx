@@ -2,8 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import React from 'react';
 import { DefaultLayout, AdminDefaultLayout } from './components/Layouts';
 import routes from './routes';
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 import { CartProvider } from './context/CartContext';
 
@@ -36,12 +34,12 @@ const App = () => {
                             path={route.path}
                             element={
                                 <CartProvider>
-                                <DefaultLayout
-                                    bannerHeight={route.bannerHeight}
-                                    showBanner={route.showBanner}
-                                >
-                                    <Page content={route.content} />
-                                </DefaultLayout>
+                                    <DefaultLayout
+                                        bannerHeight={route.bannerHeight}
+                                        showBanner={route.showBanner}
+                                    >
+                                        <Page content={route.content} />
+                                    </DefaultLayout>
                                 </CartProvider>
                             }
                         />

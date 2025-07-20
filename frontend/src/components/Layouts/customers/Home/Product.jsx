@@ -4,16 +4,7 @@ import { getAllProducts } from "~/services/productsService";
 import { addProductToCart } from "~/services/cartService";
 import Paginate from "../../DefaultLayout/admin/Paginate";
 import { useCart } from "~/context/CartContext";
-
-
-const categoryProducts = [
-    { name: "All Products" },
-    { name: "Women" },
-    { name: "Men" },
-    { name: "Bag" },
-    { name: "Shoes" },
-    { name: "Watches" },
-];
+import { getAllCategory } from "~/services/categoriesService";
 
 export default function Product() {
     const [activeCategory, setActiveCategory] = useState("All Products");
@@ -27,6 +18,7 @@ export default function Product() {
     });
     const [showDetail, setShowDetail] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [categories, setCategories] = useState([])
     const limit = 12;
 
     const { fetchCartCount } = useCart();
@@ -94,6 +86,18 @@ export default function Product() {
         setSelectedProduct(null);
     };
 
+    useEffect(() => {
+        async function fetchCategories() {
+            try {
+                const res = await getAllCategory({ limit: 1000 })
+                setCategories(Array.isArray(res.data) ? res.data : []);
+            } catch (error) {
+                setCategories([]);
+            }
+        }
+        fetchCategories();
+    })
+
     return (
         <>
             <div className="max-w-screen-2xl mx-auto my-16">
@@ -101,18 +105,18 @@ export default function Product() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between my-4">
                     <div>
                         <div className="flex text-xl gap-8">
-                            {categoryProducts.map((cat, index) => (
+                            {categories.map(cat => (
                                 <button
-                                    key={index}
+                                    key={cat._id}
                                     className={
                                         "transition-all duration-200 " +
-                                        (activeCategory === cat.name
+                                        (activeCategory === cat.nameCategory
                                             ? "text-gray-500 underline underline-offset-4 font-semibold"
                                             : "text-gray-500 hover:text-gray-800 hover:underline hover:underline-offset-4")
                                     }
-                                    onClick={() => setActiveCategory(cat.name)}
+                                    onClick={() => setActiveCategory(cat.nameCategory)}
                                 >
-                                    {cat.name}
+                                    {cat.nameCategory}
                                 </button>
                             ))}
                         </div>

@@ -75,6 +75,7 @@ export default function LoginForm() {
             }
         } catch (error) {
             toast.error("Please check your email or password");
+            return
         }
     }
 
