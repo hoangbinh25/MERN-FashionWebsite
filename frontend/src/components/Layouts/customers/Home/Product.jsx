@@ -65,7 +65,7 @@ export default function Product() {
     const User = JSON.parse(localStorage.getItem('user'));
     const addToCart = async (product) => {
         try {
-            await addProductToCart(User._id, product.id, 1, product.price);
+            await addProductToCart(User._id || User.id, product.id, 1, product.price);
             await fetchCartCount();
         } catch (error) {
             console.error("Error adding to cart:", error);

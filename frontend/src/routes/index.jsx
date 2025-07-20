@@ -23,6 +23,8 @@ import CartPage from '~/pages/Customers/CartPage';
 import OrderHistoryPage from '~/pages/Customers/OrderHistoryPage';
 import Blog from '~/pages/Admin/Blog';
 import BlogDetail from '~/components/Layouts/customers/Blog/BlogDetail';
+import PaySuccessful from '~/pages/PaySuccessful';
+
 
 const routes = [
     // customers
@@ -54,6 +56,8 @@ const routes = [
     { path: '/admin/blog', component: Blog, content: 'Blogs Management' },
 
 
+    // successful payment
+    { path: '/successful', component: PaySuccessful },
     // Not found
     { path: '*', component: NotFoundPage }
 ]

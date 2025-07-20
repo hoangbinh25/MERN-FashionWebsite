@@ -17,8 +17,13 @@ const getCartByUser = async (req, res) => {
 // [POST] /cart/addProduct
 const addProductToCart = async (req, res) => {
     const { idUser, idProduct, quantity, price } = req.body;
-    if (!idUser || !idProduct || !quantity || !price) {
-        return res.status(400).json({ message: 'All fields are required' });
+    const missingFields = [];
+    if (idUser == null) missingFields.push("idUser");
+    if (idProduct == null) missingFields.push("idProduct");
+    if (quantity == null) missingFields.push("quantity");
+    if (price == null) missingFields.push("price");
+    if (missingFields.length > 0) {
+        return res.status(400).json({ message: `Missing or null fields: ${missingFields.join(", ")}` });
     }
     try {
         const newCart = await cartService.addPrdToCart(idUser, idProduct, quantity, price);
@@ -56,9 +61,23 @@ const updateQuantityInCart = async (req, res) => {
     }
 }
 
+const deleteAllProductInCart = async (req, res) => {
+    const { idUser } = req.body;
+    if (!idUser) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+    try {
+        const result = await cartService.deleteAllProductInCart(idUser);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getCartByUser,
     addProductToCart,
     deleteProductFromCart,
-    updateQuantityInCart
+    updateQuantityInCart,
+    deleteAllProductInCart
 };

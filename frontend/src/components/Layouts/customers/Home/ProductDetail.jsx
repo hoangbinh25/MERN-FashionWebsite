@@ -23,7 +23,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
     };
     const handleNextImg = () => {
         if (!images.length) return;
-        setMainImg(images[(currentImgIdx + 1) % images.length]); 
+        setMainImg(images[(currentImgIdx + 1) % images.length]);
     };
     const [size, setSize] = useState("");
     const [color, setColor] = useState("");
@@ -33,8 +33,8 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
     const User = JSON.parse(localStorage.getItem('user'));
     const addToCart = async ({ id, quantity, price }) => {
         try {
-            await addProductToCart(User._id, id, quantity, price);
-            await fetchCartCount(); 
+            await addProductToCart(User._id || User.id, id, quantity, price);
+            await fetchCartCount();
         } catch (error) {
             console.error("Error adding to cart:", error);
         }
@@ -134,7 +134,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                                 quantity,
                                 price: product.price,
                             });
-                            await fetchCartCount(); 
+                            await fetchCartCount();
                             if (typeof onClose === 'function') {
                                 onClose();
                             }

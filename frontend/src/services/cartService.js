@@ -36,3 +36,12 @@ export const updateQuantityInCart = async (idUser, idProduct, quantity) => {
     console.log("updateQuantityInCart response:", response.data);
     return response.data;
 }
+
+export const deleteAllProductInCart = async (idUser) => {
+    console.log("deleteAllProductInCart called with idUser:", idUser);
+    const response = await axios.delete(`${API_URL}/cart/deleteAllProductInCart`, {
+        data: { idUser }
+    });
+    console.log("deleteAllProductInCart response:", response.data);
+    return response.data;
+}
