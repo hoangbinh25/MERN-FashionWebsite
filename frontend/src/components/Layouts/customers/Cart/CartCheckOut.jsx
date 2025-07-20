@@ -1,24 +1,49 @@
 import React, { useState } from "react";
+import { redirect } from "react-router-dom";
+import { deleteAllProductInCart } from "~/services/cartService";
+import { createOrder } from "~/services/orderService";
+import { createUser } from "~/services/usersService";
+import { useCart } from "~/context/CartContext";
+import { useNavigate } from "react-router-dom";
 
-const mockCart = [
-  { name: "Fresh Strawberries", qty: 1, price: 36000 },
-  { name: "Lightweight Jacket", qty: 1, price: 16000 },
-];
-const subtotal = mockCart.reduce((sum, item) => sum + item.price * item.qty, 0);
-const shipping = 5000;
-const total = subtotal + shipping;
-
-const mockAddress = {
-  fullName: "John Doe",
-  phone: "0123 456 789",
-  province: "Thành phố Hà Nội",
-  district: "Quận Ba Đình",
-  commune: "Phường Kim Mã",
-  street: "123 Nguyen Trai, Ward 5"
-};
-
-export default function CheckOut({ onCancel }) {
+// Remove mockAddress, use addressInfo prop instead
+export default function CheckOut({ addressInfo, cartItems, onCancel }) {
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  console.log("cartItems Info:", cartItems);
+
+  const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const shipping = 0;
+  const total = subtotal + shipping;
+  const address = "Province / City: " + addressInfo.province + ", District: " + addressInfo.district + ", Commune (Ward): " + addressInfo.commune + ", Address (Street, Ward...): " + addressInfo.street;
+  const { fetchCartCount } = useCart();
+  const navigate = useNavigate();
+  const User = JSON.parse(localStorage.getItem("user"));
+  console.log("Cart Items:", cartItems);
+  const handleCreateOrder = async () => {
+    const orderData = {
+      idUser: User._id || User.id,
+      address: address,
+      statusPayment: paymentMethod, // "cod" hoặc "qr"
+      orderDetails: cartItems.map(item => ({
+        idProduct: item.idProduct._id,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      total: total
+    };
+
+    try {
+      const result = await createOrder(orderData);
+      console.log("Order created:", result);
+      if (result) {
+        await deleteAllProductInCart(User._id || User.id);
+        await fetchCartCount();
+        navigate("/successful");
+      }
+    } catch (error) {
+      console.log("Order creation failed:", error);
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto bg-gray-50 rounded-lg shadow p-6">
@@ -28,24 +53,37 @@ export default function CheckOut({ onCancel }) {
         <div className="flex-1 md:w-1/2 border-r pr-6">
           <div>
             <h3 className="text-xl font-semibold mb-4 text-gray-700">Products</h3>
-            {mockCart.map((item, idx) => (
+            {cartItems.map((item, idx) => (
               <div key={idx} className="flex justify-between items-center text-base py-3 border-b last:border-b-0">
-                <span className="font-medium text-gray-700">{item.name} <span className="text-gray-400">x{item.qty}</span></span>
-                <span className="font-semibold text-indigo-600">{item.price.toLocaleString()}&nbsp;₫</span>
+                <span className="font-medium text-gray-700">{item.idProduct.nameProduct} <span className="text-gray-400">x{item.quantity}</span></span>
+                <span className="font-semibold text-indigo-600">
+                  {(item.price * item.quantity).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })}
+                </span>
               </div>
             ))}
             <div className="mt-6 space-y-1">
               <div className="flex justify-between text-sm">
                 <span>Subtotal:</span>
-                <span className="font-semibold">{subtotal.toLocaleString()}&nbsp;₫</span>
+                <span className="font-semibold">
+                  {subtotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Shipping:</span>
-                <span className="font-semibold">{shipping.toLocaleString()}&nbsp;₫</span>
+                <span className="font-semibold">
+                  {shipping.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </span>
               </div>
               <div className="flex justify-between text-lg font-bold">
                 <span>Total:</span>
-                <span>{total.toLocaleString()}&nbsp;₫</span>
+                <span>
+                  {total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </span>
               </div>
             </div>
           </div>
@@ -56,12 +94,12 @@ export default function CheckOut({ onCancel }) {
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-4 text-gray-700">Shipping Address</h3>
             <div className="text-base space-y-2">
-              <div><span className="font-medium text-gray-600">Name:</span> {mockAddress.fullName}</div>
-              <div><span className="font-medium text-gray-600">Phone:</span> {mockAddress.phone}</div>
-              <div><span className="font-medium text-gray-600">Province/City:</span> {mockAddress.province}</div>
-              <div><span className="font-medium text-gray-600">District:</span> {mockAddress.district}</div>
-              <div><span className="font-medium text-gray-600">Commune/Ward:</span> {mockAddress.commune}</div>
-              <div><span className="font-medium text-gray-600">Street:</span> {mockAddress.street}</div>
+              <div><span className="font-medium text-gray-600">Name:</span> {addressInfo?.fullName}</div>
+              <div><span className="font-medium text-gray-600">Phone:</span> {addressInfo?.phone}</div>
+              <div><span className="font-medium text-gray-600">Province/City:</span> {addressInfo?.province}</div>
+              <div><span className="font-medium text-gray-600">District:</span> {addressInfo?.district}</div>
+              <div><span className="font-medium text-gray-600">Commune/Ward:</span> {addressInfo?.commune}</div>
+              <div><span className="font-medium text-gray-600">Street:</span> {addressInfo?.street}</div>
             </div>
           </div>
 
@@ -116,6 +154,7 @@ export default function CheckOut({ onCancel }) {
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 disabled={paymentMethod !== "cod"}
+                onClick={handleCreateOrder}
               >
                 Confirm Payment
               </button>

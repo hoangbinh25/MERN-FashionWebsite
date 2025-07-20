@@ -84,9 +84,25 @@ const updateQuantityProductInCart = async (idUser, idProduct, quantity) => {
     });
 };
 
+const deleteAllProductInCart = async (idUser) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await Cart.deleteMany({ idUser: new mongoose.Types.ObjectId(idUser) });
+            if (result.deletedCount > 0) {
+                resolve({ status: 'OK', message: 'All products deleted from cart' });
+            } else {
+                resolve({ status: 'Error', message: 'No products found in cart for this user' });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 module.exports = {
     addPrdToCart,
     getProductCartByUser,
     deleteProductFromCart,
-    updateQuantityProductInCart
+    updateQuantityProductInCart,
+    deleteAllProductInCart
 };
