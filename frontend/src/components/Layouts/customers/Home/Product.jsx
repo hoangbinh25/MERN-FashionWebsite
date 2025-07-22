@@ -96,7 +96,7 @@ export default function Product() {
             }
         }
         fetchCategories();
-    })
+    }, [])
 
     return (
         <>
