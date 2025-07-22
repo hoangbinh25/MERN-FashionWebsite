@@ -6,14 +6,14 @@
             "config": { "distDir": "dist" }
         },
         {
-            "src": "backend/src/server.js",
+            "src": "backend/api/index.js",
             "use": "@vercel/node"
         }
     ],
     "routes": [
         {
-            "src": "/(.*)",
-            "dest": "backend/src/server.js"
+            "src": "/api/(.*)",
+            "dest": "/backend/api/index.js"
         },
         {
             "src": "/(.*)",
