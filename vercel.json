@@ -13,7 +13,7 @@
     "routes": [
         {
             "src": "/api/(.*)",
-            "dest": "/backend/src/server.js"
+            "dest": "backend/src/server.js"
         },
         {
             "src": "/(.*)",

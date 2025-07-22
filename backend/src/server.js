@@ -12,8 +12,7 @@ const app = express();
 
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://mern-fashion-website.vercel.app',
-    'https://mern-fashion-website-73wf.vercel.app/'
+    'https://mern-fashion-website-73wf.vercel.app'
 ];
 
 // Bật CORS cơ bản
@@ -27,20 +26,6 @@ app.use(cors({
     },
     credentials: true,
 }));
-
-// Middleware thủ công xử lý preflight request
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://mern-fashion-website.vercel.app", "https://mern-fashion-website-73wf.vercel.app/");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
-    }
-
-    next();
-});
 
 // Middleware khác
 app.use(express.json());
