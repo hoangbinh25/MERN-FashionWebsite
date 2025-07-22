@@ -127,10 +127,8 @@ const createProduct = async (newProduct, files) => {
       nameProduct,
       description,
       category,
-      quantity,
       price,
-      size,
-      color,
+      variations,
     } = newProduct;
 
     try {
@@ -152,16 +150,21 @@ const createProduct = async (newProduct, files) => {
         fs.unlinkSync(file.path); // Xóa file tạm sau khi upload
       }
 
+      let parsedVariations = [];
+      try {
+        parsedVariations = JSON.parse(variations); // sẽ là array [{ size, quantity }]
+      } catch (err) {
+        return reject({ status: 'Error', message: 'Invalid variations format' });
+      }
+
       // Tạo sản phẩm
       const createdProduct = await Product.create({
         nameProduct,
         description,
         image: imageUrls,
         category,
-        quantity,
         price,
-        size,
-        color,
+        variations: parsedVariations,
       });
 
       resolve({
@@ -175,7 +178,6 @@ const createProduct = async (newProduct, files) => {
     }
   });
 };
-
 
 
 const updateProduct = async (productId, data, files) => {
