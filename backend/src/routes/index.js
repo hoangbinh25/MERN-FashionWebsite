@@ -1,3 +1,6 @@
+const express = require('express');
+const router = express.Router();
+
 const userRouter = require('./UserRouter');
 const authRouter = require('./AuthRouter');
 const productRouter = require('./ProductRouter')
@@ -8,17 +11,15 @@ const CartRouter = require('./CartRoute');
 const blogRouter = require('./BlogRouter');
 const OrderRouter = require('./OrderRouter');
 
-function router(app) {
-    app.use('/user', userRouter);
-    app.use('/auth', authRouter);
-    app.use('/product', productRouter);
-    app.use('/category', categoryRouter);
-    app.use('/contact', contactRouter);
-    app.use('/chat', chatRoute);
-    app.use('/cart', CartRouter);
-    app.use('/blog', blogRouter);
-    app.use('/order', OrderRouter);
 
-}
+router.use('/user', userRouter);
+router.use('/auth', authRouter);
+router.use('/product', productRouter);
+router.use('/category', categoryRouter);
+router.use('/contact', contactRouter);
+router.use('/chat', chatRoute);
+router.use('/cart', CartRouter);
+router.use('/blog', blogRouter);
+router.use('/order', OrderRouter);
 
 module.exports = router;

@@ -12,7 +12,7 @@ const app = express();
 
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://mern-fashion-website-73wf.vercel.app'
+    'https://mern-fashion-website.vercel.app'
 ];
 
 // Bật CORS cơ bản
@@ -40,6 +40,10 @@ app.use(session({
         mongoUrl: process.env.MONGODB_URL,
         collectionName: 'sessions',
     }),
+    cookie: {
+        secure: true,
+        sameSite: 'none'
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -48,6 +52,6 @@ app.use(passport.session());
 connectDB();
 
 // Route init
-router(app);
+app.use(require('./routes'));
 
 module.exports = app;
