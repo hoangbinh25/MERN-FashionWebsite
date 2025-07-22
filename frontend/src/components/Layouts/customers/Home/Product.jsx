@@ -96,7 +96,7 @@ export default function Product() {
             }
         }
         fetchCategories();
-    })
+    }, [])
 
     return (
         <>
@@ -165,17 +165,6 @@ export default function Product() {
                                 <li>$100.00 - $150.00</li>
                                 <li>$150.00 - $200.00</li>
                                 <li>$200.00+</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 className="font-bold mb-2">Color</h3>
-                            <ul>
-                                <li>Black</li>
-                                <li>Blue</li>
-                                <li>Grey</li>
-                                <li>Green</li>
-                                <li>Red</li>
-                                <li>White</li>
                             </ul>
                         </div>
                         <div>

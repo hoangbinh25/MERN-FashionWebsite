@@ -127,10 +127,8 @@ const createProduct = async (newProduct, files) => {
       nameProduct,
       description,
       category,
-      quantity,
       price,
-      size,
-      color,
+      variations,
     } = newProduct;
 
     try {
@@ -152,16 +150,21 @@ const createProduct = async (newProduct, files) => {
         fs.unlinkSync(file.path); // Xóa file tạm sau khi upload
       }
 
+      let parsedVariations = [];
+      try {
+        parsedVariations = typeof variations === "string" ? JSON.parse(variations) : variations; // sẽ là array [{ size, quantity }]
+      } catch (err) {
+        return reject({ status: 'Error', message: 'Invalid variations format' });
+      }
+
       // Tạo sản phẩm
       const createdProduct = await Product.create({
         nameProduct,
         description,
         image: imageUrls,
         category,
-        quantity,
         price,
-        size,
-        color,
+        variations: parsedVariations,
       });
 
       resolve({
@@ -175,7 +178,6 @@ const createProduct = async (newProduct, files) => {
     }
   });
 };
-
 
 
 const updateProduct = async (productId, data, files) => {
@@ -195,6 +197,14 @@ const updateProduct = async (productId, data, files) => {
       // Nếu không có ảnh mới, giữ nguyên ảnh cũ
       if (!files || files.length === 0) {
         data.image = imageOld;
+      }
+
+      if (typeof data.variations === "string") {
+        try {
+          data.variations = JSON.parse(data.variations);
+        } catch (err) {
+          return reject({ status: 'Error', message: 'Invalid variations format' });
+        }
       }
 
       // Xóa ảnh không còn giữ
@@ -225,6 +235,7 @@ const updateProduct = async (productId, data, files) => {
         {
           ...data,
           image: updatedImages,
+          variations: data.variations,
         },
         { new: true }
       ).populate("category", "nameCategory");
@@ -239,8 +250,6 @@ const updateProduct = async (productId, data, files) => {
     }
   });
 };
-
-
 
 // Delete product
 const deleteProduct = async (productId) => {

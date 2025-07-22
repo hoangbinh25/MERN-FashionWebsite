@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "./authService.";
 
 const API_URL = import.meta.env.VITE_API_URL_BACKEND;

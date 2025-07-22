@@ -10,9 +10,10 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
         nameProduct: product.nameProduct || "",
         description: product.description || "",
         price: product.price || 0,
-        quantity: product.quantity || 0,
-        size: product.size || "",
-        color: product.color || "",
+        variations: product.variations?.map(v => ({
+          size: v.size,
+          quantity: v.quantity
+        })) || [{ size: "", quantity: 0 }],
         category: product.category?._id || "",
         image: product.image[0] || "",
         images: product.image || [],
@@ -21,9 +22,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
         nameProduct: "",
         description: "",
         price: 0,
-        quantity: 0,
-        size: "",
-        color: "",
+        variations: [{ size: "", quantity: 0 }],
         category: "",
         image: "",
         images: [],
@@ -35,6 +34,25 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
   const [loading, setLoading] = useState(false);
 
   if (!product) return null;
+
+  const handleVariationChange = (index, field, value) => {
+    const updated = [...form.variations];
+    updated[index][field] = field === "quantity" ? Number(value) : value
+    setForm(prev => ({ ...prev, variations: updated }))
+  };
+
+  const addVariation = () => {
+    setForm(prev => ({
+      ...prev,
+      variations: [...prev.variations, { size: "", quantity: 0 }]
+    }))
+  }
+
+  const removeVariation = (index) => {
+    const updated = [...form.variations];
+    updated.splice(index, 1);
+    setForm(prev => ({ ...prev, variations: updated }));
+  };
 
   const handleImagesFile = (e) => {
     const files = Array.from(e.target.files);
@@ -64,9 +82,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
       formData.append("nameProduct", form.nameProduct);
       formData.append("description", form.description);
       formData.append("price", form.price);
-      formData.append("quantity", form.quantity);
-      formData.append("size", form.size);
-      formData.append("color", form.color);
+      formData.append("variations", JSON.stringify(form.variations));
       formData.append("category", form.category);
       // Nếu không có ảnh mới, giữ nguyên ảnh cũ
       if (imagesFiles && imagesFiles.length > 0) {
@@ -138,42 +154,51 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                   required
                 />
               </div>
-              <div className="flex-1">
-                <label className="text-xs sm:text-sm font-semibold text-gray-600">Quantity</label>
-                <input
-                  type="number"
-                  name="quantity"
-                  value={form.quantity}
-                  onChange={handleChange}
-                  className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                  min={0}
-                  required
-                />
-              </div>
             </div>
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="text-xs sm:text-sm font-semibold text-gray-600">Size</label>
-                <input
-                  type="text"
-                  name="size"
-                  value={form.size}
-                  onChange={handleChange}
-                  className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                  required
-                />
-              </div>
-              <div className="flex-1">
-                <label className="text-xs sm:text-sm font-semibold text-gray-600">Color</label>
-                <input
-                  type="text"
-                  name="color"
-                  value={form.color}
-                  onChange={handleChange}
-                  className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                  required
-                />
-              </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Variations (Size + Quantity)</label>
+              {form.variations.map((v, idx) => (
+                <div key={idx} className="flex gap-3 items-center">
+                  <select
+                    value={v.size}
+                    onChange={(e) => handleVariationChange(idx, "size", e.target.value)}
+                    className="border rounded px-2 py-1 w-32 text-sm"
+                    required
+                  >
+                    <option value="">Choose size</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                  </select>
+                  <input
+                    type="number"
+                    min={0}
+                    value={v.quantity}
+                    onChange={(e) => handleVariationChange(idx, "quantity", e.target.value)}
+                    placeholder="Quantity"
+                    className="border rounded px-2 py-1 w-24 text-sm"
+                    required
+                  />
+                  {form.variations.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeVariation(idx)}
+                      className="text-red-500 text-sm font-semibold"
+                    >
+                      ✖
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addVariation}
+                className="text-indigo-500 hover:underline text-sm mt-1"
+              >
+                + Add Variation
+              </button>
             </div>
             <div>
               <label className="text-xs sm:text-sm font-semibold text-gray-600">Category</label>
