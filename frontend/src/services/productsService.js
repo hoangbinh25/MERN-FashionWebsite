@@ -16,7 +16,7 @@ const getAllProducts = async ({
 }) => {
     const datatest = `${API_URL}/product/getProducts` + '?page=' + page + '&limit=' + limit + '&sort=' + sort + '&order=' + order + '&nameProduct=' + nameProduct + '&color=' + color + '&size=' + size + '&category=' + category + '&minPrice=' + minPrice + '&maxPrice=' + maxPrice;
     console.log("API URL:", datatest);
-    const response = await axios.get(`${API_URL}/product/getProducts`, {
+    const response = await api.get(`${API_URL}/product/getProducts`, {
         params: { page, limit, sort, order, nameProduct, color, size, minPrice, maxPrice }
     });
 
@@ -24,7 +24,7 @@ const getAllProducts = async ({
 };
 
 const getProductById = async (id) => {
-    const response = await axios.get(`${API_URL}/product/getproduct/${id}`);
+    const response = await api.get(`${API_URL}/product/getproduct/${id}`);
     return response.data;
 }
 

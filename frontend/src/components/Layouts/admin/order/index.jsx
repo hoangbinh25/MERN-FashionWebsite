@@ -96,7 +96,7 @@ export default function Orders() {
                   </td>
                   <td className="py-3 px-4 text-center">
                     {/* Replace with your StatusBadge component if available */}
-                    <span className={`px-2 py-1 rounded ${order.statusOrder === "Pending" ? "bg-yellow-100 text-yellow-800" : order.statusOrder === "Shipped" ? "bg-green-100 text-green-800" : order.statusOrder === "Cancelled" ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-800"}`}>
+                    <span className={`px-2 py-1 rounded ${order.statusOrder.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-800" : order.statusOrder.toLowerCase() === "shipped" ? "bg-green-100 text-green-800" : order.statusOrder.toLowerCase() === "canceled" ? "bg-red-100 text-red-800" : order.statusOrder.toLowerCase() === "delivered" ? "bg-lime-100 text-lime-500" : "bg-gray-100 text-gray-800"}`}>
                       {order.statusOrder}
                     </span>
                   </td>

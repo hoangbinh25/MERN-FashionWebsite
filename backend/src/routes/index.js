@@ -7,6 +7,7 @@ const chatRoute = require('./chatRouter');
 const CartRouter = require('./CartRoute');
 const blogRouter = require('./BlogRouter');
 const OrderRouter = require('./OrderRouter');
+const ReportRouter = require('./ReportRouter');
 
 function router(app) {
     app.use('/user', userRouter);
@@ -18,6 +19,7 @@ function router(app) {
     app.use('/cart', CartRouter);
     app.use('/blog', blogRouter);
     app.use('/order', OrderRouter);
+    app.use('/report', ReportRouter);
 
 }
 
