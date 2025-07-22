@@ -15,29 +15,13 @@ const allowedOrigins = [
     'https://mern-fashion-website.vercel.app'
 ];
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
-    credentials: true,
-};
-
-app.use(cors(corsOptions));
-
-// Cho phép xử lý preflight (OPTIONS) request
-app.options("*", cors(corsOptions));
-
-// middlewares
-app.use(express.json());
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,
 }));
 
+// middlewares
+app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }))

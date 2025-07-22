@@ -49,7 +49,6 @@ export default function ProductTable() {
         sort: sortBy || "nameProduct",
         order,
         nameProduct: safeSearch,
-        color,
         size,
         category: selectedCategory === "All" ? "" : selectedCategory,
         minPrice,
@@ -61,13 +60,11 @@ export default function ProductTable() {
         sort: sortBy || "nameProduct",
         order,
         nameProduct: safeSearch,
-        color,
         size,
         category: selectedCategory === "All" ? "" : selectedCategory,
         minPrice,
         maxPrice
       });
-      console.log("Fetched products response:", response);
       setProducts(response.data || []);
       setPagination({
         currentPage: response.pageCurrent || response.pagination?.currentPage || 1,
@@ -200,19 +197,6 @@ export default function ProductTable() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             />
           </div>
-          <div className="flex-1 w-full md:w-1/4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Color</label>
-            <input
-              type="text"
-              value={color}
-              onChange={(e) => {
-                setColor(e.target.value);
-                setPagination(prev => ({ ...prev, currentPage: 1 }));
-              }}
-              placeholder="Color..."
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            />
-          </div>
         </div>
         <div className="flex flex-col md:flex-row gap-4 mt-4">
           <div className="flex-1 w-full md:w-1/3">
@@ -290,7 +274,6 @@ export default function ProductTable() {
               <th className="px-2 py-3 border-b">#</th>
               <th className="px-2 py-3 border-b">Image</th>
               <th className="px-2 py-3 border-b">Name</th>
-              <th className="px-2 py-3 border-b">Color</th>
               <th className="px-2 py-3 border-b">Size</th>
               <th className="px-2 py-3 border-b">Description</th>
               <th className="px-2 py-3 border-b">Price</th>
@@ -320,7 +303,6 @@ export default function ProductTable() {
                     />
                   </td>
                   <td className="px-2 py-3 border-b">{product.nameProduct}</td>
-                  <td className="px-2 py-3 border-b">{product.color}</td>
                   <td className="px-2 py-3 border-b">{product.size}</td>
                   <td className="px-2 py-3 border-b">
                     <span style={{

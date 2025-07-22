@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { addProductToCart } from "~/services/cartService";
 import { useCart } from "~/context/CartContext";
-
-
+import { toast } from "react-toastify";
 
 export default function ProductDetail({ product, onClose, hideCloseButton }) {
     // Xử lý lấy mảng ảnh đúng chuẩn
@@ -42,7 +41,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
 
     return (
         <div className="min-w-[320px] max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 sm:gap-8 md:gap-12 relative">
-            {/* Mobile close button (ẩn nếu hideC      loseButton=true) */}
+            {/* Mobile close button (ẩn nếu hideCloseButton=true) */}
             {!hideCloseButton && (
                 <button
                     className="block md:hidden absolute top-4 right-4 z-20 bg-white rounded-full p-2 sm:p-3 shadow text-xl font-bold"
@@ -76,7 +75,11 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                 </div>
                 <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
                     {images.map((img, idx) => (
-                        <img key={idx} src={img} alt="Thumb" className={`w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover rounded cursor-pointer border ${mainImg === img ? "border-indigo-500" : "border-transparent"}`} onClick={() => setMainImg(img)} />
+                        <img key={idx}
+                            src={img}
+                            alt="Thumb"
+                            className={`w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover rounded cursor-pointer border ${mainImg === img ? "border-indigo-500" : "border-transparent"}`}
+                            onClick={() => setMainImg(img)} />
                     ))}
                 </div>
             </div>
@@ -105,21 +108,6 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                                 )}
                             </select>
                         </div>
-                        <div className="w-full sm:w-32 md:w-36">
-                            <label className="block text-sm xs:text-base sm:text-lg font-medium mb-1">Color</label>
-                            <select value={color} onChange={e => setColor(e.target.value)} className="w-full border rounded px-3 py-2 sm:px-4 sm:py-3">
-                                <option value="">Choose an option</option>
-                                {Array.isArray(product.colors) && product.colors.length > 0 ? (
-                                    product.colors.map((cl, idx) => (
-                                        <option key={idx} value={cl}>{cl}</option>
-                                    ))
-                                ) : (
-                                    ["Black", "Blue", "Grey"].map((cl, idx) => (
-                                        <option key={idx} value={cl}>{cl}</option>
-                                    ))
-                                )}
-                            </select>
-                        </div>
                     </div>
                     <div className="flex items-center gap-3 sm:gap-4">
                         <label className="block text-sm xs:text-base sm:text-lg font-medium">Quantity</label>
@@ -129,10 +117,15 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                     </div>
                     <button className="w-full bg-indigo-500 text-white font-semibold py-3 sm:py-4 rounded mt-4 sm:mt-6 hover:bg-indigo-600 transition"
                         onClick={async () => {
+                            if (!size) {
+                                toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng");
+                                return
+                            }
                             addToCart({
                                 id: product.id,
                                 quantity,
                                 price: product.price,
+                                size,
                             });
                             await fetchCartCount();
                             if (typeof onClose === 'function') {

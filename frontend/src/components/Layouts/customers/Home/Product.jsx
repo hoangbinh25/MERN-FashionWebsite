@@ -168,17 +168,6 @@ export default function Product() {
                             </ul>
                         </div>
                         <div>
-                            <h3 className="font-bold mb-2">Color</h3>
-                            <ul>
-                                <li>Black</li>
-                                <li>Blue</li>
-                                <li>Grey</li>
-                                <li>Green</li>
-                                <li>Red</li>
-                                <li>White</li>
-                            </ul>
-                        </div>
-                        <div>
                             <h3 className="font-bold mb-2">Tags</h3>
                             <div className="flex flex-wrap gap-2">
                                 <span className="px-3 py-1 border rounded-full">Fashion</span>

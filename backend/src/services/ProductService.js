@@ -152,7 +152,7 @@ const createProduct = async (newProduct, files) => {
 
       let parsedVariations = [];
       try {
-        parsedVariations = JSON.parse(variations); // sẽ là array [{ size, quantity }]
+        parsedVariations = typeof variations === "string" ? JSON.parse(variations) : variations; // sẽ là array [{ size, quantity }]
       } catch (err) {
         return reject({ status: 'Error', message: 'Invalid variations format' });
       }
@@ -199,6 +199,14 @@ const updateProduct = async (productId, data, files) => {
         data.image = imageOld;
       }
 
+      if (typeof data.variations === "string") {
+        try {
+          data.variations = JSON.parse(data.variations);
+        } catch (err) {
+          return reject({ status: 'Error', message: 'Invalid variations format' });
+        }
+      }
+
       // Xóa ảnh không còn giữ
       const imagesToDelete = product.image.filter((img) => !imageOld.includes(img));
       for (const url of imagesToDelete) {
@@ -227,6 +235,7 @@ const updateProduct = async (productId, data, files) => {
         {
           ...data,
           image: updatedImages,
+          variations: data.variations,
         },
         { new: true }
       ).populate("category", "nameCategory");
@@ -241,8 +250,6 @@ const updateProduct = async (productId, data, files) => {
     }
   });
 };
-
-
 
 // Delete product
 const deleteProduct = async (productId) => {
