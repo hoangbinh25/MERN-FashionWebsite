@@ -5,7 +5,7 @@ FashionWebsite là ứng dụng web thời trang hiện đại, xây dựng vớ
 ---
 
 Link deploy:
-         https://mern-fashion-website-73wf.vercel.app/
+         https://mern-fashion-website.vercel.app
 
 ## 🚀 Tính năng chính
 

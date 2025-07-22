@@ -10,7 +10,7 @@ const chatRoute = require('./chatRouter');
 const CartRouter = require('./CartRoute');
 const blogRouter = require('./BlogRouter');
 const OrderRouter = require('./OrderRouter');
-
+const ReportRouter = require('./ReportRouter');
 
 router.use('/user', userRouter);
 router.use('/auth', authRouter);

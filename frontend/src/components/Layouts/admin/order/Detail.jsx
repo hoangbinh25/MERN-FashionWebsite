@@ -33,7 +33,7 @@ function getTotal(orderDetail) {
 }
 
 function formatUSD(vnd) {
-  const usd = vnd ;
+  const usd = vnd;
   return usd.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
@@ -95,28 +95,50 @@ export default function OrderDetail({ order, onClose }) {
         </div>
         <div className="flex justify-end pt-4">
           {order.statusOrder && order.statusOrder.toLowerCase() === "pending" && (
-            <button
-              onClick={() => {
-                handleStatusChange("Shipped");
-                onClose();
-              }}
-              className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
-            >
-              Shipped
-            </button>
+            <>
+              <button
+                onClick={() => {
+                  handleStatusChange("Shipped");
+                  onClose();
+                }}
+                className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
+              >
+                Shipped
+              </button>
+              <button
+                onClick={() => {
+                  handleStatusChange("Canceled");
+                  onClose();
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 ml-2 rounded-lg text-sm font-semibold shadow transition"
+              >
+                Canceled
+              </button>
+            </>
           )}
           {order.statusOrder && order.statusOrder.toLowerCase() === "shipped" && (
             <button
               onClick={() => {
-                handleStatusChange("Cancelled");
+                handleStatusChange("Delivered");
                 onClose();
               }}
               className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
             >
-              Cancelled
+              Delivered
             </button>
           )}
-          {order.statusOrder && order.statusOrder.toLowerCase() === "cancelled" && (
+          {/* Giao hàng rồi thì ko cho hủy "delivered" && (
+            <button
+              onClick={() => {
+                handleStatusChange("Canceled");
+                onClose();
+              }}
+              className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
+            >
+              Canceled
+            </button>
+          )} */}
+          {order.statusOrder && order.statusOrder.toLowerCase() === "canceled" && (
             <button
               onClick={() => {
                 handleStatusChange("Pending");
