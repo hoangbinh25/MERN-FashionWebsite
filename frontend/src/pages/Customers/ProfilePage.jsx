@@ -8,7 +8,6 @@ export default function ProfilePage() {
         lastName: user.lastName || "",
         userName: user.userName || "",
         email: user.email || "",
-        address: user.address || "",
         phone: user.phone || "",
     })
 
@@ -98,17 +97,6 @@ export default function ProfilePage() {
                         onChange={handleChange}
                         className="border rounded px-3 py-2 w-full"
                         disabled
-                    />
-                </div>
-                <div>
-                    <label className="font-semibold block mb-1">Address:</label>
-                    <input
-                        type="text"
-                        name="address"
-                        value={form.address}
-                        spellCheck={false}
-                        onChange={handleChange}
-                        className="border rounded px-3 py-2 w-full"
                     />
                 </div>
                 <div>

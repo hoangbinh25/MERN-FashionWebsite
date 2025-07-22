@@ -6,7 +6,7 @@ import { useCart } from "~/context/CartContext";
 export default function TableCart({ cartItems, reloadCart }) {
   const User = JSON.parse(localStorage.getItem("user"));
   const { fetchCartCount } = useCart();
-  
+
 
   const plusChange = async (_id, quantity) => {
     try {
@@ -46,24 +46,24 @@ export default function TableCart({ cartItems, reloadCart }) {
         >
           <div className="flex items-center gap-4 flex-1 min-w-0">
             <img
-              src={item.idProduct.image?.[0] || "https://via.placeholder.com/80"}
-              alt={item.idProduct.nameProduct}
+              src={item.idProduct?.image?.[0] || "https://via.placeholder.com/80"}
+              alt={item.idProduct?.nameProduct || "Product"}
               className="w-20 h-20 object-cover rounded flex-shrink-0"
             />
             <div className="min-w-0">
               <h2 className="text-lg font-semibold truncate">
-                {item.idProduct.nameProduct}
+                {item.idProduct?.nameProduct}
               </h2>
               <p className="text-gray-600">
                 {item.price.toLocaleString("en-US", {
                   style: "currency",
-                  currency: "USD", 
+                  currency: "USD",
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
                 })}
               </p>
               <p className="text-gray-500 text-sm">
-                Size: {item.idProduct.size} 
+                Size: {item.idProduct?.size || item.size || "N/A"}
               </p>
             </div>
           </div>

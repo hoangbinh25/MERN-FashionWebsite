@@ -70,17 +70,6 @@ export default function Banner({ bannerHeight }) {
                     </button>
                 )}
             </div>
-            {/* Nút chuyển slider chỉ hiện ở home */}
-            {config.showSlider && (
-                <>
-                    <button className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-blue-300 hover:text-blue-500">
-                        <svg width="32" height="32" fill="currentColor"><polygon points="20,8 12,16 20,24" /></svg>
-                    </button>
-                    <button className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-blue-300 hover:text-blue-500">
-                        <svg width="32" height="32" fill="currentColor"><polygon points="12,8 20,16 12,24" /></svg>
-                    </button>
-                </>
-            )}
         </section>
     );
 }

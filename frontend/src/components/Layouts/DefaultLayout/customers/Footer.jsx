@@ -15,14 +15,24 @@ export default function Footer() {
             <li><a href="#" className="hover:underline">Watches</a></li>
           </ul>
         </div>
-        {/* Help */}
+        {/* Location */}
         <div>
-          <h3 className="text-lg font-bold text-white mb-4">HELP</h3>
+          <h3 className="text-lg font-bold text-white mb-4">LOCATION</h3>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:underline">Track Order</a></li>
-            <li><a href="#" className="hover:underline">Returns</a></li>
-            <li><a href="#" className="hover:underline">Shipping</a></li>
-            <li><a href="#" className="hover:underline">FAQs</a></li>
+            <li>
+              <a
+                href="https://www.google.com/maps?q=Trinh+Van+Bo,+Nam+Tu+Liem,+Ha+Noi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline flex items-center gap-2"
+              >
+                <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
+                </svg>
+                View on Google Maps
+              </a>
+            </li>
+            <li className="text-sm text-gray-400">Trinh Van Bo, Nam Tu Liem, Ha Noi</li>
           </ul>
         </div>
         {/* Get in touch */}
