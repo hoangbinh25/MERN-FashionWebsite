@@ -7,11 +7,11 @@ import { useCart } from "~/context/CartContext";
 
 
 const menuList = [
-    { title: 'Home', path: '/user/home' },
-    { title: 'Shop', path: '/user/shop' },
-    { title: 'Blog', path: '/user/blog' },
-    { title: 'About', path: '/user/about' },
-    { title: 'Contact', path: '/user/contact' }
+    { title: 'Trang chủ', path: '/user/home' },
+    { title: 'Sản phẩm', path: '/user/shop' },
+    { title: 'Bài viết', path: '/user/blog' },
+    { title: 'Về chúng tôi', path: '/user/about' },
+    { title: 'Liên hê', path: '/user/contact' }
 
 ];
 
@@ -101,20 +101,20 @@ export default function Header() {
                                     </span>
                                 </button>
                                 {showDropdown && (
-                                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-50">
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
                                         <Link
                                             to="/user/order"
                                             className="block px-4 py-2 hover:bg-gray-100"
                                             onClick={() => setShowDropdown(false)}
                                         >
-                                            Order History
+                                            Lịch sử đơn hàng
                                         </Link>
                                         <Link
                                             to="/user/profile"
                                             className="block px-4 py-2 hover:bg-gray-100"
                                             onClick={() => setShowDropdown(false)}
                                         >
-                                            View Profile
+                                            Xem hồ sơ
                                         </Link>
                                         <button
                                             className="block w-full text-left px-4 py-2 hover:bg-gray-100"
@@ -122,7 +122,7 @@ export default function Header() {
                                                 logout();
                                                 navigate("/auth/login")
                                             }}>
-                                            Logout
+                                            Đăng xuất
                                         </button>
                                     </div>
                                 )}

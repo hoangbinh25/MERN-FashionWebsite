@@ -43,14 +43,14 @@ export default function LoginForm() {
         e.preventDefault();
         let newErrors = {};
         if (!email) {
-            newErrors.email = "Please enter the email.";
+            newErrors.email = "Vui lòng nhập email.";
         } else if (!validateEmail(email)) {
-            newErrors.email = "You have entered the wrong email.";
+            newErrors.email = "Bạn đã nhập sai email";
         }
         if (!password) {
-            newErrors.password = "Please enter the password.";
+            newErrors.password = "Vui lòng nhập mật khẩu";
         } else if (!validatePassword(password)) {
-            newErrors.password = "The password must be at least 8 characters, with uppercase, regular letters, numbers and special characters.";
+            newErrors.password = "Mật khẩu bao gồm 8 kí tự, chữ cái viết hoa, số và kí tự đặc biệt.";
         }
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) return;
@@ -67,14 +67,14 @@ export default function LoginForm() {
                     navigate("/user/home");
                 }
             } else {
-                if (res.message && res.message.toLowerCase().includes("email does not exist")) {
-                    setErrors((prev) => ({ ...prev, email: "Email does not exist." }));
+                if (res.message && res.message.toLowerCase().includes("Email không đã tồn tại.")) {
+                    setErrors((prev) => ({ ...prev, email: "Email không đã tồn tại" }));
                 } else {
                     toast.error(error.response.data.message);
                 }
             }
         } catch (error) {
-            toast.error("Please check your email or password");
+            toast.error("Vui lòng kiểm tra lại email và mật khẩu của bạn.");
             return
         }
     }
@@ -83,7 +83,7 @@ export default function LoginForm() {
         <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email address
+                    Email
                 </label>
                 <div className="mt-1">
                     <input
@@ -101,7 +101,7 @@ export default function LoginForm() {
 
             <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Password
+                    Mật khẩu
                 </label>
                 <div className="relative mt-1">
                     <input
@@ -140,22 +140,9 @@ export default function LoginForm() {
             </div>
 
             <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                    <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                        defaultChecked
-                    />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                        Remember me
-                    </label>
-                </div>
-
                 <div className="text-sm">
                     <Link to="/auth/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
-                        Forgot your password?
+                        Quên mật khẩu?
                     </Link>
                 </div>
             </div>
@@ -165,7 +152,7 @@ export default function LoginForm() {
                     type="submit"
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Sign in
+                    Đăng nhập
                 </button>
             </div>
         </form>
