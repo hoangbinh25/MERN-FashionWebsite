@@ -4,17 +4,21 @@ import { updateOrderStatus as updateOrderStatusAPI } from "~/services/orderServi
 const StatusBadge = ({ status }) => {
   let color, text;
   switch (status) {
-    case "Pending":
+    case "pending":
       color = "bg-yellow-100 text-yellow-800 border-yellow-300";
-      text = "Pending";
+      text = "Chờ xác nhận";
       break;
     case "Shipped":
       color = "bg-green-100 text-green-800 border-green-300";
-      text = "Shipped";
+      text = "Đang giao";
       break;
     case "Cancelled":
       color = "bg-red-100 text-red-700 border-red-300";
-      text = "Cancelled";
+      text = "Hủy";
+      break;
+    case "Delivered":
+      color = "bg-lime-100 text-lime-500";
+      text = "Đã nhận";
       break;
     default:
       color = "bg-gray-100 text-gray-700 border-gray-300";
@@ -34,7 +38,7 @@ function getTotal(orderDetail) {
 
 function formatUSD(vnd) {
   const usd = vnd;
-  return usd.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  return usd.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 }
 
 export default function OrderDetail({ order, onClose }) {
@@ -54,7 +58,7 @@ export default function OrderDetail({ order, onClose }) {
   if (!order) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg relative animate-fadeIn flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-screen-lg relative animate-fadeIn flex flex-col max-h-[90vh]">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl"
@@ -72,15 +76,15 @@ export default function OrderDetail({ order, onClose }) {
           <div className="mb-4 p-4 rounded-lg border border-indigo-100 bg-indigo-50/40">
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 min-w-[120px]">
-                <div className="text-xs text-gray-500 font-semibold">Order ID</div>
+                <div className="text-xs text-gray-500 font-semibold">Mã đơn hàng</div>
                 <div className="font-mono text-sm break-all whitespace-pre-line">{order._id}</div>
               </div>
               <div className="flex-1 min-w-[120px]">
-                <div className="text-xs text-gray-500 font-semibold">Order Date</div>
+                <div className="text-xs text-gray-500 font-semibold">Ngày đặt</div>
                 <div className="text-sm">{new Date(order.createdAt).toLocaleDateString()}</div>
               </div>
               <div className="flex-1 min-w-[120px]">
-                <div className="text-xs text-gray-500 font-semibold">Status</div>
+                <div className="text-xs text-gray-500 font-semibold">Trạng thái</div>
                 <StatusBadge status={order.statusOrder} />
               </div>
             </div>
@@ -89,22 +93,22 @@ export default function OrderDetail({ order, onClose }) {
           <div className="mb-4 p-4 rounded-lg border border-green-100 bg-green-50/40">
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 min-w-[120px]">
-                <div className="text-xs text-gray-500 font-semibold">Customer</div>
+                <div className="text-xs text-gray-500 font-semibold">Khách hàng</div>
                 <div className="text-sm">{order.fullName}</div>
               </div>
               <div className="flex-1 min-w-[120px]">
-                <div className="text-xs text-gray-500 font-semibold">Phone</div>
+                <div className="text-xs text-gray-500 font-semibold">Số điện thoại</div>
                 <div className="text-sm">{order.phone}</div>
               </div>
               <div className="flex-1 min-w-[120px]">
-                <div className="text-xs text-gray-500 font-semibold">Address</div>
+                <div className="text-xs text-gray-500 font-semibold">Địa chỉ</div>
                 <div className="text-sm">{order.address}</div>
               </div>
             </div>
           </div>
           {/* Product List */}
           <div className="mb-4 p-4 rounded-lg border border-blue-100 bg-blue-50/40">
-            <div className="font-semibold text-indigo-700 mb-2">Products</div>
+            <div className="font-semibold text-indigo-700 mb-2">Sản phẩm</div>
             <ul className="list-disc pl-6 space-y-1">
               {order.orderDetail && order.orderDetail.length > 0 ? (
                 order.orderDetail.map((item, idx) => (
@@ -120,7 +124,7 @@ export default function OrderDetail({ order, onClose }) {
                   </li>
                 ))
               ) : (
-                <li>No products found.</li>
+                <li>Không tìm thấy sản phẩm.</li>
               )}
             </ul>
           </div>
@@ -142,7 +146,7 @@ export default function OrderDetail({ order, onClose }) {
                   }}
                   className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
                 >
-                  Shipped
+                  Đang giao
                 </button>
                 <button
                   onClick={() => {
@@ -151,7 +155,7 @@ export default function OrderDetail({ order, onClose }) {
                   }}
                   className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 ml-2 rounded-lg text-sm font-semibold shadow transition"
                 >
-                  Canceled
+                  Hủy
                 </button>
               </>
             )}
@@ -163,7 +167,7 @@ export default function OrderDetail({ order, onClose }) {
                 }}
                 className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
               >
-                Delivered
+                Đã giao
               </button>
             )}
             {order.statusOrder && order.statusOrder.toLowerCase() === "canceled" && (
@@ -174,14 +178,14 @@ export default function OrderDetail({ order, onClose }) {
                 }}
                 className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
               >
-                Pending
+                Chờ xác nhận
               </button>
             )}
             <button
               onClick={onClose}
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
             >
-              Close
+              Đóng
             </button>
           </div>
         </div>

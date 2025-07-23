@@ -93,7 +93,7 @@ export default function UserTable() {
     <div className="bg-white shadow-xl rounded-2xl p-2 sm:p-4 md:p-6">
       {/* Tiêu đề và nút tạo người dùng */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">User Management</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">Quản lý người dùng</h2>
         <div className="flex gap-2 w-full sm:w-auto">
           <button
             className="block md:hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg font-semibold items-center justify-center"
@@ -108,7 +108,7 @@ export default function UserTable() {
             aria-label="Create User"
           >
             <Plus size={20} className="sm:mr-1" />
-            <span className="sm:inline">Create User</span>
+            <span className="sm:inline">Thêm người dùng</span>
           </button>
         </div>
       </div>
@@ -117,13 +117,13 @@ export default function UserTable() {
       <div className={`${showFilter ? "block" : "hidden"} md:block mb-4`}>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Search</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Tìm kiếm</label>
             <input
               type="text"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
-              placeholder="Search by . . ."
+              placeholder="Tìm kiếm theo tên . . ."
             />
           </div>
           <div className="flex-1">

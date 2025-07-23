@@ -1,11 +1,8 @@
 import { useLocation } from "react-router-dom";
-
+import bannerImg from "~/assets/img/banner.png";
 const bannerConfigs = {
     home: {
-        img: "https://themewagon.github.io/cozastore/images/slide-02.jpg",
-        h4: "Men New-Season",
-        h1: "JACKETS & COATS",
-        button: "SHOP NOW",
+        img: bannerImg,
         showSlider: true,
     },
     blog: {

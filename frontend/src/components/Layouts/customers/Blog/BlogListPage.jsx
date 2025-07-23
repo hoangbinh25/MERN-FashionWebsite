@@ -25,12 +25,12 @@ export default function BlogListPage() {
     useEffect(() => {
         async function fetchBlogs() {
             try {
-                const res = await getAllBlog({ page: pagination.currentPage, limit: 3 }); // lấy tất cả blog
+                const res = await getAllBlog({ page: pagination.currentPage, limit: 6 }); // lấy tất cả blog
                 setBlogs(res.data || []);
                 setPagination({
-                    currentPage: res.pageCurrent || 1,
-                    totalPages: res.totalPage || 1,
-                    totalItems: res.totalProduct || 0,
+                    currentPage: res.pagination?.pageCurrent || 1,
+                    totalPages: res.pagination?.totalPage || 1,
+                    totalItems: res.pagination?.totalProduct || 0,
                 });
             } catch (err) {
                 setBlogs([]);
@@ -71,11 +71,15 @@ export default function BlogListPage() {
                     ))}
                 </div>
             </div>
-            <Paginate
-                currentPage={pagination.currentPage}
-                totalPages={pagination.totalPages}
-                onPageChange={handlePageChange}
-            />
+
+            <div className="mt-6">
+                <Paginate
+                    currentPage={pagination.currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={handlePageChange}
+                />
+            </div>
+
 
         </>
 
