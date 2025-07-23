@@ -64,7 +64,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
       onSave();
     } catch (error) {
       console.error("Failed to create product:", error);
-      setError(error.response?.data?.message || "Failed to create product");
+      setError(error.response?.data?.message || "Thêm sản phẩm thất bại");
     } finally {
       setLoading(false);
     }
@@ -107,14 +107,13 @@ export default function ProductCreate({ categories, onClose, onSave }) {
             </div>
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="text-xs sm:text-sm font-semibold text-gray-600">Price (VND)</label>
+                <label className="text-xs sm:text-sm font-semibold text-gray-600">Price (VNĐ)</label>
                 <input
                   type="number"
                   name="price"
-                  value={form.price}
+                  value={form.price || ""}
                   onChange={handleChange}
                   className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                  min={0}
                   step="0.01"
                   required
                 />
@@ -139,8 +138,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
                   </select>
                   <input
                     type="number"
-                    min={0}
-                    value={v.quantity}
+                    value={v.quantity || ""}
                     onChange={(e) => handleVariationChange(idx, "quantity", e.target.value)}
                     placeholder="Quantity"
                     className="border rounded px-2 py-1 w-24 text-sm"

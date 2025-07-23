@@ -94,9 +94,9 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                 <div className="flex flex-col gap-4 sm:gap-6">
                     <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                         <div className="w-full sm:w-32 md:w-36">
-                            <label className="block text-sm xs:text-base sm:text-lg font-medium mb-1">Size</label>
+                            <label className="block text-sm xs:text-base sm:text-lg font-medium mb-1">Kíck cỡ</label>
                             <select value={size} onChange={e => setSize(e.target.value)} className="w-full border rounded px-3 py-2 sm:px-4 sm:py-3">
-                                <option value="">Choose an option</option>
+                                <option value="">Chọn</option>
                                 {Array.isArray(product.sizes) && product.sizes.length > 0 ? (
                                     product.sizes.map((sz, idx) => (
                                         <option key={idx} value={sz}>{sz}</option>
@@ -110,9 +110,9 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                         </div>
                     </div>
                     <div className="flex items-center gap-3 sm:gap-4">
-                        <label className="block text-sm xs:text-base sm:text-lg font-medium">Quantity</label>
+                        <label className="block text-sm xs:text-base sm:text-lg font-medium">Số lượng:</label>
                         <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => Math.max(1, q - 1))}>-</button>
-                        <input type="number" value={quantity} min={1} readOnly className="w-12 xs:w-14 sm:w-16 text-center border rounded py-1 sm:py-2" />
+                        <input type="text" value={quantity} min={1} className="w-12 xs:w-14 sm:w-16 text-center border rounded py-1 sm:py-2" />
                         <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => q + 1)}>+</button>
                     </div>
                     <button className="w-full bg-indigo-500 text-white font-semibold py-3 sm:py-4 rounded mt-4 sm:mt-6 hover:bg-indigo-600 transition"
@@ -132,7 +132,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                                 onClose();
                             }
                         }}
-                    >ADD TO CART</button>
+                    >Thêm vào giỏ hàng</button>
                 </div>
             </div>
         </div>

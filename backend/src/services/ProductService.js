@@ -29,7 +29,7 @@ const updateProductIsActive = async (productId, isActive) => {
 };
 
 // Get all product
-const getProducts = async (limit, page, sort, nameProduct, category, color, size, minPrice, maxPrice) => {
+const getProducts = async (limit, page, sort, nameProduct, category, size, minPrice, maxPrice) => {
   return new Promise(async (resolve, reject) => {
     try {
       let objectFilter = {};
@@ -39,9 +39,7 @@ const getProducts = async (limit, page, sort, nameProduct, category, color, size
       if (category) {
         objectFilter.category = category;
       }
-      if (color) {
-        objectFilter.color = color;
-      }
+
       if (size) {
         objectFilter.size = size;
       }
@@ -79,10 +77,12 @@ const getProducts = async (limit, page, sort, nameProduct, category, color, size
         }));
       } else {
         totalProduct = await Product.countDocuments(objectFilter);
-        let objectSort = { nameProduct: 1 };
+        let objectSort = { createdAt: -1 };
         if (sort) {
           const [sortField, sortOrder] = sort.split('-');
           objectSort = { [sortField]: sortOrder === 'desc' ? -1 : 1 };
+        } else {
+          objectSort = { createdAt: -1 }
         }
         getAllProduct = await Product.find(objectFilter)
           .limit(limit)
@@ -134,9 +134,9 @@ const createProduct = async (newProduct, files) => {
     try {
       const checkProduct = await Product.findOne({ nameProduct });
       if (checkProduct) {
-        return reject({
+        return res.status(400).json({
           status: "Error",
-          message: "The product name already exists",
+          message: "Tên sản phẩm đã tồn tại",
         });
       }
 
@@ -154,7 +154,7 @@ const createProduct = async (newProduct, files) => {
       try {
         parsedVariations = typeof variations === "string" ? JSON.parse(variations) : variations; // sẽ là array [{ size, quantity }]
       } catch (err) {
-        return reject({ status: 'Error', message: 'Invalid variations format' });
+        return reject({ status: 'Error', message: 'Định dạng không hợp lệ' });
       }
 
       // Tạo sản phẩm
@@ -169,7 +169,7 @@ const createProduct = async (newProduct, files) => {
 
       resolve({
         status: "OK",
-        message: "Product created successfully",
+        message: "Thêm sản phẩm mới thành công",
         data: createdProduct,
       });
     } catch (error) {
@@ -179,7 +179,6 @@ const createProduct = async (newProduct, files) => {
   });
 };
 
-
 const updateProduct = async (productId, data, files) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -187,7 +186,7 @@ const updateProduct = async (productId, data, files) => {
       if (!product) {
         return reject({
           status: "Error",
-          message: "Product not found",
+          message: "Không tìm thấy sản phẩm",
         });
       }
 
@@ -262,14 +261,14 @@ const deleteProduct = async (productId) => {
       if (!checkProduct) {
         return reject({
           status: 'Error',
-          message: 'The product is not defined'
+          message: 'Sản phẩm không tồn tại'
         })
       }
 
       await Product.findByIdAndDelete(productId)
       resolve({
         status: 'OK',
-        message: `Delete product with ${productId} success`
+        message: `Xóa sản phẩm với ${productId} thành công`
       })
 
     } catch (error) {

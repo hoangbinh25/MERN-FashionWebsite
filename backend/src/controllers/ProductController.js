@@ -9,7 +9,6 @@ const getProducts = async (req, res) => {
             sort,
             nameProduct,
             category,
-            color,
             size,
             minPrice,
             maxPrice
@@ -21,7 +20,6 @@ const getProducts = async (req, res) => {
             sort,
             nameProduct,
             category,
-            color,
             size,
             minPrice,
             maxPrice

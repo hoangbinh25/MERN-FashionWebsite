@@ -2,20 +2,20 @@ import React from "react";
 
 const passwordRules = [
     {
-        label: "At least 8 characters length",
+        label: "Đô dài mật khẩu cần 8 kí tự trở lên",
         test: (pw) => pw.length >= 8,
     },
     {
-        label: "At least 1 number (0...9)",
+        label: "Ít nhất 1 số (0...9)",
         test: (pw) => /\d/.test(pw),
     }, {
-        label: "At least 1 lowercase letter (a...z)",
+        label: "Ít nhất 1 chữ cái thường (a...z)",
         test: (pw) => /[a-z]/.test(pw),
     }, {
-        label: "At least 1 uppercase letter (A...Z)",
+        label: "Ít nhất 1 chữ viết hoa (A...Z)",
         test: (pw) => /[A-Z]/.test(pw),
     }, {
-        label: "At least 1 special symbol (!...$)",
+        label: "Ít nhất 1 kí tự đặc biệt (!...$)",
         test: (pw) => /[!@#$%^&*(),.?\":{}|<>]/.test(pw),
     },
 ]
@@ -42,7 +42,7 @@ const CheckIcon = ({ active }) => {
 export default function PasswordValidator({ password }) {
     return (
         <div className="rounded-lg border p-4 bg-white shadow mt-4">
-            <div className="mb-2 font-semibold">Password must contains</div>
+            <div className="mb-2 font-semibold">Mật khẩu bao gồm:</div>
             <ul className="space-y-1">
                 {passwordRules.map((rule, idx) => {
                     const passed = rule.test(password);

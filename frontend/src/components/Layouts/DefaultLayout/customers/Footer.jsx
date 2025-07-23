@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Categories */}
         <div>
-          <h3 className="text-lg font-bold text-white mb-4">CATEGORIES</h3>
+          <h3 className="text-lg font-bold text-white mb-4">Danh mục</h3>
           <ul className="space-y-2">
             <li><a href="#" className="hover:underline">Women</a></li>
             <li><a href="#" className="hover:underline">Men</a></li>
@@ -17,7 +17,7 @@ export default function Footer() {
         </div>
         {/* Location */}
         <div>
-          <h3 className="text-lg font-bold text-white mb-4">LOCATION</h3>
+          <h3 className="text-lg font-bold text-white mb-4">Vị trí</h3>
           <ul className="space-y-2">
             <li>
               <a
@@ -29,7 +29,7 @@ export default function Footer() {
                 <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
                 </svg>
-                View on Google Maps
+                Xem trên Google Maps
               </a>
             </li>
             <li className="text-sm text-gray-400">Trinh Van Bo, Nam Tu Liem, Ha Noi</li>
@@ -37,9 +37,9 @@ export default function Footer() {
         </div>
         {/* Get in touch */}
         <div>
-          <h3 className="text-lg font-bold text-white mb-4">GET IN TOUCH</h3>
+          <h3 className="text-lg font-bold text-white mb-4">Liên hệ</h3>
           <p className="mb-4 text-sm">
-            Any questions? Let us know in store at Trinh Van Bo, Nam Tu Liem, Ha Noi or call us on (+84 912345678)
+            Nếu có thắc mắc gì, vui lòng liên hệ với chung tôi theo số (+84 912345678)
           </p>
           <div className="flex space-x-4 text-2xl">
             {/* Facebook */}
@@ -58,7 +58,7 @@ export default function Footer() {
         </div>
         {/* Newsletter */}
         <div>
-          <h3 className="text-lg font-bold text-white mb-4">NEWSLETTER</h3>
+          <h3 className="text-lg font-bold text-white mb-4">Đăng kí nhận bản tin</h3>
           <form className="flex flex-col space-y-4">
             <input
               type="email"
@@ -69,7 +69,7 @@ export default function Footer() {
               type="submit"
               className="bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-2 rounded-full transition"
             >
-              SUBSCRIBE
+              Đăng kí
             </button>
           </form>
         </div>

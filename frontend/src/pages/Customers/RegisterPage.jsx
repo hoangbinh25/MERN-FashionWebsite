@@ -8,7 +8,7 @@ import SocialAuth from "~/components/Layouts/customers/Auth/SocialAuth";
 
 export default function RegisterPage() {
     return (
-        <AuthLayout title="Create new account">
+        <AuthLayout title="Tạo tài khoản">
             <RegisterForm />
             <AuthToggle isLogin={false} />
             <SocialAuth />
