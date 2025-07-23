@@ -20,7 +20,7 @@ export default function Paginate({ currentPage, totalPages, onPageChange }) {
   };
 
   return (
-    <nav className="flex justify-center mt-4">
+    <nav className="flex justify-center my-4">
       <ul className="inline-flex items-center space-x-1">
         <li>
           <button
@@ -34,11 +34,10 @@ export default function Paginate({ currentPage, totalPages, onPageChange }) {
         {getPages().map((page) => (
           <li key={page}>
             <button
-              className={`px-3 py-1 rounded ${
-                page === currentPage
+              className={`px-3 py-1 rounded ${page === currentPage
                   ? "bg-indigo-500 text-white"
                   : "bg-gray-200 hover:bg-gray-300"
-              }`}
+                }`}
               onClick={() => onPageChange(page)}
               disabled={page === currentPage}
             >

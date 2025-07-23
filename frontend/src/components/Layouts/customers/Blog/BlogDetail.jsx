@@ -34,25 +34,27 @@ export default function BlogDetail() {
                     alt="Blog"
                     className="w-[960px] h-[480px] mt-10 object-contain hover:scale-105 transition-all duration-300"
                 />
-                <div className="absolute top-12 left-[25rem] bg-white shadow-lg px-4 py-2 text-center rounded-lg">
-                    <div className="text-3xl font-bold text-indigo-600">22</div>
-                    <div className="text-sm text-gray-500">Jan 2018</div>
-                </div>
             </div>
 
             {/* Main Content */}
             <div className="max-w-4xl mx-auto px-6 py-12">
                 {/* Article Header */}
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-4 leading-tight">
+                    <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4 leading-snug text-center">
                         {blog.titleBlog}
                     </h1>
-                    <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                        {blog.descBlog}
+                    <p className="text-gray-500 text-base md:text-lg text-center">
+                        Fashion Tips • July 22, 2025
                     </p>
+                    {blog.descBlog?.split('\n').map((para, idx) => (
+                        <p key={idx} className="mb-5 text-[17px] leading-8 text-justify text-gray-700">
+                            {para.trim()}
+                        </p>
+                    ))}
+
 
                     {/* Author Info */}
-                    <div className="flex items-center justify-between border-b border-gray-200 pb-6">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-6 mt-6">
                         <div className="flex items-center space-x-4">
                             <img
                                 src={blog.image}
@@ -67,63 +69,6 @@ export default function BlogDetail() {
                         <div className="text-sm text-gray-500">
                             <span>5 min read</span> • <span>Fashion Tips</span>
                         </div>
-                    </div>
-                </div>
-
-                {/* Article Content */}
-                <div className="prose prose-lg max-w-none mb-12">
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        Winter doesn't mean you have to pack away your favorite dresses! With the right styling techniques and layering strategies, you can rock dresses all year round while staying cozy and chic. Here are eight inspiring ways to wear dresses during the winter months.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">1. Layer with Chunky Knits</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        One of the most popular winter dress styling techniques is layering with chunky knit sweaters. Choose a fitted dress in a neutral color and pair it with an oversized knit cardigan or sweater. This creates a beautiful contrast between the structured dress and the relaxed knit, while providing essential warmth.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">2. Add Tights and Boots</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        Don't underestimate the power of a good pair of tights! Opt for opaque tights in black, navy, or burgundy to add warmth and sophistication. Pair with ankle boots or knee-high boots for a complete winter-ready look that's both practical and stylish.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">3. Belt Your Outerwear</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        Transform your winter coat into a dress-like silhouette by adding a belt. This technique works especially well with longer coats and creates a flattering cinched waist while maintaining the elegance of your dress underneath.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">4. Mix Textures</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        Winter is the perfect time to experiment with texture mixing. Pair a silk dress with a wool coat, or a velvet dress with a leather jacket. The contrast of textures adds visual interest and creates a more sophisticated, layered look.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">5. Accessorize with Scarves</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        A beautiful scarf can transform any dress into a winter-appropriate outfit. Choose scarves in complementary colors and experiment with different tying techniques. A silk scarf adds elegance, while a chunky knit scarf provides both warmth and style.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">6. Choose Winter-Appropriate Fabrics</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        When shopping for winter dresses, look for fabrics like wool, velvet, corduroy, or thick cotton. These materials provide natural insulation and feel more seasonally appropriate than lightweight summer fabrics.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">7. Layer with Blazers</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        A well-fitted blazer can instantly make any dress more professional and warm. Choose blazers in neutral colors like black, navy, or camel for maximum versatility, or opt for bold colors to make a statement.
-                    </p>
-
-                    <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-4">8. Don't Forget the Details</h2>
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        Small details can make a big difference in winter dress styling. Add a statement belt, choose dresses with interesting necklines that work well with scarves, or opt for dresses with built-in sleeves for extra warmth.
-                    </p>
-
-                    <div className="bg-gray-50 p-6 rounded-lg my-8">
-                        <h3 className="text-xl font-bold text-gray-800 mb-3">Pro Tips:</h3>
-                        <ul className="list-disc list-inside text-gray-700 space-y-2">
-                            <li>Always keep a pair of emergency tights in your bag</li>
-                            <li>Invest in quality thermal underwear for extra warmth</li>
-                            <li>Choose dresses with longer hemlines for better coverage</li>
-                            <li>Don't be afraid to mix patterns and colors</li>
-                        </ul>
                     </div>
                 </div>
 

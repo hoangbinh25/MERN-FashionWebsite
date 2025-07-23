@@ -5,19 +5,19 @@ const founders = [
     {
         name: 'Nguyen Thanh Tung',
         role: 'Co-Founder & CEO',
-        bio: 'With a strong passion for fashion and business, Tung leads TBN Store with a vision to expand the brand far and wide.',
+        bio: 'Với niềm đam mê mãnh liệt với thời trang và kinh doanh, Tùng dẫn dắt TBN Store với tầm nhìn mở rộng thương hiệu ngày càng lớn mạnh.',
         imageUrl: 'https://res.cloudinary.com/djjrooopy/image/upload/v1752403066/20231006_123545_j7ggcd.jpg',
     },
     {
         name: 'Trinh Cam Nhung',
         role: 'Co-Founder & Creative Director',
-        bio: 'Nhung breathes life into every product. She is responsible for design, ensuring each collection is unique and trendy.',
+        bio: 'Nhung thổi hồn vào từng sản phẩm. Cô chịu trách nhiệm thiết kế, đảm bảo mỗi bộ sưu tập đều độc đáo và hợp thời trang.',
         imageUrl: 'https://res.cloudinary.com/djjrooopy/image/upload/v1752403076/z6800473229717_8a117a46944926632ffab042622c8bb3_gtsq6j.jpg',
     },
     {
         name: 'Hoang Phu Binh',
         role: 'Co-Founder & CTO',
-        bio: 'Binh is the tech expert behind the smooth shopping experience, always updating to bring the best convenience.',
+        bio: 'Bình là chuyên gia công nghệ đứng sau trải nghiệm mua sắm mượt mà, luôn cập nhật để mang lại sự tiện lợi tốt nhất.',
         imageUrl: 'https://res.cloudinary.com/djjrooopy/image/upload/v1752403073/z6800470976260_d71ef6b8d2bb7d02887f4a7b326707ba_g5wsww.jpg',
     },
 ];
@@ -40,8 +40,9 @@ export default function About() {
                     {/* --- Founders --- */}
                     <div className="mb-20">
                         <div className="text-center mb-12">
-                            <h2 className="text-4xl font-bold text-gray-900">Founders</h2>
-                            <p className="mt-3 text-gray-600">We are friends sharing the same passion.</p>
+                            <h2 className="text-4xl font-bold text-gray-900">Người Sáng Lập</h2>
+                            <p className="mt-3 text-gray-600">Chúng tôi là những người bạn cùng chung đam mê.</p>
+
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
                             {founders.map((founder) => (
@@ -72,9 +73,9 @@ export default function About() {
                             <div className="mx-auto text-indigo-600 mb-4">
                                 <Users size={48} />
                             </div>
-                            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
+                            <h2 className="text-4xl font-bold text-gray-900 mb-4">Hành Trình Của Chúng Tôi</h2>
                             <p className="text-gray-600 leading-relaxed text-lg">
-                                TBN Store was founded from friendship and a shared passion for fashion by Tung, Nhung, and Binh. We realized that finding stylish, quality, and affordable clothing in Vietnam was a challenge. Thus, the idea of an online store where everyone could easily access the latest trends was born. Starting from a small room with a few sewing machines, we worked tirelessly to research the market, handpick every fabric, and perfect every stitch. TBN Store is our dedication, our effort to bring you not just clothes, but confidence and style.
+                                TBN Store được thành lập từ tình bạn và đam mê thời trang của Tùng, Nhung và Bình. Chúng tôi nhận ra rằng việc tìm kiếm những bộ quần áo hợp thời, chất lượng và giá cả phải chăng tại Việt Nam là một thách thức. Vì vậy, ý tưởng về một cửa hàng trực tuyến giúp mọi người dễ dàng tiếp cận xu hướng mới đã ra đời. Bắt đầu từ một căn phòng nhỏ với vài chiếc máy may, chúng tôi đã nỗ lực không ngừng để nghiên cứu thị trường, lựa chọn từng loại vải và hoàn thiện từng đường kim mũi chỉ. TBN Store là tâm huyết, là nỗ lực để mang đến cho bạn không chỉ quần áo, mà còn là sự tự tin và phong cách.
                             </p>
                         </div>
                     </div>
@@ -82,18 +83,18 @@ export default function About() {
                     {/* --- Shopping Features --- */}
                     <div>
                         <div className="text-center mb-12">
-                            <h2 className="text-4xl font-bold text-gray-900">Shopping Made Easier Than Ever</h2>
-                            <p className="mt-3 text-gray-600">Enjoy a seamless and fast online shopping experience at TBN Store.</p>
+                            <h2 className="text-4xl font-bold text-gray-900">Mua Sắm Dễ Dàng Hơn Bao Giờ Hết</h2>
+                            <p className="mt-3 text-gray-600">Trải nghiệm mua sắm trực tuyến mượt mà và nhanh chóng tại TBN Store.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-                            <Feature icon={<ShoppingCart size={36} />} title="Smooth Experience">
-                                Friendly website interface, easy to search and select products with just a few clicks.
+                            <Feature icon={<ShoppingCart size={36} />} title="Trải Nghiệm Mượt Mà">
+                                Giao diện thân thiện, dễ tìm kiếm và chọn sản phẩm chỉ với vài cú nhấp.
                             </Feature>
-                            <Feature icon={<Zap size={36} />} title="Fast Payment">
-                                Multiple secure payment methods supported, orders processed in seconds.
+                            <Feature icon={<Zap size={36} />} title="Thanh Toán Nhanh Chóng">
+                                Hỗ trợ nhiều phương thức thanh toán an toàn, xử lý đơn hàng chỉ trong vài giây.
                             </Feature>
-                            <Feature icon={<Truck size={36} />} title="Nationwide Delivery">
-                                We partner with reputable shipping companies to deliver quickly to your doorstep.
+                            <Feature icon={<Truck size={36} />} title="	Giao Hàng Toàn Quốc">
+                                Chúng tôi hợp tác với các đơn vị vận chuyển uy tín để giao hàng nhanh chóng tận nơi.
                             </Feature>
                         </div>
                     </div>

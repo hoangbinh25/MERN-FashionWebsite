@@ -60,7 +60,7 @@ export default function UserDetail({ user, onClose, onSave }) {
       };
       await updateUser(form._id, updateData);
       if (onSave) onSave();
-      
+
       onClose();
     } catch (err) {
       setError("Update failed. Please try again.");
@@ -174,7 +174,6 @@ export default function UserDetail({ user, onClose, onSave }) {
                 value={form.phone}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                required
               />
             </div>
             <div>
@@ -185,7 +184,6 @@ export default function UserDetail({ user, onClose, onSave }) {
                 value={form.address}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                required
               />
             </div>
             <div className="flex items-center gap-2">

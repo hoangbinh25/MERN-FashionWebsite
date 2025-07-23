@@ -54,11 +54,11 @@ export default function ProfilePage() {
     };
 
     return (
-        <div className="max-w-xl mx-auto mt-10 bg-white shadow rounded-lg p-8">
-            <h2 className="text-2xl font-bold mb-6 text-indigo-600 text-center">Profile</h2>
+        <div className="max-w-xl mx-auto mt-10 bg-white shadow rounded-lg p-8 mb-10">
+            <h2 className="text-2xl font-bold mb-6 text-indigo-600 text-center">Hồ sơ của bạn</h2>
             <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
-                    <label className="font-semibold block mb-1">Full name:</label>
+                    <label className="font-semibold block mb-1">Tên:</label>
                     <div className="flex gap-2">
                         <input
                             type="text"
@@ -79,7 +79,7 @@ export default function ProfilePage() {
                     </div>
                 </div>
                 <div>
-                    <label className="font-semibold block mb-1">Name profile:</label>
+                    <label className="font-semibold block mb-1">Tên hồ sơ:</label>
                     <input
                         type="text"
                         name="userName"
@@ -100,7 +100,7 @@ export default function ProfilePage() {
                     />
                 </div>
                 <div>
-                    <label className="font-semibold block mb-1">Phone:</label>
+                    <label className="font-semibold block mb-1">Số điện thoại:</label>
                     <input
                         type="text"
                         name="phone"
@@ -113,7 +113,7 @@ export default function ProfilePage() {
                     type="submit"
                     className="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700 transition"
                 >
-                    Save
+                    Cập nhật
                 </button>
                 {message && <div className="text-green-600 text-center mt-2">{message}</div>}
             </form>

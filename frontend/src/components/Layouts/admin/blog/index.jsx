@@ -65,7 +65,7 @@ export default function BlogTable() {
     <div className="bg-white shadow-xl rounded-2xl p-2 sm:p-4 md:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">Blog Management</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">Quản lý blog</h2>
         <div className="flex gap-2 w-full sm:w-auto">
           <button
             className="block md:hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg font-semibold items-center justify-center"
@@ -80,7 +80,7 @@ export default function BlogTable() {
             aria-label="Create Blog"
           >
             <Plus size={20} className="sm:mr-1" />
-            <span className="sm:inline">Create Blog</span>
+            <span className="sm:inline">Tạo blog</span>
           </button>
         </div>
       </div>
@@ -89,26 +89,14 @@ export default function BlogTable() {
       <div className={`${showFilter ? "block" : "hidden"} md:block mb-4`}>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 w-full md:w-1/3">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Search</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Tìm kiếm</label>
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by title..."
+              placeholder="Tìm kiếm theo tiêu đề"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             />
-          </div>
-
-          <div className="flex-1 w-full md:w-1/3">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Order</label>
-            <select
-              value={order}
-              onChange={(e) => setOrder(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            >
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
           </div>
         </div>
       </div>
@@ -118,7 +106,7 @@ export default function BlogTable() {
         {loading ? (
           <p>Loading...</p>
         ) : blogs.length === 0 ? (
-          <p>No blogs found</p>
+          <p>Không có blog nào.</p>
         ) : (
           blogs.map((blog) => (
             <div
@@ -154,18 +142,18 @@ export default function BlogTable() {
           <thead className="bg-gray-100 text-gray-700 uppercase">
             <tr>
               <th className="px-2 py-3 border-b">#</th>
-              <th className="px-2 py-3 border-b">Image</th>
-              <th className="px-2 py-3 border-b">Title</th>
-              <th className="px-2 py-3 border-b">Description</th>
-              <th className="px-2 py-3 border-b">Created At</th>
-              <th className="px-2 py-3 border-b text-center">Actions</th>
+              <th className="px-2 py-3 border-b">Ảnh</th>
+              <th className="px-2 py-3 border-b">Tiêu đề</th>
+              <th className="px-2 py-3 border-b">Mô tả</th>
+              <th className="px-2 py-3 border-b">Tạo ngày</th>
+              <th className="px-2 py-3 border-b text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr><td colSpan="6">Loading...</td></tr>
             ) : blogs.length === 0 ? (
-              <tr><td colSpan="6">No blogs found</td></tr>
+              <tr><td colSpan="6">Không có blog nào.</td></tr>
             ) : (
               blogs.map((blog, index) => (
                 <tr
@@ -190,7 +178,7 @@ export default function BlogTable() {
                         handleDelete(blog._id);
                       }}
                     >
-                      Delete
+                      Xóa
                     </button>
                   </td>
                 </tr>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllBlog } from "~/services/blogService";
 import { Link } from "react-router-dom";
-import Paginate from "../../DefaultLayout/admin/Paginate";
+import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 
 export default function BlogListPage() {
     const [blogs, setBlogs] = useState([]);
@@ -25,7 +25,7 @@ export default function BlogListPage() {
     useEffect(() => {
         async function fetchBlogs() {
             try {
-                const res = await getAllBlog({}); // lấy tất cả blog
+                const res = await getAllBlog({ page: pagination.currentPage, limit: 3 }); // lấy tất cả blog
                 setBlogs(res.data || []);
                 setPagination({
                     currentPage: res.pageCurrent || 1,
@@ -39,15 +39,15 @@ export default function BlogListPage() {
             }
         }
         fetchBlogs();
-    }, []);
+    }, [pagination.currentPage]);
 
     if (loading) return <div className="text-center py-10">Loading...</div>;
-    if (!blogs.length) return <div className="text-center py-10 text-gray-500">No blogs found.</div>;
+    if (!blogs.length) return <div className="text-center py-10 text-gray-500">Không có blog nào.</div>;
 
     return (
         <>
             <div className="max-w-5xl mx-auto px-4 py-10">
-                <h1 className="text-3xl font-bold mb-8 text-center">All Blogs</h1>
+                <h1 className="text-3xl font-bold mb-8 text-center">Tất cả bài viết</h1>
                 <div className="grid md:grid-cols-3 gap-8">
                     {blogs.map(blog => (
                         <Link
@@ -76,22 +76,7 @@ export default function BlogListPage() {
                 totalPages={pagination.totalPages}
                 onPageChange={handlePageChange}
             />
-            {showDetail && selectedProduct && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-lg max-w-5xl w-full relative">
-                        <button
-                            className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl font-bold z-30"
-                            onClick={async () => {
-                                await handleCloseDetail();
-                                await fetchCartCount();
-                            }}
-                        >
-                            x
-                        </button>
-                        <ProductDetail product={selectedProduct} onClose={handleCloseDetail} hideCloseButton={true} />
-                    </div>
-                </div>
-            )}
+
         </>
 
     );

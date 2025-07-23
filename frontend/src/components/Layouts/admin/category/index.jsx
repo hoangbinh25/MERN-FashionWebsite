@@ -66,7 +66,7 @@ export default function CategoryTable() {
     <div className="bg-white shadow-xl rounded-2xl p-2 sm:p-4 md:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">Category Management</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">Quản lý danh mục</h2>
         <div className="flex gap-2 w-full sm:w-auto">
           <button
             className="block md:hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg font-semibold items-center justify-center"
@@ -81,7 +81,7 @@ export default function CategoryTable() {
             aria-label="Create Category"
           >
             <Plus size={20} className="sm:mr-1" />
-            <span className="sm:inline">Create Category</span>
+            <span className="sm:inline">Thêm danh mục</span>
           </button>
         </div>
       </div>
@@ -90,26 +90,14 @@ export default function CategoryTable() {
       <div className={`${showFilter ? "block" : "hidden"} md:block mb-4`}>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 w-full md:w-1/3">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Search</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Tìm kiếm</label>
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name..."
+              placeholder="Tìm kiếm theo tên"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             />
-          </div>
-         
-          <div className="flex-1 w-full md:w-1/3">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Order</label>
-            <select
-              value={order}
-              onChange={(e) => setOrder(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            >
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
           </div>
         </div>
       </div>
@@ -155,16 +143,16 @@ export default function CategoryTable() {
           <thead className="bg-gray-100 text-gray-700 uppercase">
             <tr>
               <th className="px-2 py-3 border-b">#</th>
-              <th className="px-2 py-3 border-b">Name</th>
-              <th className="px-2 py-3 border-b">Created At</th>
-              <th className="px-2 py-3 border-b text-center">Actions</th>
+              <th className="px-2 py-3 border-b">Tên</th>
+              <th className="px-2 py-3 border-b">Ngày thêm</th>
+              <th className="px-2 py-3 border-b text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr><td colSpan="4">Loading...</td></tr>
             ) : categories.length === 0 ? (
-              <tr><td colSpan="4">No categories found</td></tr>
+              <tr><td colSpan="4">Không có danh mục.</td></tr>
             ) : (
               categories.map((cat, index) => (
                 <tr
@@ -183,7 +171,7 @@ export default function CategoryTable() {
                         handleDelete(cat._id);
                       }}
                     >
-                      Delete
+                      Xóa
                     </button>
 
                   </td>

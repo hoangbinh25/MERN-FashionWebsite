@@ -23,8 +23,8 @@ export default function OrderHistoryPage() {
     }, []);
 
     return (
-        <div className="max-w-6xl mx-auto py-10 px-2 md:px-4 min-h-screen">
-            <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Order History</h2>
+        <div className="max-w-screen-2xl mx-auto py-10 px-2 md:px-4 min-h-screen">
+            <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Lịch sử đơn hàng</h2>
             {selectedOrder ? (
                 <OrderDetail order={selectedOrder} onBack={() => setSelectedOrder(null)} />
             ) : (
@@ -32,13 +32,13 @@ export default function OrderHistoryPage() {
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b">
-                                <th className="py-2 text-left">Order Id</th>
-                                <th className="py-2 text-left">Date</th>
-                                <th className="py-2 text-left">Status</th>
-                                <th className="py-2 text-left">Payment Method</th>
-                                <th className="py-2 text-left">Products</th>
-                                <th className="py-2 text-right">Total</th>
-                                <th className="py-2 text-center">Action</th>
+                                <th className="py-2 text-left">Mã đơn</th>
+                                <th className="py-2 text-left">Ngày</th>
+                                <th className="py-2 text-left">Trạng thái</th>
+                                <th className="py-2 text-left">Phương thức thanh toán</th>
+                                <th className="py-2 text-left">Sản phẩm</th>
+                                <th className="py-2 text-right">Tổng tiền:</th>
+                                <th className="py-2 text-center">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,10 +47,10 @@ export default function OrderHistoryPage() {
                                     <td className="py-2">{order._id}</td>
                                     <td className="py-2">{new Date(order.createdAt).toLocaleDateString()}</td>
                                     <td className="py-2">
-                                        <span className={`px-2 py-1 rounded text-xs font-semibold ${order.statusOrder === "Delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>{order.statusOrder}</span>
+                                        <span className={`px-2 py-1 rounded text-xs font-semibold ${order.statusOrder === "Đã giao" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>{order.statusOrder}</span>
                                     </td>
                                     <td className="py-2">
-                                        <span>{order.statusPayment === "cod" ? "Cash on Delivery" : "Online Payment"}</span>
+                                        <span>{order.statusPayment === "cod" ? "Thanh toán khi nhận hàng" : "Thanh toán online"}</span>
                                     </td>
                                     <td className="py-2">
                                         {order.orderDetail.map((item, idx) => (
@@ -61,14 +61,14 @@ export default function OrderHistoryPage() {
                                         ))}
                                     </td>
                                     <td className="py-2 text-right font-semibold">
-                                        {order.total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}
+                                        {order.total.toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0 })}
                                     </td>
                                     <td className="py-2 text-center">
                                         <button
                                             className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-semibold"
                                             onClick={() => setSelectedOrder(order)}
                                         >
-                                            View Detail
+                                            Xem chi tiết
                                         </button>
                                     </td>
                                 </tr>
