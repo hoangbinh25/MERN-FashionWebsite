@@ -22,13 +22,8 @@ export const getAllUsers = async (params = {}) => {
         if (searchName && searchName.trim() !== "") {
             queryParams.searchName = searchName;
         }
-        const res = await axios.get(`${API_URL}/user/getUsers`, {
-            params: queryParams,
-        const datatest = `${API_URL}/user/getUsers?page=${page}&limit=${limit}&sortBy=${sortBy}&role=${role}&isActive=${isActive}`;
-        console.log("API URL:", datatest);
         const res = await api.get(`${API_URL}/user/getUsers`, {
-            params,
-
+            params: queryParams,
             headers: {
                 token: `Bearer ${token}`
             }
