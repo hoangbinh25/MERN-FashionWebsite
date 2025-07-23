@@ -8,11 +8,11 @@ export default function Sidebar() {
         <aside className="w-full md:w-1/3 md:pl-12 mt-12 md:mt-0 p-8">
             <SearchBox />
             <div className="mb-8">
-                <h2 className="font-bold text-2xl mb-4">Categories</h2>
+                <h2 className="font-bold text-2xl mb-4">Danh mục</h2>
                 <CategoryList />
             </div>
             <div>
-                <h2 className="font-bold text-2xl mb-4">Featured Products</h2>
+                <h2 className="font-bold text-2xl mb-4">Sản phẩm mới</h2>
                 <FeaturedProduct />
             </div>
         </aside>

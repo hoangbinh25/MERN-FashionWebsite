@@ -24,6 +24,7 @@ import OrderHistoryPage from '~/pages/Customers/OrderHistoryPage';
 import Blog from '~/pages/Admin/Blog';
 import BlogDetail from '~/components/Layouts/customers/Blog/BlogDetail';
 import PaySuccessful from '~/pages/PaySuccessful';
+import OAuthCallbackHandler from '~/components/Layouts/customers/Auth/OAuthCallbackHandler';
 
 
 const user = JSON.parse(localStorage.getItem("user"));
@@ -47,6 +48,7 @@ const routes = [
     { path: '/auth/verify-otp', component: OTPVerificationPage },
     { path: '/auth/forgot-password', component: ForgotPasswordPage },
     { path: '/auth/reset-password', component: ResetPasswordPage },
+    { path: '/auth/oauth-callback', component: OAuthCallbackHandler },
 
     //admin
     { path: '/admin', component: Index, content: 'Admin' },

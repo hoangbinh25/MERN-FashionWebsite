@@ -90,10 +90,12 @@ export default function Header() {
             <div className={`bg-[#f3f1ef] ${isFixed ? "bg-white shadow" : ""}`}>
                 <div className="max-w-screen-2xl mx-auto flex items-center justify-between h-20 px-4">
                     {/* Logo */}
-                    <div className="flex items-center space-x-2">
-                        <span className="text-2xl font-bold tracking-wide text-gray-800">TBN</span>
-                        <span className="text-2xl font-light tracking-wide text-gray-600">STORE</span>
-                    </div>
+                    <Link to="/user/home">
+                        <div className="flex items-center space-x-2 cursor-pointer">
+                            <span className="text-2xl font-bold tracking-wide text-gray-800">TBN</span>
+                            <span className="text-2xl font-light tracking-wide text-gray-600">STORE</span>
+                        </div>
+                    </Link>
 
                     {/* Menu */}
                     <nav className="flex-1 justify-center hidden md:flex">

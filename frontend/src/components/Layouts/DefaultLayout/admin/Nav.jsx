@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, User, Menu } from "lucide-react";
+import { User, Menu } from "lucide-react";
 import { useAuth } from "~/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -33,16 +33,6 @@ export default function Nav({ onMenuClick }) {
             </div>
             {/* Ẩn icon trên mobile, chỉ hiện trên md trở lên */}
             <div className="hidden md:flex flex-row items-center gap-4">
-                <div className="relative">
-                    <input
-                        type="text"
-                        placeholder="Type here..."
-                        className="px-4 py-2 rounded-full bg-white text-sm focus:outline-none w-60"
-                        onChange={e => console.log(e.target.value)}
-
-                    />
-                </div>
-                <Bell className="text-white" />
                 <div className="relative">
                     <button onClick={handleUserClick}>
                         <User className="text-white" />

@@ -29,7 +29,7 @@ export default function Contact() {
         <div className="flex flex-col md:flex-row max-w-screen-2xl mx-auto my-16 border rounded-md bg-white">
             {/* Form */}
             <div className="w-full md:w-1/2 p-10 border-b md:border-b-0 md:border-r">
-                <h2 className="text-3xl font-medium text-center mb-10">Send Us A Message</h2>
+                <h2 className="text-3xl font-medium text-center mb-10">Gửi phản hồi</h2>
                 <form className="space-y-8" onSubmit={handleSubmit}>
                     <div className="relative">
                         <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={22} />
@@ -47,7 +47,7 @@ export default function Contact() {
                             rows={6}
                             value={message}
                             onChange={e => setMessage(e.target.value)}
-                            placeholder="How Can We Help?"
+                            placeholder="Chúng tôi có thể giúp gì cho bạn?"
                             className="w-full p-4 border rounded focus:outline-none resize-none"
                         />
                     </div>
@@ -55,14 +55,14 @@ export default function Contact() {
                         type="submit"
                         className="w-full py-4 bg-neutral-800 text-white font-medium rounded-full text-lg tracking-wider hover:bg-neutral-900 transition"
                     >
-                        {loading ? "Sending..." : "Send"}
+                        {loading ? "Đang gửi..." : "Gửi"}
                     </button>
                 </form>
             </div>
             {/* Contact Info */}
             <div className="w-full md:w-1/2 p-10 flex flex-col justify-center items-center">
                 <div className="space-y-10">
-                    <div className="flex items-start space-x-4">
+                    <div className="flex items-start space-x-4 cursor-pointer">
                         <FiMapPin size={24} className="mt-1 text-gray-500" />
                         <div>
                             <div className="font-semibold text-lg">Address</div>
@@ -71,18 +71,18 @@ export default function Contact() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-start space-x-4">
+                    <div className="flex items-start space-x-4 cursor-pointer">
                         <FiPhone size={24} className="mt-1 text-gray-500" />
                         <div>
                             <div className="font-semibold text-lg">Lets Talk</div>
                             <a href="tel:+18001236879" className="text-blue-500 hover:underline">+84912345678</a>
                         </div>
                     </div>
-                    <div className="flex items-start space-x-4">
+                    <div className="flex items-start space-x-4 cursor-pointer">
                         <FiMail size={24} className="mt-1 text-gray-500" />
                         <div>
                             <div className="font-semibold text-lg">Sale Support</div>
-                            <a href="mailto:contact@example.com" className="text-blue-500 hover:underline">contact@example.com</a>
+                            <a href="mailto:contact@example.com" className="text-blue-500 hover:underline">tbnstore20xx@gmail.com</a>
                         </div>
                     </div>
                 </div>
