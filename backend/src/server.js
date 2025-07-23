@@ -28,11 +28,6 @@ app.use(cors({
     credentials: true,
 }));
 
-// app.options('*', cors({
-//     origin: allowedOrigins,
-//     credentials: true
-// }));
-
 // Middleware khác
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
