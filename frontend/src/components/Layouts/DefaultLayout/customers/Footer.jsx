@@ -64,6 +64,7 @@ export default function Footer() {
               type="email"
               placeholder="email@example.com"
               className="bg-transparent border-b border-gray-500 py-2 px-0 text-white placeholder-gray-400 focus:outline-none"
+              onChange={e => console.log(e.target.value)}
             />
             <button
               type="submit"

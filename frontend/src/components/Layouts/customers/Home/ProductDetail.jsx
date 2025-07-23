@@ -88,7 +88,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
             <div className="w-full md:w-1/2 flex flex-col gap-4 sm:gap-6 md:gap-8">
                 <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-semibold">{product.name}</h2>
                 <div className="text-base xs:text-lg sm:text-xl md:text-2xl font-bold text-gray-700">
-                    {product.price ? `$${product.price}` : "Liên hệ"}
+                    {product.price ? `${product.price}VNĐ` : "Liên hệ"}
                 </div>
                 <p className="text-gray-500 text-sm xs:text-base sm:text-lg md:text-xl">{product.description || "Không có mô tả cho sản phẩm này."}</p>
                 <div className="flex flex-col gap-4 sm:gap-6">

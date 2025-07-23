@@ -24,6 +24,7 @@ const getProducts = async (req, res) => {
             minPrice,
             maxPrice
         );
+        // console.log('Received category:', req.query.category);
         res.json(products)
     } catch (e) {
         res.status(500).json({ error: e.message });

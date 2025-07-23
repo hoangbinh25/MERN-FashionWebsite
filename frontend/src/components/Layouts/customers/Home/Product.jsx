@@ -199,9 +199,14 @@ export default function Product() {
                             </button>
                             <div className="mt-2 px-2">
                                 <div className="text-gray-700 text-base">{product.name}</div>
-                                <div className="text-gray-500 text-sm">${product.price}</div>
+                                <div className="text-gray-500 text-sm">{product.price}VNĐ</div>
                             </div>
-                            <button className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500" onClick={e => { e.stopPropagation(); addToCart(product); }}>
+                            <button
+                                className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500"
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    addToCart(product);
+                                }}>
                                 <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="9" cy="21" r="1" />
                                     <circle cx="20" cy="21" r="1" />
