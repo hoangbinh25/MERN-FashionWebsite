@@ -75,7 +75,8 @@ export const getAllOrders = async ({ status, sortBy }) => {
 
 export const createAddress = async (addressData) => {
   try {
-    const res = await axios.put(`${API_URL}/user/create`, addressData);
+    // Sửa từ /user/create thành /address/create
+    const res = await axios.post(`${API_URL}/address/create`, addressData);
     return res.data;
   } catch (error) {
     console.error("Create address error:", error);
@@ -88,7 +89,6 @@ export const getAddressByIdUser = async (idUser) => {
     const res = await axios.get(`${API_URL}/address/get/${idUser}`);
     return res.data;
   } catch (error) {
-    // Nếu không tìm thấy địa chỉ, trả về null thay vì throw error
     if (error.response && error.response.status === 404) {
       return null;
     }

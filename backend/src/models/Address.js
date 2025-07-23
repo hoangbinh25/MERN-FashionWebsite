@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 
 const addressSchema = new mongoose.Schema({
     idUser: { type: String, required: true, default: '' },
+    fullName: { type: String, required: true, default: '' },
+    phone: { type: String, required: true, default: '' },
     province: { type: String, required: true, default: '' },
     provinceCode: { type: Number, required: true, default: 0 },
     district: { type: String, required: true, default: '' },

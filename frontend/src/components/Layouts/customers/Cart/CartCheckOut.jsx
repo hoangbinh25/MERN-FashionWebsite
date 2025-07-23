@@ -16,17 +16,18 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   const shipping = 0;
   const total = subtotal + shipping;
-  const address = "Province / City: " + addressInfo.province + ", District: " + addressInfo.district + ", Commune (Ward): " + addressInfo.commune + ", Address (Street, Ward...): " + addressInfo.street;
+  const address = "Tỉnh/Thành phố: " + addressInfo.province + ", Quận/Huyện: " + addressInfo.district + ", Phường/Xã: " + addressInfo.commune + ", Địa chỉ cụ thể: " + addressInfo.street;
   const { fetchCartCount } = useCart();
   const navigate = useNavigate();
   const User = JSON.parse(localStorage.getItem("user"));
-  //sinh mã thanh toán
+
+  // Sinh mã thanh toán
   const generatePaymentCode = () => {
-  const prefix = "PAY";
-  const timestamp = Date.now();
-  const random = Math.floor(1000 + Math.random() * 9000);
-  return `${prefix}${timestamp}${random}`; 
-};
+    const prefix = "PAY";
+    const timestamp = Date.now();
+    const random = Math.floor(1000 + Math.random() * 9000);
+    return `${prefix}${timestamp}${random}`;
+  };
 
   const paymentCodeRef = useRef(generatePaymentCode());
   const paymentCode = paymentCodeRef.current;
@@ -34,7 +35,6 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
   // const paymentCode = "PAY17532888702323355";
   // const paymentDemo = "PAY17532888702323355- Ma GD ACSP/ PK19403xtfhgn4";
   const URL_QR = `https://qr.sepay.vn/img?acc=2004020423&bank=mb&amount=${total}&des=${paymentCode}`;
-
 
   const handleCreateOrder = async () => {
     const orderData = {
@@ -50,64 +50,62 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
       })),
       total: total
     };
-    console.log("Order Data:", orderData);
+    console.log("Dữ liệu đơn hàng:", orderData);
 
     try {
       const result = await createOrder(orderData);
-      console.log("Order created:", result);
+      console.log("Đơn hàng đã tạo:", result);
       if (result) {
         await deleteAllProductInCart(User._id || User.id);
         await fetchCartCount();
         navigate("/successful");
       }
     } catch (error) {
-      console.log("Order creation failed:", error);
+      console.log("Tạo đơn hàng thất bại:", error);
+      alert("Không thể tạo đơn hàng. Vui lòng thử lại!");
     }
   };
 
-useEffect(() => {
-  const interval = setInterval(async () => {
-    try {
-      const res = await getAllTransactions();
-      const transactions = res.data?.transactions || [];
-      for (const tx of transactions) {
-        console.log("Checking payment:", paymentCode);
-        console.log("Checking transaction:", tx.transaction_content.trim());
-        if (tx.transaction_content?.trim().startsWith(paymentCode)) {
-          console.log("✅ Transaction matched:", tx);
-          clearInterval(interval);
-          handleCreateOrder();
-          break; 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await getAllTransactions();
+        const transactions = res.data?.transactions || [];
+        for (const tx of transactions) {
+          console.log("Kiểm tra thanh toán:", paymentCode);
+          console.log("Kiểm tra giao dịch:", tx.transaction_content.trim());
+          if (tx.transaction_content?.trim().startsWith(paymentCode)) {
+            console.log("✅ Giao dịch khớp:", tx);
+            clearInterval(interval);
+            handleCreateOrder();
+            break;
+          }
         }
+      } catch (err) {
+        console.log("Lỗi kiểm tra giao dịch:", err);
       }
-    } catch (err) {
-      console.log("Error checking transactions:", err);
-    }
-  }, 2000);
+    }, 2000);
 
-  return () => clearInterval(interval);
-}, []);
-
-
-
-
-
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="max-w-5xl mx-auto bg-gray-50 rounded-lg shadow p-6">
-      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Checkout Order</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Thanh Toán Đơn Hàng</h2>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Left: Product List */}
         <div className="flex-1 md:w-1/2 border-r pr-6">
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-700">Products</h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-700">Sản Phẩm</h3>
             {cartItems.map((item, idx) => (
               <div key={idx} className="flex justify-between items-center text-base py-3 border-b last:border-b-0">
-                <span className="font-medium text-gray-700">{item.idProduct.nameProduct} <span className="text-gray-400">x{item.quantity}</span></span>
+                <span className="font-medium text-gray-700">
+                  {item.idProduct.nameProduct} <span className="text-gray-400">x{item.quantity}</span>
+                </span>
                 <span className="font-semibold text-indigo-600">
-                  {(item.price * item.quantity).toLocaleString("en-US", {
+                  {(item.price * item.quantity).toLocaleString("vi-VN", {
                     style: "currency",
-                    currency: "USD",
+                    currency: "VND",
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
                   })}
@@ -116,21 +114,36 @@ useEffect(() => {
             ))}
             <div className="mt-6 space-y-1">
               <div className="flex justify-between text-sm">
-                <span>Subtotal:</span>
+                <span>Tạm tính:</span>
                 <span className="font-semibold">
-                  {subtotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                  {subtotal.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                  })}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span>Shipping:</span>
+                <span>Phí vận chuyển:</span>
                 <span className="font-semibold">
-                  {shipping.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                  {shipping.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                  })}
                 </span>
               </div>
-              <div className="flex justify-between text-lg font-bold">
-                <span>Total:</span>
-                <span>
-                  {total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              <div className="flex justify-between text-lg font-bold border-t pt-2">
+                <span>Tổng cộng:</span>
+                <span className="text-indigo-600">
+                  {total.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                  })}
                 </span>
               </div>
             </div>
@@ -140,21 +153,21 @@ useEffect(() => {
         {/* Right: Address & Payment */}
         <div className="flex-1 md:w-1/2 pl-0 md:pl-6">
           <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-4 text-gray-700">Shipping Address</h3>
-            <div className="text-base space-y-2">
-              <div><span className="font-medium text-gray-600">Name:</span> {addressInfo?.fullName}</div>
-              <div><span className="font-medium text-gray-600">Phone:</span> {addressInfo?.phone}</div>
-              <div><span className="font-medium text-gray-600">Province/City:</span> {addressInfo?.province}</div>
-              <div><span className="font-medium text-gray-600">District:</span> {addressInfo?.district}</div>
-              <div><span className="font-medium text-gray-600">Commune/Ward:</span> {addressInfo?.commune}</div>
-              <div><span className="font-medium text-gray-600">Street:</span> {addressInfo?.street}</div>
+            <h3 className="text-xl font-semibold mb-4 text-gray-700">Địa Chỉ Giao Hàng</h3>
+            <div className="text-base space-y-2 bg-white p-4 rounded-lg border">
+              <div><span className="font-medium text-gray-600">Họ tên:</span> {addressInfo?.fullName}</div>
+              <div><span className="font-medium text-gray-600">Số điện thoại:</span> {addressInfo?.phone}</div>
+              <div><span className="font-medium text-gray-600">Tỉnh/Thành phố:</span> {addressInfo?.province}</div>
+              <div><span className="font-medium text-gray-600">Quận/Huyện:</span> {addressInfo?.district}</div>
+              <div><span className="font-medium text-gray-600">Phường/Xã:</span> {addressInfo?.commune}</div>
+              <div><span className="font-medium text-gray-600">Địa chỉ cụ thể:</span> {addressInfo?.street}</div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-700">Payment</h3>
-            <div className="flex gap-6 items-center mb-4">
-              <label className="flex items-center gap-2 cursor-pointer">
+            <h3 className="text-xl font-semibold mb-4 text-gray-700">Phương Thức Thanh Toán</h3>
+            <div className="space-y-3 mb-4">
+              <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                 <input
                   type="radio"
                   name="payment"
@@ -163,9 +176,12 @@ useEffect(() => {
                   onChange={() => setPaymentMethod("cod")}
                   className="accent-indigo-600"
                 />
-                <span className="text-gray-700">Pay on Delivery (COD)</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🚚</span>
+                  <span className="text-gray-700 font-medium">Thanh toán khi nhận hàng (COD)</span>
+                </div>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                 <input
                   type="radio"
                   name="payment"
@@ -174,37 +190,49 @@ useEffect(() => {
                   onChange={() => setPaymentMethod("qr")}
                   className="accent-pink-500"
                 />
-                <span className="text-gray-700">Bank Transfer via QR</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">📱</span>
+                  <span className="text-gray-700 font-medium">Chuyển khoản qua QR Code</span>
+                </div>
               </label>
             </div>
+
             {paymentMethod === "qr" && (
-              <div className="mt-2 flex flex-col items-center">
-                <img
-                  src={URL_QR}
-                  alt="QR Code"
-                  className="w-48 h-48 object-contain border-2 border-pink-300 rounded-xl shadow"
-                />
-                <span className="text-xs text-gray-500 mt-2">Scan to pay via TPBank</span>
+              <div className="mt-4 p-4 bg-white rounded-lg border">
+                <div className="flex flex-col items-center">
+                  <p className="text-sm text-gray-600 mb-3 text-center">
+                    Quét mã QR bên dưới để thanh toán qua TPBank
+                  </p>
+                  <img
+                    src={URL_QR}
+                    alt="Mã QR thanh toán"
+                    className="w-48 h-48 object-contain border-2 border-pink-300 rounded-xl shadow"
+                  />
+                  <div className="mt-3 text-center">
+                    <p className="text-xs text-gray-500">Mã thanh toán: <span className="font-mono font-bold">{paymentCode}</span></p>
+                    <p className="text-xs text-orange-600 mt-1">⏰ Hệ thống sẽ tự động xác nhận thanh toán</p>
+                  </div>
+                </div>
               </div>
             )}
 
             <div className="flex gap-4 mt-6">
               <button
-                className="w-1/2 py-3 rounded text-center text-sm font-semibold bg-gray-100 text-gray-500 hover:bg-gray-200 transition duration-200 shadow"
+                className="w-1/2 py-3 rounded text-center text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition duration-200 shadow border"
                 type="button"
                 onClick={onCancel}
               >
-                Cancel
+                Hủy
               </button>
               <button
                 className={`w-1/2 py-3 rounded text-center text-sm font-semibold transition duration-200 ${paymentMethod === "cod"
-                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 disabled={paymentMethod !== "cod"}
                 onClick={handleCreateOrder}
               >
-                Confirm Payment
+                {paymentMethod === "cod" ? "Xác Nhận Đặt Hàng" : "Đang chờ thanh toán..."}
               </button>
             </div>
           </div>
