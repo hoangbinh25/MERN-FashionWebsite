@@ -55,23 +55,41 @@ export default function OrderDetail({ order, onBack }) {
                 className="mb-6 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 font-semibold"
                 onClick={onBack}
             >
-                ← Quay lại lịch sử đơn hàng
+                ← Back to Order History
             </button>
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Chi tiết đơn hàng</h2>
-            <div className="mb-4">
-                <span className="font-semibold">Mã đơn:</span> {order._id}<br />
-                <span className="font-semibold">Ngày đặt:</span> {new Date(order.createdAt).toLocaleDateString()}<br />
-                <span className="font-semibold">Trạng thái:</span> <span className={`px-2 py-1 rounded text-xs font-semibold ${order.statusOrder === "Đã giao" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>{order.statusOrder}</span>
-            </div>
-            <div className="mb-6">
-                <h3 className="font-semibold mb-2">Địa chỉ giao hàng</h3>
-                <div className="text-sm space-y-1">
-                    <div>{order.address}</div>
+            <h2 className="text-xl font-bold mb-6 text-indigo-700 flex items-center gap-2">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                Order Details
+            </h2>
+
+            {/* Order Info */}
+            <div className="mb-4 p-4 rounded-lg border border-indigo-100 bg-indigo-50/40">
+                <div className="flex flex-wrap gap-4">
+                    <div className="flex-1 min-w-[120px]">
+                        <div className="text-xs text-gray-500 font-semibold">Order ID</div>
+                        <div className="font-mono text-sm break-all whitespace-pre-line">{order._id}</div>
+                    </div>
+                    <div className="flex-1 min-w-[120px]">
+                        <div className="text-xs text-gray-500 font-semibold">Date</div>
+                        <div className="text-sm">{new Date(order.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div className="flex-1 min-w-[120px]">
+                        <div className="text-xs text-gray-500 font-semibold">Status</div>
+                        <StatusBadge status={order.statusOrder} />
+                    </div>
                 </div>
             </div>
-            <div className="mb-6">
-                <h3 className="font-semibold mb-2">Sản phẩm</h3>
-                <div className="space-y-2">
+
+            {/* Shipping Address */}
+            <div className="mb-4 p-4 rounded-lg border border-green-100 bg-green-50/40">
+                <div className="text-xs text-gray-500 font-semibold mb-1">Shipping Address</div>
+                <div className="text-sm">{order.address}</div>
+            </div>
+
+            {/* Product List */}
+            <div className="mb-4 p-4 rounded-lg border border-blue-100 bg-blue-50/40">
+                <div className="font-semibold text-indigo-700 mb-2">Products</div>
+                <ul className="list-disc pl-6 space-y-1">
                     {order.orderDetail.map((item, idx) => (
                         <li key={item._id} className="flex justify-between items-center">
                             <span>
@@ -79,22 +97,29 @@ export default function OrderDetail({ order, onBack }) {
                                 {" — "}
                                 {item.quantity} x {item.price.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}
                             </span>
-                            <span className="font-semibold text-indigo-600">
-                                {item.price.toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0 })}
+                            <span className="text-xs text-gray-500">
+                                {(item.price * item.quantity).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}
                             </span>
                         </li>
                     ))}
                 </ul>
             </div>
 
-            <div className="space-y-1">
-                {/* <div className="flex justify-between text-sm">
-                    <span>Tổng tiền:</span>
-                    <span className="font-semibold">{subtotal.toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0 })}</span>
-                </div> */}
-                <div className="flex justify-between text-lg font-bold">
-                    <span>Tổng tiền:</span>
-                    <span>{order.total.toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0 })}</span>
+            {/* Total */}
+            <div className="mb-4 p-4 rounded-lg border border-yellow-100 bg-yellow-50/40 text-right">
+                <div className="flex flex-col gap-1 items-end">
+                    <div className="flex justify-between w-full max-w-xs">
+                        <span className="text-sm">Subtotal:</span>
+                        <span className="font-semibold">{subtotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}</span>
+                    </div>
+                    <div className="flex justify-between w-full max-w-xs">
+                        <span className="text-sm">Shipping:</span>
+                        <span className="font-semibold">{shipping.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}</span>
+                    </div>
+                    <div className="flex justify-between w-full max-w-xs text-base font-bold">
+                        <span>Total:</span>
+                        <span>{order.total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}</span>
+                    </div>
                 </div>
             </div>
 
