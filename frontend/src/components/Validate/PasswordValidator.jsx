@@ -2,7 +2,7 @@ import React from "react";
 
 const passwordRules = [
     {
-        label: "Đô dài mật khẩu cần 8 kí tự trở lên",
+        label: "Độ dài mật khẩu cần 8 kí tự trở lên",
         test: (pw) => pw.length >= 8,
     },
     {
