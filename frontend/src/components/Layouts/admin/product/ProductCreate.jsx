@@ -84,7 +84,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
           <div className="flex-1 flex flex-col gap-3">
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="nameProduct"
@@ -95,7 +95,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Description</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Description <span className="text-red-500">*</span></label>
               <textarea
                 name="description"
                 value={form.description}
@@ -107,7 +107,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
             </div>
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="text-xs sm:text-sm font-semibold text-gray-600">Price (VNĐ)</label>
+                <label className="text-xs sm:text-sm font-semibold text-gray-600">Price (VNĐ)<span className="text-red-500">*</span></label>
                 <input
                   type="number"
                   name="price"
@@ -164,7 +164,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
               </button>
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Category</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Category<span className="text-red-500">*</span></label>
               <select
                 name="category"
                 value={form.category}
@@ -192,10 +192,10 @@ export default function ProductCreate({ categories, onClose, onSave }) {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                     </svg>
-                    Saving...
+                    Đang thêm...
                   </span>
                 ) : (
-                  'Create'
+                  'Thêm'
                 )}
               </button>
               <button
@@ -203,7 +203,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
                 className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold text-sm"
                 onClick={onClose}
               >
-                Cancel
+                Hủy bỏ
               </button>
             </div>
           </div>

@@ -184,7 +184,7 @@ const updateProduct = async (productId, data, files) => {
     try {
       const product = await Product.findById(productId);
       if (!product) {
-        return reject({
+        return res.status(400).json({
           status: "Error",
           message: "Không tìm thấy sản phẩm",
         });
@@ -202,7 +202,7 @@ const updateProduct = async (productId, data, files) => {
         try {
           data.variations = JSON.parse(data.variations);
         } catch (err) {
-          return reject({ status: 'Error', message: 'Invalid variations format' });
+          return reject({ status: 'Error', message: 'Không đúng định dạng' });
         }
       }
 
@@ -245,6 +245,7 @@ const updateProduct = async (productId, data, files) => {
         data: updatedProduct,
       });
     } catch (error) {
+      console.error("Lỗi update product:", error);
       reject(error);
     }
   });

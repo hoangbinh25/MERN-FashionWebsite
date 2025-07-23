@@ -38,6 +38,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
   const handleVariationChange = (index, field, value) => {
     const updated = [...form.variations];
     updated[index][field] = field === "quantity" ? Number(value) : value
+
     setForm(prev => ({ ...prev, variations: updated }))
   };
 
@@ -67,11 +68,18 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "quantity" && Number(value) < 0) {
+      alert("Số lượng cần lớn hơn 0");
+      return;
+    }
+
     setForm((prev) => ({
       ...prev,
       [name]: name === "price" || name === "quantity" ? Number(value) : value,
     }));
   };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,15 +99,14 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
         }
       } else {
         // Truyền lại danh sách ảnh cũ (dạng url string)
-        (product.image || []).forEach((img) => {
-          formData.append("imageOld", img);
-        });
+        const oldImages = product.image || [];
+        formData.append("imageOld", JSON.stringify(oldImages));
       }
       await updateProduct(product._id, formData);
       onSave();
     } catch (error) {
       console.error("Failed to update product:", error);
-      setError(error.response?.data?.message || "Failed to update product");
+      setError(error.response?.data?.message || "Cập nhật sản phẩm thất bại. Vui lòng kiểm tra lại không để trống và số lượng không được < 0");
     } finally {
       setLoading(false);
     }
@@ -119,44 +126,47 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
           <div className="flex-1 flex flex-col gap-3">
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name<span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="nameProduct"
                 value={form.nameProduct}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
+                placeholder="Tên sản phẩm"
                 required
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Description</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Description<span className="text-red-500">*</span></label>
               <textarea
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 rows={2}
+                placeholder="Mô tả"
                 required
               />
             </div>
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="text-xs sm:text-sm font-semibold text-gray-600">Price (VND)</label>
+                <label className="text-xs sm:text-sm font-semibold text-gray-600">Price (VND)<span className="text-red-500">*</span></label>
                 <input
                   type="number"
                   name="price"
-                  value={form.price}
+                  value={form.price || ""}
                   onChange={handleChange}
                   className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
-                  min={0}
                   step="0.01"
+                  placeholder="Nhập giá tiền"
+                  min="0"
                   required
                 />
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Variations (Size + Quantity)</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Variations (Size + Quantity)<span className="text-red-500">*</span></label>
               {form.variations.map((v, idx) => (
                 <div key={idx} className="flex gap-3 items-center">
                   <select
@@ -174,12 +184,13 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                   </select>
                   <input
                     type="number"
-                    min={0}
-                    value={v.quantity}
+                    value={v.quantity || ""}
                     onChange={(e) => handleVariationChange(idx, "quantity", e.target.value)}
-                    placeholder="Quantity"
-                    className="border rounded px-2 py-1 w-24 text-sm"
+                    placeholder="Nhập số lượng"
+                    className="border rounded px-2 py-1 w-36 text-sm"
+                    min="0"
                     required
+
                   />
                   {form.variations.length > 1 && (
                     <button
@@ -201,7 +212,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
               </button>
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Category</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Category<span className="text-red-500">*</span></label>
               <select
                 name="category"
                 value={form.category}
@@ -229,10 +240,10 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                     </svg>
-                    Saving...
+                    Cập nhật...
                   </span>
                 ) : (
-                  'Save'
+                  'Cập nhật'
                 )}
               </button>
               <button
@@ -240,7 +251,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                 className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold text-sm"
                 onClick={onClose}
               >
-                Cancel
+                Hủy bỏ
               </button>
             </div>
           </div>
