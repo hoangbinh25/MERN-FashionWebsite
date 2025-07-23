@@ -27,6 +27,8 @@ import PaySuccessful from '~/pages/PaySuccessful';
 import OAuthCallbackHandler from '~/components/Layouts/customers/Auth/OAuthCallbackHandler';
 
 
+const user = JSON.parse(localStorage.getItem("user"));
+
 const routes = [
     // customers
     { path: '/', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
@@ -56,7 +58,7 @@ const routes = [
     { path: '/admin/user', component: User, content: 'Users Management' },
     { path: '/admin/store', component: Store, content: 'Stores Management' },
     { path: '/admin/blog', component: Blog, content: 'Blogs Management' },
-
+    
 
     // successful payment
     { path: '/successful', component: PaySuccessful },

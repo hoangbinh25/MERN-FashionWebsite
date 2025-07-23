@@ -49,6 +49,7 @@ const OrderService = {
 async getOrdersByUser(idUser) {
   try {
     return await Order.find({ idUser })
+      .sort({ createdAt: -1 })
       .populate({
         path: 'orderDetail',
         populate: { path: 'Product', model: 'Product' }

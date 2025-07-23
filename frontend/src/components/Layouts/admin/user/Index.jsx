@@ -20,6 +20,7 @@ export default function UserTable() {
   const [showFilter, setShowFilter] = useState(false);
   const itemsPerPage = 5;
   const [loading, setLoading] = useState(false);
+  const [searchName, setSearchName] = useState("");
 
   // Lấy danh sách role từ users
   const uniqueRoles = ["All", ...new Set(users.map((u) => u.role))];
@@ -35,6 +36,7 @@ export default function UserTable() {
       else if (selectedEnableUser === "Disabled") statusParam = false;
       let sortByParam = sortBy === "createdAt" ? "createdAt" : "";
       const params = {
+        searchName: searchName,
         page: currentPage,
         limit: itemsPerPage,
         sortBy: sortByParam,
@@ -58,6 +60,13 @@ export default function UserTable() {
     fetchUsers();
     // eslint-disable-next-line
   }, [selectedRole, selectedEnableUser, sortBy, currentPage]);
+
+  // Thêm useEffect để fetch khi searchName thay đổi
+  useEffect(() => {
+    setCurrentPage(1); // Reset về trang 1 khi tìm kiếm mới
+    fetchUsers();
+    // eslint-disable-next-line
+  }, [searchName]);
 
   const handleEditUser = () => {
     setSelectedUser(null);
@@ -107,6 +116,16 @@ export default function UserTable() {
       {/* Bộ lọc */}
       <div className={`${showFilter ? "block" : "hidden"} md:block mb-4`}>
         <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1">
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Search</label>
+            <input
+              type="text"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              placeholder="Search by . . ."
+            />
+          </div>
           <div className="flex-1">
             <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Role</label>
             <select
