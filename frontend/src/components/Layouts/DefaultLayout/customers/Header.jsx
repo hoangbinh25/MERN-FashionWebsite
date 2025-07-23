@@ -7,11 +7,11 @@ import { useCart } from "~/context/CartContext";
 
 
 const menuList = [
-    { title: 'Home', path: '/user/home' },
-    { title: 'Shop', path: '/user/shop' },
-    { title: 'Blog', path: '/user/blog' },
-    { title: 'About', path: '/user/about' },
-    { title: 'Contact', path: '/user/contact' }
+    { title: 'Trang chủ', path: '/user/home' },
+    { title: 'Sản phẩm', path: '/user/shop' },
+    { title: 'Bài viết', path: '/user/blog' },
+    { title: 'Về chúng tôi', path: '/user/about' },
+    { title: 'Liên hệ', path: '/user/contact' }
 
 ];
 
@@ -19,11 +19,15 @@ export default function Header() {
     const location = useLocation();
     const [isFixed, setIsFixed] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const { user, logout } = useAuth();
     const { cartCount } = useCart();
 
-    const dropdownRef = useRef()
-    const navigate = useNavigate()
+    const dropdownRef = useRef();
+    const searchRef = useRef();
+    const searchInputRef = useRef();
+    const navigate = useNavigate();
 
     // Dropdown when user login
     useEffect(() => {
@@ -36,6 +40,13 @@ export default function Header() {
         return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
 
+    // Focus input Search
+    useEffect(() => {
+        if (showSearch && searchInputRef) {
+            searchInputRef.current.focus();
+        }
+    }, [showSearch])
+
     // Event Scroll
     useEffect(() => {
         const handleScroll = () => {
@@ -44,6 +55,33 @@ export default function Header() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll)
     }, []);
+
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (searchRef.current && !searchRef.current.contains(e.target)) {
+                setShowSearch(false);  // Đóng khi click bên ngoài
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            console.log('Search for: ', searchQuery);
+            setShowSearch();
+            setSearchQuery("");
+
+        }
+    }
+
+    const handleSearchIconClick = () => {
+        setShowSearch(!showSearch);
+        if (!showSearch) {
+            setSearchQuery("");
+        }
+    }
 
     return (
         <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
@@ -79,10 +117,32 @@ export default function Header() {
 
                     {/* Icons */}
                     <div className="flex items-center space-x-6">
-                        {/* Search Icon */}
-                        <button className="group flex items-center justify-center w-9 h-9 relative">
-                            <FaSearch className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
-                        </button>
+                        {/* Search Section */}
+                        <div className="relative" ref={searchRef}>
+                            {/* Search Icon */}
+                            <button
+                                className="group flex items-center justify-center w-9 h-9 relative"
+                                onClick={handleSearchIconClick}
+                            >
+                                <FaSearch className={`w-7 h-7 transition ${showSearch ? 'text-indigo-500' : 'text-gray-700 group-hover:text-indigo-500'}`} />
+                            </button>
+
+                            {/* Search Input - Xuất hiện bên dưới icon */}
+                            {showSearch && (
+                                <div className="absolute -top-1/4 right-9 mt-2 z-50">
+                                    <form onSubmit={handleSearch} className="flex items-center shadow-lg">
+                                        <input
+                                            ref={searchInputRef}
+                                            type="text"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            placeholder="Tìm kiếm sản phẩm..."
+                                            className="w-60 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
+                                        />
+                                    </form>
+                                </div>
+                            )}
+                        </div>
                         {/* Cart Icon */}
                         <Link to="/user/cart" className="group flex items-center justify-center w-9 h-9 relative">
                             <FaCartShopping className="w-7 h-7 text-gray-700 group-hover:text-indigo-500 transition" />
@@ -101,20 +161,20 @@ export default function Header() {
                                     </span>
                                 </button>
                                 {showDropdown && (
-                                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-50">
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
                                         <Link
                                             to="/user/order"
                                             className="block px-4 py-2 hover:bg-gray-100"
                                             onClick={() => setShowDropdown(false)}
                                         >
-                                            Order History
+                                            Lịch sử đơn hàng
                                         </Link>
                                         <Link
                                             to="/user/profile"
                                             className="block px-4 py-2 hover:bg-gray-100"
                                             onClick={() => setShowDropdown(false)}
                                         >
-                                            View Profile
+                                            Xem hồ sơ
                                         </Link>
                                         <button
                                             className="block w-full text-left px-4 py-2 hover:bg-gray-100"
@@ -122,7 +182,7 @@ export default function Header() {
                                                 logout();
                                                 navigate("/auth/login")
                                             }}>
-                                            Logout
+                                            Đăng xuất
                                         </button>
                                     </div>
                                 )}

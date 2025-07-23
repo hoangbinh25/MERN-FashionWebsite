@@ -4,7 +4,7 @@ import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import ProductDetail from "./ProductDetail";
 import ProductCreate from "./ProductCreate";
 import { getAllProducts, deleteProduct, updateProductIsActive } from "~/services/productsService";
-import { getAllCategory, getAllCategoryBy } from "~/services/categoriesService";
+import { getAllCategoryBy } from "~/services/categoriesService";
 
 export default function ProductTable() {
   const [products, setProducts] = useState([]);
@@ -43,24 +43,24 @@ export default function ProductTable() {
     setLoading(true);
     try {
       const safeSearch = search || "";
-      console.log("API params:", {
-        page: pagination.currentPage,
-        limit: 5,
-        sort: sortBy || "nameProduct",
-        order,
-        nameProduct: safeSearch,
-        size,
-        category: selectedCategory === "All" ? "" : selectedCategory,
-        minPrice,
-        maxPrice
-      });
+      // console.log("API params:", {
+      //   page: pagination.currentPage,
+      //   limit: 5,
+      //   sort: sortBy || "nameProduct",
+      //   order,
+      //   nameProduct: safeSearch || undefined,
+      //   size: size === "" ? undefined : size,
+      //   category: selectedCategory === "All" ? "" : selectedCategory,
+      //   minPrice,
+      //   maxPrice
+      // });
       const response = await getAllProducts({
         page: pagination.currentPage,
         limit: 5,
         sort: sortBy || "nameProduct",
         order,
         nameProduct: safeSearch,
-        size,
+        size: size === "" ? undefined : size,
         category: selectedCategory === "All" ? "" : selectedCategory,
         minPrice,
         maxPrice
@@ -71,6 +71,8 @@ export default function ProductTable() {
         totalPages: response.totalPage || response.pagination?.totalPages || 1,
         totalItems: response.totalProduct || response.pagination?.totalItems || 0
       });
+
+      // console.log('Selected Category:', selectedCategory);
     } catch (error) {
       console.error("Failed to fetch products:", error);
       console.error("Error details:", error.response?.data || error.message);
@@ -84,6 +86,10 @@ export default function ProductTable() {
       setLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   console.log("Selected Category (FE):", selectedCategory);
+  // }, [selectedCategory]);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -103,7 +109,7 @@ export default function ProductTable() {
   };
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this product?");
+    const confirmed = window.confirm("Bạn chắc chắn muốn xóa sản phẩm này. Sẽ không thể khôi phục");
     if (!confirmed) return;
 
     try {
@@ -111,19 +117,19 @@ export default function ProductTable() {
       fetchProducts();
     } catch (error) {
       console.error("Failed to delete product:", error);
-      alert("Delete failed!");
+      alert("Xóa sản phẩm thất bại!");
     }
   };
 
   const handleIsActive = async (id, isActive) => {
-    const confirmed = window.confirm(`Are you sure you want to ${isActive ? "activate" : "deactivate"} this product?`);
+    const confirmed = window.confirm(`Bạn muốn ${isActive ? "ẩn" : "bỏ ẩn"} sản phầm này?`);
     if (!confirmed) return;
     try {
       await updateProductIsActive(id, !isActive);
       fetchProducts();
     } catch (error) {
       console.error("Failed to update product status:", error);
-      alert("Update failed!");
+      alert("Cập nhật sản phẩm thất bại!");
     }
   };
 
@@ -136,7 +142,7 @@ export default function ProductTable() {
     <div className="bg-white shadow-xl rounded-2xl p-2 sm:p-4 md:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">Product Management</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">Quản lý sản phẩm</h2>
         <div className="flex gap-2 w-full sm:w-auto">
           <button
             className="block md:hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg font-semibold items-center justify-center"
@@ -151,7 +157,7 @@ export default function ProductTable() {
             aria-label="Create Product"
           >
             <Plus size={20} className="sm:mr-1" />
-            <span className="sm:inline">Create Product</span>
+            <span className="sm:inline">Thêm sản phẩm</span>
           </button>
         </div>
       </div>
@@ -165,7 +171,7 @@ export default function ProductTable() {
               type="text"
               value={search || ""}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name..."
+              placeholder="Tìm kiếm theo tên..."
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             />
           </div>
@@ -176,9 +182,9 @@ export default function ProductTable() {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             >
-              <option value="All">All</option>
+              <option value="All">Tất cả</option>
               {categories.map((cat) => (
-                <option key={cat.nameCategory} value={cat.nameCategory}>
+                <option key={cat._id} value={cat._id}>
                   {cat.nameCategory}
                 </option>
               ))}
@@ -186,8 +192,7 @@ export default function ProductTable() {
           </div>
           <div className="flex-1 w-full md:w-1/4">
             <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Size</label>
-            <input
-              type="text"
+            <select
               value={size}
               onChange={(e) => {
                 setSize(e.target.value);
@@ -195,7 +200,20 @@ export default function ProductTable() {
               }}
               placeholder="Size..."
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            />
+            >
+              <option value="All">Tất cả</option>
+              {Array.from(
+                new Set(
+                  products.flatMap(product =>
+                    product.variations?.map(v => v.size) || []
+                  )
+                )
+              ).map(size => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="flex flex-col md:flex-row gap-4 mt-4">
@@ -207,21 +225,10 @@ export default function ProductTable() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             >
               <option value="">-- Select --</option>
-              <option value="0-500000">0 - 500,000 VND</option>
-              <option value="500000-1000000">500,000 - 1,000,000 VND</option>
-              <option value="1000000-2000000">1,000,000 - 2,000,000 VND</option>
-              <option value="2000000-5000000">2,000,000 - 5,000,000 VND</option>
-            </select>
-          </div>
-          <div className="flex-1 w-full md:w-1/3">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Order</label>
-            <select
-              value={order}
-              onChange={(e) => setOrder(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
-            >
-              <option value="price-desc">Descending</option>
-              <option value="price-asc">Ascending</option>
+              <option value="0-500000">0 - 500,000 VNĐ</option>
+              <option value="500000-1000000">500,000 - 1,000,000 VNĐ</option>
+              <option value="1000000-2000000">1,000,000 - 2,000,000 VNĐ</option>
+              <option value="2000000-5000000">2,000,000 - 5,000,000 VNĐ</option>
             </select>
           </div>
         </div>
@@ -271,22 +278,21 @@ export default function ProductTable() {
         <table className="w-full text-sm text-left text-gray-700 border border-gray-200 rounded-xl">
           <thead className="bg-gray-100 text-gray-700 uppercase">
             <tr>
-              <th className="px-2 py-3 border-b">#</th>
-              <th className="px-2 py-3 border-b">Image</th>
-              <th className="px-2 py-3 border-b">Name</th>
-              <th className="px-2 py-3 border-b">Size</th>
-              <th className="px-2 py-3 border-b">Description</th>
-              <th className="px-2 py-3 border-b">Price</th>
-              <th className="px-2 py-3 border-b">Qty</th>
-              <th className="px-2 py-3 border-b">Category</th>
-              <th className="px-2 py-3 border-b text-center">Actions</th>
+              <th className="px-2 py-3 border-b">STT</th>
+              <th className="px-2 py-3 border-b">Ảnh</th>
+              <th className="px-2 py-3 border-b">Tên</th>
+              <th className="px-2 py-3 border-b">Kích cỡ & Số lượng</th>
+              <th className="px-2 py-3 border-b">Miêu tả</th>
+              <th className="px-2 py-3 border-b">Giá</th>
+              <th className="px-2 py-3 border-b">Danh mục</th>
+              <th className="px-2 py-3 border-b text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr><td colSpan="8">Loading...</td></tr>
             ) : products.length === 0 ? (
-              <tr><td colSpan="8">No products found</td></tr>
+              <tr><td colSpan="8">Không tìm thấy sản phẩm nào</td></tr>
             ) : (
               products.map((product, index) => (
                 <tr
@@ -303,7 +309,11 @@ export default function ProductTable() {
                     />
                   </td>
                   <td className="px-2 py-3 border-b">{product.nameProduct}</td>
-                  <td className="px-2 py-3 border-b">{product.size}</td>
+                  <td className="px-2 py-3 border-b">{product.variations?.map((v, i) => (
+                    <div key={i}>
+                      Size {v.size}: {v.quantity}
+                    </div>
+                  ))}</td>
                   <td className="px-2 py-3 border-b">
                     <span style={{
                       display: '-webkit-box',
@@ -318,8 +328,7 @@ export default function ProductTable() {
                     </span>
                   </td>
                   <td className="px-2 py-3 border-b">{product.price} VND</td>
-                  <td className="px-2 py-3 border-b">{product.quantity}</td>
-                  <td className="px-2 py-3 border-b">{product.category?.nameCategory || "No Category"}</td>
+                  <td className="px-2 py-3 border-b">{product.category?.nameCategory || "Không thấy danh mục"}</td>
                   <td className="px-2 py-3 border-b text-center">
                     <div className="flex items-center justify-center gap-2">
                       <button

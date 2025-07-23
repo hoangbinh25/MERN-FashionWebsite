@@ -7,7 +7,7 @@ export const getAllUsers = async (params = {}) => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
         // Thêm searchName vào params nếu có
@@ -24,6 +24,11 @@ export const getAllUsers = async (params = {}) => {
         }
         const res = await axios.get(`${API_URL}/user/getUsers`, {
             params: queryParams,
+        const datatest = `${API_URL}/user/getUsers?page=${page}&limit=${limit}&sortBy=${sortBy}&role=${role}&isActive=${isActive}`;
+        console.log("API URL:", datatest);
+        const res = await api.get(`${API_URL}/user/getUsers`, {
+            params,
+
             headers: {
                 token: `Bearer ${token}`
             }
@@ -40,7 +45,7 @@ export const getUserById = async (userId) => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
         const res = await axios.get(`${API_URL}/user/getUser/${userId}`, {
@@ -60,10 +65,10 @@ export const createUser = async (data) => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
-        const res = await axios.post(`${API_URL}/user/create`, data, {
+        const res = await api.post(`${API_URL}/user/create`, data, {
             headers: {
                 token: `Bearer ${token}`
             }
@@ -80,7 +85,7 @@ export const updateUser = async (userId, data) => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
         const res = await axios.put(`${API_URL}/user/profile/${userId}`, data, {
@@ -100,10 +105,10 @@ export const deleteUser = async (userId) => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
-        const res = await axios.delete(`${API_URL}/user/delete/${userId}`, {
+        const res = await api.delete(`${API_URL}/user/delete/${userId}`, {
             headers: {
                 token: `Bearer ${token}`
             }
@@ -115,14 +120,11 @@ export const deleteUser = async (userId) => {
     }
 };
 
-
-
-
 export const updateUserProfile = async (userId, data) => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
         const res = await api.put(`${API_URL}/user/profile/${userId}`, data, {
@@ -141,7 +143,7 @@ export const sendContactMail = async (email, message) => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
         const res = await axios.post(`${API_URL}/contact/send-mail`,

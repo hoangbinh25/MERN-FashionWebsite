@@ -8,7 +8,7 @@ passport.use(new GoogleStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         // console.log('Google profile:', profile);
-        // console.log(process.env.GOOGLE_CALLBACK_URL)
+        console.log(process.env.GOOGLE_CALLBACK_URL)
         // Tìm hoặc tạo user
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {

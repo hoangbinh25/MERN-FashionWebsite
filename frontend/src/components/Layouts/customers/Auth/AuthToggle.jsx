@@ -9,7 +9,7 @@ export default function AuthToggle({ isLogin }) {
                 </div>
                 <div className="relative flex justify-center text-sm">
                     <span className="px-2 bg-white text-gray-500">
-                        {isLogin ? 'New to COZA STORE?' : 'Already have an account?'}
+                        {isLogin ? 'Xin chào bạn đến với TBN STORE ' : 'Bạn đã có tài khoản?'}
                     </span>
                 </div>
             </div>
@@ -20,14 +20,14 @@ export default function AuthToggle({ isLogin }) {
                         to="/auth/register"
                         className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        Create new account
+                        Tạo tài khoản mới
                     </Link>
                 ) : (
                     <Link
                         to="/auth/login"
                         className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        Sign in to your account
+                        Đăng nhập với tài khoản của bạn
                     </Link>
                 )}
             </div>

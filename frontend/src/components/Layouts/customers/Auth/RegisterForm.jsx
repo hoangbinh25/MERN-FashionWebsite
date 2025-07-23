@@ -22,19 +22,19 @@ export default function RegisterForm() {
         let error = "";
         switch (name) {
             case "firstName":
-                if (!value.trim()) error = "First name is required.";
+                if (!value.trim()) error = "Không được để trống";
                 break;
             case "lastName":
-                if (!value.trim()) error = "Last name is required.";
+                if (!value.trim()) error = "Không được để trống";
                 break;
             case "email":
-                if (!value.trim()) error = "Email is required.";
-                else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = "Invalid email format.";
+                if (!value.trim()) error = "Email không được để trống";
+                else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = "Định dang email không hợp lệ";
                 break;
             case "password":
                 if (!value) error = "Password is required.";
                 else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/.test(value)) {
-                    error = "Password must be at least 8 characters, with uppercase, lowercase, number and special character.";
+                    error = "Mật khẩu bao gồm 8 kí tự, chữ cái viết hoa, số và kí tự đặc biệt.";
                 }
                 break;
             case "confirmPassword":
@@ -84,7 +84,7 @@ export default function RegisterForm() {
             );
             if (res.status === 200) {
                 setSuccess(res.data.message);
-                console.log('Redirecting to verify OTP with email:', formData.email);
+                console.log('Chuyển hướng để xác minh OTP bằng email:', formData.email);
 
                 setTimeout(() => {
                     navigate('/auth/verify-otp',
@@ -93,12 +93,12 @@ export default function RegisterForm() {
                         });
                 }, 300);
             } else {
-                setError(res.data.message || 'Registration failed');
+                setError(res.data.message || 'Đăng kí thất bại');
             }
 
         } catch (error) {
             console.log(error.response?.data || error);
-            setError('Registration failed');
+            setError('Đăng kí thất bại');
         } finally {
             setLoading(false);
         }
@@ -115,7 +115,7 @@ export default function RegisterForm() {
             <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                        First name <span className="text-red-500">*</span>
+                        Họ <span className="text-red-500">*</span>
                     </label>
                     <div className="mt-1">
                         <input
@@ -135,7 +135,7 @@ export default function RegisterForm() {
 
                 <div>
                     <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                        Last name <span className="text-red-500">*</span>
+                        Tên <span className="text-red-500">*</span>
                     </label>
                     <div className="mt-1">
                         <input
@@ -156,7 +156,7 @@ export default function RegisterForm() {
 
             <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email address <span className="text-red-500">*</span>
+                    Email <span className="text-red-500">*</span>
                 </label>
                 <div className="mt-1">
                     <input
@@ -177,7 +177,7 @@ export default function RegisterForm() {
 
             <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Password <span className="text-red-500">*</span>
+                    Mật khẩu <span className="text-red-500">*</span>
                 </label>
                 <div className="relative mt-1">
                     <input
@@ -218,7 +218,7 @@ export default function RegisterForm() {
 
             <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                    Confirm Password <span className="text-red-500">*</span>
+                    Nhập lại mật khẩu <span className="text-red-500">*</span>
                 </label>
                 <div className="relative mt-1">
                     <input
@@ -262,7 +262,7 @@ export default function RegisterForm() {
                     disabled={loading}
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    {loading ? 'Registering...' : 'Register'}
+                    {loading ? 'Đăng kí...' : 'Đăng kí'}
                 </button>
             </div>
         </form>

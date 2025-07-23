@@ -39,7 +39,7 @@ export default function LoginPage() {
     }, [navigate]);
     return (
         <>
-            <AuthLayout title="Sign in to your account">
+            <AuthLayout title="Đăng nhập">
                 <LoginForm />
                 <AuthToggle isLogin={true} />
                 <SocialAuth />

@@ -9,7 +9,6 @@ const getProducts = async (req, res) => {
             sort,
             nameProduct,
             category,
-            color,
             size,
             minPrice,
             maxPrice
@@ -21,11 +20,11 @@ const getProducts = async (req, res) => {
             sort,
             nameProduct,
             category,
-            color,
             size,
             minPrice,
             maxPrice
         );
+        // console.log('Received category:', req.query.category);
         res.json(products)
     } catch (e) {
         res.status(500).json({ error: e.message });

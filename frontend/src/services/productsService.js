@@ -9,16 +9,15 @@ const getAllProducts = async ({
     sort = "nameproduct",
     order = "desc",
     nameProduct,
-    color,
     size,
     category,
     minPrice,
     maxPrice
 }) => {
-    const datatest = `${API_URL}/product/getProducts` + '?page=' + page + '&limit=' + limit + '&sort=' + sort + '&order=' + order + '&nameProduct=' + nameProduct + '&color=' + color + '&size=' + size + '&category=' + category + '&minPrice=' + minPrice + '&maxPrice=' + maxPrice;
-    console.log("API URL:", datatest);
+    // const datatest = `${API_URL}/product/getProducts` + '?page=' + page + '&limit=' + limit + '&sort=' + sort + '&order=' + order + '&nameProduct=' + nameProduct + '&size=' + size + '&category=' + category + '&minPrice=' + minPrice + '&maxPrice=' + maxPrice;
+    // console.log("API URL:", datatest);
     const response = await api.get(`${API_URL}/product/getProducts`, {
-        params: { page, limit, sort, order, nameProduct, color, size, minPrice, maxPrice }
+        params: { page, limit, sort, order, nameProduct, size, category, minPrice, maxPrice }
     });
 
     return response.data;

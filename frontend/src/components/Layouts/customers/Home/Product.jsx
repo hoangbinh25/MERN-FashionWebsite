@@ -101,7 +101,7 @@ export default function Product() {
     return (
         <>
             <div className="max-w-screen-2xl mx-auto my-16">
-                <h1 className="text-4xl font-bold mb-4 pb-3 md:mb-0">PRODUCT OVERVIEW</h1>
+                <h1 className="text-4xl font-bold mb-4 pb-3 md:mb-0">SẢN PHẨM</h1>
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between my-4">
                     <div>
                         <div className="flex text-xl gap-8">
@@ -127,11 +127,11 @@ export default function Product() {
                             onClick={() => setShowFilter((prev) => !prev)}
                         >
                             <svg width="18" height="18" fill="none" stroke="currentColor"><path d="M3 6h12M6 9h6M9 12h0" strokeWidth="2" strokeLinecap="round" /></svg>
-                            Filter
+                            Lọc
                         </button>
                         <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500">
                             <svg width="18" height="18" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6" strokeWidth="2" /><line x1="14" y1="14" x2="17" y2="17" strokeWidth="2" strokeLinecap="round" /></svg>
-                            Search
+                            Tìm kiếm
                         </button>
                     </div>
                 </div>
@@ -146,36 +146,25 @@ export default function Product() {
                 >
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 p-6">
                         <div>
-                            <h3 className="font-bold mb-2">Sort By</h3>
+                            <h3 className="font-bold mb-2">Sắp xếp theo</h3>
                             <ul>
-                                <li>Default</li>
-                                <li>Popularity</li>
-                                <li>Average rating</li>
-                                <li>Newness</li>
-                                <li>Price: Low to High</li>
-                                <li>Price: High to Low</li>
+                                <li>Mặc định</li>
+                                <li>Phổ biến nhất</li>
+                                <li>Mới nhất</li>
+                                <li>Giá: Thấp - cao</li>
+                                <li>Giá: Cao - thấp</li>
                             </ul>
                         </div>
                         <div>
                             <h3 className="font-bold mb-2">Price</h3>
                             <ul>
-                                <li>All</li>
-                                <li>$0.00 - $50.00</li>
-                                <li>$50.00 - $100.00</li>
-                                <li>$100.00 - $150.00</li>
-                                <li>$150.00 - $200.00</li>
-                                <li>$200.00+</li>
+                                <li>Tất cả</li>
+                                <li>0 - 50 000 VNĐ</li>
+                                <li>50 000 VNĐ - 100 000 VNĐ</li>
+                                <li>100 000 VNĐ - 150 000 VNĐ</li>
+                                <li>150 000 VNĐ - 200 000 VNĐ</li>
+                                <li>200 000 VNĐ +</li>
                             </ul>
-                        </div>
-                        <div>
-                            <h3 className="font-bold mb-2">Tags</h3>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="px-3 py-1 border rounded-full">Fashion</span>
-                                <span className="px-3 py-1 border rounded-full">Lifestyle</span>
-                                <span className="px-3 py-1 border rounded-full">Denim</span>
-                                <span className="px-3 py-1 border rounded-full">Streetstyle</span>
-                                <span className="px-3 py-1 border rounded-full">Crafts</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -206,13 +195,18 @@ export default function Product() {
                                     z-10
                                 "
                             >
-                                Quick View
+                                Xem
                             </button>
                             <div className="mt-2 px-2">
                                 <div className="text-gray-700 text-base">{product.name}</div>
-                                <div className="text-gray-500 text-sm">${product.price}</div>
+                                <div className="text-gray-500 text-sm">{product.price}VNĐ</div>
                             </div>
-                            <button className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500" onClick={e => { e.stopPropagation(); addToCart(product); }}>
+                            <button
+                                className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500"
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    addToCart(product);
+                                }}>
                                 <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="9" cy="21" r="1" />
                                     <circle cx="20" cy="21" r="1" />

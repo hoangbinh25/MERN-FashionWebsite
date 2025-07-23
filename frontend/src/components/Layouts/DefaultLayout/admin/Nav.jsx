@@ -38,6 +38,8 @@ export default function Nav({ onMenuClick }) {
                         type="text"
                         placeholder="Type here..."
                         className="px-4 py-2 rounded-full bg-white text-sm focus:outline-none w-60"
+                        onChange={e => console.log(e.target.value)}
+
                     />
                 </div>
                 <Bell className="text-white" />

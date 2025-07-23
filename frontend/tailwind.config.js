@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
-      },
+        vietnam: ['"Be Vietnam Pro"', 'sans-serif'],
+      }
     },
   },
   plugins: [],

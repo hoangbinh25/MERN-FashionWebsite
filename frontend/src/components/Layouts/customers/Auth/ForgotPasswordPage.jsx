@@ -14,7 +14,7 @@ export default function ForgotPasswordPage() {
         setError('');
         try {
             const res = await forgotPassword(email);
-            setMessage(res.data?.message || 'Reset link sent! Please check your email.');
+            setMessage(res.data?.message || 'Đã gửi về email của bạn. Hãy kiểm tra email!');
             setDisabled(true);
             setCountdown(60);
             const timer = setInterval(() => {
@@ -28,20 +28,20 @@ export default function ForgotPasswordPage() {
                 });
             }, 1000);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to send reset link');
+            setError(err.response?.data?.message || 'Gửi thất bại');
         }
     };
 
     return (
         <div className='min-h-96'>
             <div className="max-w-md mx-auto mt-20 p-8 bg-white rounded-lg shadow-lg">
-                <h2 className="text-2xl font-bold mb-6 text-centers">Forgot Password</h2>
+                <h2 className="text-2xl font-bold mb-6 text-centers">Quên mật khẩu</h2>
                 {message && <p className="text-green-600 mb-4 text-center">{message}</p>}
                 {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <input
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder="Nhập email của bạn"
                         className="w-full border px-4 py-3 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
                         disabled={disabled}
                     />
                     <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition" disabled={disabled}>
-                        {disabled ? `Send again in ${countdown}s` : 'Send reset link'}
+                        {disabled ? `Sẽ được gửi lại sau ${countdown}s` : 'Gửi'}
                     </button>
                 </form>
             </div>

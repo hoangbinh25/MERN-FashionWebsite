@@ -39,6 +39,7 @@ export default function Contact() {
                             disabled
                             value={email}
                             className="w-full pl-12 pr-4 py-4 border rounded focus:outline-none"
+                            onChange={e => console.log(e.target.value)}
                         />
                     </div>
                     <div>
