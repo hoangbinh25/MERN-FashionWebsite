@@ -21,10 +21,16 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.error('Blocked by CORS:', origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true,
+}));
+
+app.options('*', cors({
+    origin: allowedOrigins,
+    credentials: true
 }));
 
 // Middleware khác
