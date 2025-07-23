@@ -43,6 +43,7 @@ export default function Orders() {
           >
             <option value="All">All</option>
             <option value="Pending">Pending</option>
+            <option value="Delivered">Delivered</option>
             <option value="Shipped">Shipped</option>
             <option value="Cancelled">Cancelled</option>
           </select>
@@ -96,7 +97,16 @@ export default function Orders() {
                   </td>
                   <td className="py-3 px-4 text-center">
                     {/* Replace with your StatusBadge component if available */}
-                    <span className={`px-2 py-1 rounded ${order.statusOrder.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-800" : order.statusOrder.toLowerCase() === "shipped" ? "bg-green-100 text-green-800" : order.statusOrder.toLowerCase() === "canceled" ? "bg-red-100 text-red-800" : order.statusOrder.toLowerCase() === "delivered" ? "bg-lime-100 text-lime-500" : "bg-gray-100 text-gray-800"}`}>
+                    <span className={
+                      `px-2 py-1 rounded ${order.statusOrder.toLowerCase() === "pending" 
+                      ? "bg-yellow-100 text-yellow-800" 
+                      : order.statusOrder.toLowerCase() === "shipped" 
+                      ? "bg-green-100 text-green-800" 
+                      : order.statusOrder.toLowerCase() === "canceled" 
+                      ? "bg-red-100 text-red-800" 
+                      : order.statusOrder.toLowerCase() === "delivered" 
+                      ? "bg-lime-100 text-lime-500" 
+                      : "bg-gray-100 text-gray-800"}`}>
                       {order.statusOrder}
                     </span>
                   </td>
@@ -105,7 +115,20 @@ export default function Orders() {
                       onClick={() => setViewOrder(order)}
                       className="inline-flex items-center gap-1 text-indigo-600 hover:underline font-medium px-2"
                     >
-                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      <svg 
+                      width="16" 
+                      height="16" 
+                      fill="none" 
+                      viewBox="0 0 24 24"
+                      >
+                        <path 
+                        d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" 
+                        stroke="#6366f1" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        />
+                      </svg>
                       View
                     </button>
                     {/* Add delete logic if needed */}

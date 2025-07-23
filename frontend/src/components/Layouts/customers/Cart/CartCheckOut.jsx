@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { redirect } from "react-router-dom";
 import { deleteAllProductInCart } from "~/services/cartService";
 import { createOrder } from "~/services/orderService";
 import { createUser } from "~/services/usersService";
 import { useCart } from "~/context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { getAllTransactions } from "~/services/orderService";
+import { useRef } from "react";
+
 
 // Remove mockAddress, use addressInfo prop instead
 export default function CheckOut({ addressInfo, cartItems, onCancel }) {
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  console.log("cartItems Info:", cartItems);
-
+  const [transactions, setTransactions] = useState([]);
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   const shipping = 0;
   const total = subtotal + shipping;
@@ -18,7 +20,22 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
   const { fetchCartCount } = useCart();
   const navigate = useNavigate();
   const User = JSON.parse(localStorage.getItem("user"));
-  console.log("Address Info:", addressInfo);
+  //sinh mã thanh toán
+  const generatePaymentCode = () => {
+  const prefix = "PAY";
+  const timestamp = Date.now();
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return `${prefix}${timestamp}${random}`; 
+};
+
+  const paymentCodeRef = useRef(generatePaymentCode());
+  const paymentCode = paymentCodeRef.current;
+
+  // const paymentCode = "PAY17532888702323355";
+  // const paymentDemo = "PAY17532888702323355- Ma GD ACSP/ PK19403xtfhgn4";
+  const URL_QR = `https://qr.sepay.vn/img?acc=2004020423&bank=mb&amount=${total}&des=${paymentCode}`;
+
+
   const handleCreateOrder = async () => {
     const orderData = {
       idUser: User._id || User.id,
@@ -47,6 +64,34 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
       console.log("Order creation failed:", error);
     }
   };
+
+useEffect(() => {
+  const interval = setInterval(async () => {
+    try {
+      const res = await getAllTransactions();
+      const transactions = res.data?.transactions || [];
+      for (const tx of transactions) {
+        console.log("Checking payment:", paymentCode);
+        console.log("Checking transaction:", tx.transaction_content.trim());
+        if (tx.transaction_content?.trim().startsWith(paymentCode)) {
+          console.log("✅ Transaction matched:", tx);
+          clearInterval(interval);
+          handleCreateOrder();
+          break; 
+        }
+      }
+    } catch (err) {
+      console.log("Error checking transactions:", err);
+    }
+  }, 2000);
+
+  return () => clearInterval(interval);
+}, []);
+
+
+
+
+
 
   return (
     <div className="max-w-5xl mx-auto bg-gray-50 rounded-lg shadow p-6">
@@ -135,7 +180,7 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
             {paymentMethod === "qr" && (
               <div className="mt-2 flex flex-col items-center">
                 <img
-                  src="https://img.vietqr.io/image/tpbank-mynamebvh-compact2.jpg?amount=&addInfo=test&accountName=Nguyen%20Thanh%20Tung"
+                  src={URL_QR}
                   alt="QR Code"
                   className="w-48 h-48 object-contain border-2 border-pink-300 rounded-xl shadow"
                 />

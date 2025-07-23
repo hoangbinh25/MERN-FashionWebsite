@@ -11,6 +11,8 @@ const CartRouter = require('./CartRoute');
 const blogRouter = require('./BlogRouter');
 const OrderRouter = require('./OrderRouter');
 const ReportRouter = require('./ReportRouter');
+const AddressRouter = require('./AddressRouter');
+const TransactionRouter = require('./transactionRouter');
 
 router.use('/user', userRouter);
 router.use('/auth', authRouter);
@@ -21,5 +23,11 @@ router.use('/chat', chatRoute);
 router.use('/cart', CartRouter);
 router.use('/blog', blogRouter);
 router.use('/order', OrderRouter);
+router.use('/report', ReportRouter);
+router.use('/address', AddressRouter);
+router.use('/transaction', TransactionRouter);
 
 module.exports = router;
+
+
+

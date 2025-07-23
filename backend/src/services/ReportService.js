@@ -31,10 +31,9 @@ const ReportService = {
           $lt: new Date(year, month),
         };
       } else if (filterType === "quarter" && quarter) {
-        const startMonth = (quarter - 1) * 3;
         matchStage.createdAt = {
-          $gte: new Date(year, startMonth),
-          $lt: new Date(year, startMonth + 3),
+          $gte: new Date(year, 0),
+          $lt: new Date(+year + 1, 0),
         };
       } else {
         const start = new Date(year, 0);
@@ -57,6 +56,8 @@ const ReportService = {
         ? 12
         : filterType === "quarter"
         ? 4
+        : filterType === "year"
+        ? 12
         : 5;
 
     for (let i = 0; i < groupLength; i++) {
@@ -71,8 +72,7 @@ const ReportService = {
       else if (/^day-\d{1,2}$/.test(filterType) || filterType === "day") index = date.getDate() - 1;
       else if (filterType === "month") index = date.getMonth();
       else if (filterType === "quarter") index = Math.floor(date.getMonth() / 3);
-      else if (filterType === "year") index = date.getFullYear() - (year - 4);
-
+      else if (filterType === "year") index = date.getMonth(); // Sửa lại dòng này
       if (index >= 0 && index < groupLength) {
         orderStats[index] += 1;
         revenueStats[index] += order.total;
