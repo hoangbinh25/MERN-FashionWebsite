@@ -20,107 +20,134 @@ export default function AddressCart({ cartItems, onProceedCheckout, onAddressCha
     commune: "",
     street: "",
   });
-  const [addressDetail, setAddressDetail] = useState({
-    idUser: User._id || User.id,
-    province: "",
-    provinceCode: 0,
-    district: "",
-    districtCode: 0,
-    commune: "",
-    communeCode: 0,
-    addressDetail: ""
-  });
+  const [addressDetail, setAddressDetail] = useState(null);
+  const [isNewAddress, setIsNewAddress] = useState(false);
 
-  //lấy địa chỉ của user
+  // Load địa chỉ của user khi component mount
   useEffect(() => {
-  const fetchOrCreateAddress = async () => {
-    try {
-      const res = await getAddressByIdUser(User._id);
-      if (res) {
-        setAddressDetail(res);
-        setAddressInfo({
-          fullName: res.fullName || "",
-          phone: res.phone || "",
-          province: res.province,
-          district: res.district,
-          commune: res.commune,
-          street: res.addressDetail
-        });
-        setSelectedProvince(res.provinceCode?.toString() || "");
-        setSelectedDistrict(res.districtCode?.toString() || "");
-        setSelectedCommune(res.communeCode?.toString() || "");
-      } else {
-        const created = await createAddress({
-          idUser: User._id,
-          province: "",
-          provinceCode: 0,
-          district: "",
-          districtCode: 0,
-          commune: "",
-          communeCode: 0,
-          addressDetail: ""
-        });
-        setAddressDetail(created);
+    const fetchOrCreateAddress = async () => {
+      try {
+        console.log("🔍 Fetching address for user:", User._id || User.id);
+        const res = await getAddressByIdUser(User._id);
+        console.log("📦 Address response:", res);
+
+        // Kiểm tra nếu có địa chỉ
+        if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+          const addressData = res.data[0];
+          console.log("✅ Existing address found:", addressData);
+          setIsNewAddress(false);
+
+          // Set address detail
+          setAddressDetail(addressData);
+
+          // Set address info for form
+          setAddressInfo({
+            fullName: addressData.fullName || "",
+            phone: addressData.phone || "",
+            province: addressData.province || "",
+            district: addressData.district || "",
+            commune: addressData.commune || "",
+            street: addressData.addressDetail || "",
+          });
+
+          // Load địa chỉ theo thứ tự: Province -> District -> Commune
+          loadAddressData(addressData);
+
+        } else {
+          // Nếu chưa có địa chỉ
+          console.log("❌ No address found for user");
+          setIsNewAddress(true);
+        }
+      } catch (error) {
+        console.error("❌ Error fetching address:", error);
+        setIsNewAddress(true);
       }
-    } catch (error) {
-      console.error("Error fetching/creating address:", error);
-    }
-  };
+    };
 
-  fetchOrCreateAddress();
-}, []);
-
-//lưu địa chỉ khi thay đổi
-useEffect(() => {
-  const timeout = setTimeout(() => {
-    if (addressDetail?._id) {
-      updateAddress(addressDetail._id, {
-        ...addressDetail,
-        province: addressInfo.province,
-        district: addressInfo.district,
-        commune: addressInfo.commune,
-        provinceCode: parseInt(selectedProvince) || 0,
-        districtCode: parseInt(selectedDistrict) || 0,
-        communeCode: communes.find(c => c.name === selectedCommune)?.idCommune || 0,
-        addressDetail: addressInfo.street,
-        fullName: addressInfo.fullName,
-        phone: addressInfo.phone
-      });
-    }
-  }, 1000); // 1s sau khi dừng nhập
-
-  return () => clearTimeout(timeout);
-}, [addressInfo, selectedProvince, selectedDistrict, selectedCommune]);
-
-
-  useEffect(() => {
-    if (selectedProvince) {
-      setDistricts(
-        provincesData.district.filter(
-          (d) => d.idProvince === selectedProvince
-        )
+    // Function để load địa chỉ theo thứ tự
+    const loadAddressData = (addressData) => {
+      // 1. Tìm và set province
+      const foundProvince = provincesData.province.find(p =>
+        p.name === addressData.province || p.idProvince === addressData.provinceCode?.toString()
       );
-      setSelectedDistrict("");
-      setCommunes([]);
-      setSelectedCommune("");
-    } else {
-      setDistricts([]);
+
+      console.log("🔍 Looking for province:", addressData.province, "or code:", addressData.provinceCode);
+      console.log("📍 Found province:", foundProvince);
+
+      if (foundProvince) {
+        setSelectedProvince(foundProvince.idProvince);
+
+        // 2. Load districts for province
+        const provinceDistricts = provincesData.district.filter(
+          (d) => d.idProvince === foundProvince.idProvince
+        );
+        console.log("🏘️ Available districts for province:", provinceDistricts);
+        setDistricts(provinceDistricts);
+
+        // 3. Tìm và set district
+        const foundDistrict = provinceDistricts.find(d =>
+          d.name === addressData.district || d.idDistrict === addressData.districtCode?.toString()
+        );
+
+        console.log("🔍 Looking for district:", addressData.district, "or code:", addressData.districtCode);
+        console.log("🏘️ Found district:", foundDistrict);
+
+        if (foundDistrict) {
+          setSelectedDistrict(foundDistrict.idDistrict);
+
+          // 4. Load communes for district
+          const districtCommunes = provincesData.commune.filter(
+            (c) => c.idDistrict === foundDistrict.idDistrict
+          );
+          console.log("🏠 Available communes for district:", districtCommunes);
+          setCommunes(districtCommunes);
+
+          // 5. Set commune
+          console.log("🔍 Looking for commune:", addressData.commune);
+          setSelectedCommune(addressData.commune || "");
+        } else {
+          console.warn("❌ District not found:", addressData.district, addressData.districtCode);
+          // Reset nếu không tìm thấy district
+          setSelectedDistrict("");
+          setCommunes([]);
+          setSelectedCommune("");
+        }
+      } else {
+        console.warn("❌ Province not found:", addressData.province, addressData.provinceCode);
+        // Reset nếu không tìm thấy province
+        setSelectedProvince("");
+        setDistricts([]);
+        setSelectedDistrict("");
+        setCommunes([]);
+        setSelectedCommune("");
+      }
+    };
+
+    if (User._id) {
+      fetchOrCreateAddress();
+    }
+  }, [User._id]);
+
+  // Handle province change (manual)
+  useEffect(() => {
+    if (selectedProvince && !addressDetail) {
+      const provinceDistricts = provincesData.district.filter(
+        (d) => d.idProvince === selectedProvince
+      );
+      setDistricts(provinceDistricts);
       setSelectedDistrict("");
       setCommunes([]);
       setSelectedCommune("");
     }
   }, [selectedProvince]);
 
+  // Handle district change (manual)
   useEffect(() => {
-    if (selectedDistrict) {
-      setCommunes(
-        provincesData.commune.filter(
-          (c) => c.idDistrict === selectedDistrict
-        )
+    if (selectedDistrict && !addressDetail) {
+      const districtCommunes = provincesData.commune.filter(
+        (c) => c.idDistrict === selectedDistrict
       );
-      setSelectedCommune("");
-    } else {
-      setCommunes([]);
+      setCommunes(districtCommunes);
       setSelectedCommune("");
     }
   }, [selectedDistrict]);
@@ -130,8 +157,89 @@ useEffect(() => {
     if (onAddressChange) onAddressChange({ ...addressInfo, [field]: value });
   };
 
-  const handleProceed = () => {
-    if (onProceedCheckout) onProceedCheckout(addressInfo);
+  const handleProvinceChange = (e) => {
+    const selectedId = e.target.value;
+    const selectedName = provincesData.province.find(p => p.idProvince === selectedId)?.name || "";
+    setSelectedProvince(selectedId);
+    handleChange("province", selectedName);
+
+    // Load districts và reset selections
+    const provinceDistricts = provincesData.district.filter(
+      (d) => d.idProvince === selectedId
+    );
+    setDistricts(provinceDistricts);
+    setSelectedDistrict("");
+    setCommunes([]);
+    setSelectedCommune("");
+  };
+
+  const handleDistrictChange = (e) => {
+    const selectedId = e.target.value;
+    const selectedName = districts.find(d => d.idDistrict === selectedId)?.name || "";
+    setSelectedDistrict(selectedId);
+    handleChange("district", selectedName);
+
+    // Load communes và reset selection
+    const districtCommunes = provincesData.commune.filter(
+      (c) => c.idDistrict === selectedId
+    );
+    setCommunes(districtCommunes);
+    setSelectedCommune("");
+  };
+
+  const handleCommuneChange = (e) => {
+    setSelectedCommune(e.target.value);
+    handleChange("commune", e.target.value);
+  };
+
+  const handleProceed = async () => {
+    try {
+      // Tạo payload với thông tin địa chỉ mới
+      const addressPayload = {
+        idUser: User._id,
+        fullName: addressInfo.fullName,
+        phone: addressInfo.phone,
+        province: addressInfo.province,
+        provinceCode: parseInt(selectedProvince) || 0,
+        district: addressInfo.district,
+        districtCode: parseInt(selectedDistrict) || 0,
+        commune: addressInfo.commune,
+        communeCode: communes.find(c => c.name === selectedCommune)?.idCommune || 0,
+        addressDetail: addressInfo.street
+      };
+
+      console.log("💾 Address payload:", addressPayload);
+      console.log("🔍 Current addressDetail:", addressDetail);
+
+      let result;
+
+      // Kiểm tra có địa chỉ để update hay tạo mới
+      if (addressDetail?._id) {
+        // CẬP NHẬT địa chỉ có sẵn
+        console.log("🔄 UPDATING existing address with ID:", addressDetail._id);
+        result = await updateAddress(addressDetail._id, addressPayload);
+        console.log("✅ Address updated successfully:", result);
+      } else {
+        // TẠO MỚI địa chỉ
+        console.log("🆕 CREATING new address for user");
+        result = await createAddress(addressPayload);
+        console.log("✅ New address created successfully:", result);
+
+        if (result && result.data) {
+          setAddressDetail(result.data);
+          setIsNewAddress(false);
+        }
+      }
+
+      // Sau khi lưu thành công thì proceed checkout
+      if (onProceedCheckout) {
+        onProceedCheckout(addressInfo);
+      }
+
+    } catch (error) {
+      console.error("❌ Failed to save address:", error);
+      alert("Không thể lưu địa chỉ. Vui lòng thử lại!");
+    }
   };
 
   const isValidPhone = /^0\d{9,10}$/.test(addressInfo.phone);
@@ -140,54 +248,56 @@ useEffect(() => {
   const isAddressComplete =
     Object.values(addressInfo).every(val => val && val.trim() !== "") &&
     isValidPhone &&
-    isValidFullName;
+    isValidFullName &&
+    selectedProvince &&
+    selectedDistrict &&
+    selectedCommune;
 
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow space-y-4">
-      <h3 className="text-xl font-semibold border-b pb-2">Shipping Address</h3>
+      <div className="flex justify-between items-center border-b pb-2">
+        <h3 className="text-xl font-semibold">Địa chỉ giao hàng</h3>
+      </div>
 
       <div className="space-y-2">
         <div>
-          <label className="block text-sm font-medium text-gray-600">Full Name</label>
+          <label className="block text-sm font-medium text-gray-600">Tên đầy đủ</label>
           <input
             type="text"
             placeholder="John Doe"
+            value={addressInfo.fullName}
             className={`w-full border px-3 py-2 rounded text-sm mt-1 ${addressInfo.fullName && !isValidFullName ? "border-red-500" : ""}`}
             onChange={e => handleChange("fullName", e.target.value)}
           />
           {addressInfo.fullName && !isValidFullName && (
             <span className="text-xs text-red-500">
-              Full name must be at least 2 words.
+              Tên đầy đủ phải có ít nhất 2 từ.
             </span>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600">Phone Number</label>
+          <label className="block text-sm font-medium text-gray-600">Số điện thoại</label>
           <input
             type="text"
             placeholder="0123 456 789"
+            value={addressInfo.phone}
             className={`w-full border px-3 py-2 rounded text-sm mt-1 ${addressInfo.phone && !isValidPhone ? "border-red-500" : ""}`}
             onChange={e => handleChange("phone", e.target.value)}
           />
           {addressInfo.phone && !isValidPhone && (
-            <span className="text-xs text-red-500">Invalid phone number. Please enter a valid format (10-11 digits, starting with 0).</span>
+            <span className="text-xs text-red-500">Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng (10-11 chữ số, bắt đầu bằng 0).</span>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600">Province / City</label>
+          <label className="block text-sm font-medium text-gray-600">Tỉnh / Thành phố</label>
           <select
             className="w-full border px-3 py-2 rounded text-sm mt-1"
             value={selectedProvince}
-            onChange={e => {
-              const selectedId = e.target.value;
-              const selectedName = provincesData.province.find(p => p.idProvince === selectedId)?.name || "";
-              setSelectedProvince(selectedId);
-              handleChange("province", selectedName);
-            }}
+            onChange={handleProvinceChange}
           >
-            <option value="">Select Province/City</option>
+            <option value="">Chọn Tỉnh/Thành phố</option>
             {provincesData.province.map((p) => (
               <option key={p.idProvince} value={p.idProvince}>{p.name}</option>
             ))}
@@ -195,19 +305,14 @@ useEffect(() => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600">District</label>
+          <label className="block text-sm font-medium text-gray-600">Quận / Huyện</label>
           <select
             className="w-full border px-3 py-2 rounded text-sm mt-1"
             value={selectedDistrict}
-            onChange={e => {
-              const selectedId = e.target.value;
-              const selectedName = districts.find(d => d.idDistrict === selectedId)?.name || "";
-              setSelectedDistrict(selectedId);
-              handleChange("district", selectedName);
-            }}
+            onChange={handleDistrictChange}
             disabled={!selectedProvince}
           >
-            <option value="">Select District</option>
+            <option value="">Chọn Quận/Huyện</option>
             {districts.map((d) => (
               <option key={d.idDistrict} value={d.idDistrict}>{d.name}</option>
             ))}
@@ -215,17 +320,14 @@ useEffect(() => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600">Commune (Ward)</label>
+          <label className="block text-sm font-medium text-gray-600">Xã / Phường</label>
           <select
             className="w-full border px-3 py-2 rounded text-sm mt-1"
             value={selectedCommune}
-            onChange={e => {
-              setSelectedCommune(e.target.value);
-              handleChange("commune", e.target.value);
-            }}
+            onChange={handleCommuneChange}
             disabled={!selectedDistrict}
           >
-            <option value="">Select Commune/Ward</option>
+            <option value="">Chọn Xã/Phường</option>
             {communes.length > 0 ? communes.map((c, idx) => (
               <option key={idx} value={c.name}>{c.name}</option>
             )) : null}
@@ -233,10 +335,11 @@ useEffect(() => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600">Address (Street, Ward...)</label>
+          <label className="block text-sm font-medium text-gray-600">Địa chỉ (Đường, Phường...)</label>
           <input
             type="text"
-            placeholder="123 Nguyen Trai, Ward 5"
+            placeholder="123 Nguyễn Trãi, Phường 5"
+            value={addressInfo.street}
             className="w-full border px-3 py-2 rounded text-sm mt-1"
             onChange={e => handleChange("street", e.target.value)}
           />
@@ -244,22 +347,10 @@ useEffect(() => {
       </div>
 
       <div className="border-t pt-4 space-y-1">
-        <div className="flex justify-between text-sm">
-          <span>Subtotal:</span>
-          <span className="font-semibold">
-            {subtotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-          </span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span>Shipping:</span>
-          <span className="font-semibold">
-            {shipping.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-          </span>
-        </div>
         <div className="flex justify-between text-lg font-bold">
-          <span>Total:</span>
+          <span>Tổng tiền:</span>
           <span>
-            {total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            {total.toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           </span>
         </div>
       </div>
@@ -270,7 +361,7 @@ useEffect(() => {
         onClick={handleProceed}
         disabled={!isAddressComplete}
       >
-        Proceed to Checkout
+        {addressDetail?._id ? 'Tiến hành thanh toán' : 'Tiến hành thanh toán'}
       </button>
     </div>
   );
