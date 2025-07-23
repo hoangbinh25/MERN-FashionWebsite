@@ -9,7 +9,7 @@ export default function AuthToggle({ isLogin }) {
                 </div>
                 <div className="relative flex justify-center text-sm">
                     <span className="px-2 bg-white text-gray-500">
-                        {isLogin ? 'New to COZA STORE?' : 'Already have an account?'}
+                        {isLogin ? 'Xin chào bạn đến với TBN STORE ' : 'Bạn đã có tài khoản?'}
                     </span>
                 </div>
             </div>

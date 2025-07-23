@@ -10,7 +10,7 @@ const getAllBlog = async ({
     search = '',
     titleBlog,
 }) => {
-    const res = await axios.get(`${API_URL}/blog/getBlogs`
+    const res = await api.get(`${API_URL}/blog/getBlogs`
         + '?page=' + page
         + '&limit=' + limit
         + '&sort=' + sort

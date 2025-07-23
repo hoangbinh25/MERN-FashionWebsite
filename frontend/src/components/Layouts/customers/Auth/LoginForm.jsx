@@ -83,7 +83,7 @@ export default function LoginForm() {
         <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email
+                    Email <span className="text-red-500">*</span>
                 </label>
                 <div className="mt-1">
                     <input
@@ -101,7 +101,7 @@ export default function LoginForm() {
 
             <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Mật khẩu
+                    Mật khẩu <span className="text-red-500">*</span>
                 </label>
                 <div className="relative mt-1">
                     <input

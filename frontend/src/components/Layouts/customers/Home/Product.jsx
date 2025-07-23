@@ -166,16 +166,6 @@ export default function Product() {
                                 <li>200 000 VNĐ +</li>
                             </ul>
                         </div>
-                        {/* <div>
-                            <h3 className="font-bold mb-2">Tags</h3>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="px-3 py-1 border rounded-full">Fashion</span>
-                                <span className="px-3 py-1 border rounded-full">Lifestyle</span>
-                                <span className="px-3 py-1 border rounded-full">Denim</span>
-                                <span className="px-3 py-1 border rounded-full">Streetstyle</span>
-                                <span className="px-3 py-1 border rounded-full">Crafts</span>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
 
