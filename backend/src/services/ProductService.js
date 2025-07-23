@@ -1,6 +1,7 @@
 const Product = require('../models/Product');
 const { cloudinary } = require("../config/cloudinary");
 const fs = require("fs");
+const { ObjectId } = require('mongodb');
 
 // Update isActive status for product
 const updateProductIsActive = async (productId, isActive) => {
@@ -36,12 +37,13 @@ const getProducts = async (limit, page, sort, nameProduct, category, size, minPr
       if (nameProduct) {
         objectFilter.nameProduct = { $regex: nameProduct, $options: 'i' }
       }
+
       if (category) {
         objectFilter.category = category;
       }
 
-      if (size) {
-        objectFilter.size = size;
+      if (size && size !== "All") {
+        objectFilter['variations'] = { $elemMatch: { size: size } };
       }
       if (minPrice || maxPrice) {
         objectFilter.price = {};

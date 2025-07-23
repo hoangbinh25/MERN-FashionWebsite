@@ -11,7 +11,7 @@ const menuList = [
     { title: 'Sản phẩm', path: '/user/shop' },
     { title: 'Bài viết', path: '/user/blog' },
     { title: 'Về chúng tôi', path: '/user/about' },
-    { title: 'Liên hê', path: '/user/contact' }
+    { title: 'Liên hệ', path: '/user/contact' }
 
 ];
 

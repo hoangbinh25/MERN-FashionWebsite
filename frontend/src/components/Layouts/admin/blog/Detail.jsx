@@ -92,6 +92,7 @@ export default function BlogDetail({ blog, onClose, onSave }) {
               type="text"
               name="_id"
               value={form._id}
+              onChange={e => console.log(e.target.value)}
               disabled
               className="mt-1 border rounded px-3 py-2 w-full bg-gray-100 text-sm"
             />

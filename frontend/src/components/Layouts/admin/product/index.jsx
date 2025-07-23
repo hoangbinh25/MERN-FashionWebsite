@@ -4,7 +4,7 @@ import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import ProductDetail from "./ProductDetail";
 import ProductCreate from "./ProductCreate";
 import { getAllProducts, deleteProduct, updateProductIsActive } from "~/services/productsService";
-import { getAllCategory, getAllCategoryBy } from "~/services/categoriesService";
+import { getAllCategoryBy } from "~/services/categoriesService";
 
 export default function ProductTable() {
   const [products, setProducts] = useState([]);
@@ -43,17 +43,17 @@ export default function ProductTable() {
     setLoading(true);
     try {
       const safeSearch = search || "";
-      console.log("API params:", {
-        page: pagination.currentPage,
-        limit: 5,
-        sort: sortBy || "nameProduct",
-        order,
-        nameProduct: safeSearch,
-        size: size === "" ? undefined : size,
-        category: selectedCategory === "All" ? "" : selectedCategory,
-        minPrice,
-        maxPrice
-      });
+      // console.log("API params:", {
+      //   page: pagination.currentPage,
+      //   limit: 5,
+      //   sort: sortBy || "nameProduct",
+      //   order,
+      //   nameProduct: safeSearch || undefined,
+      //   size: size === "" ? undefined : size,
+      //   category: selectedCategory === "All" ? "" : selectedCategory,
+      //   minPrice,
+      //   maxPrice
+      // });
       const response = await getAllProducts({
         page: pagination.currentPage,
         limit: 5,
@@ -71,6 +71,8 @@ export default function ProductTable() {
         totalPages: response.totalPage || response.pagination?.totalPages || 1,
         totalItems: response.totalProduct || response.pagination?.totalItems || 0
       });
+
+      // console.log('Selected Category:', selectedCategory);
     } catch (error) {
       console.error("Failed to fetch products:", error);
       console.error("Error details:", error.response?.data || error.message);
@@ -84,6 +86,10 @@ export default function ProductTable() {
       setLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   console.log("Selected Category (FE):", selectedCategory);
+  // }, [selectedCategory]);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -178,7 +184,7 @@ export default function ProductTable() {
             >
               <option value="All">Tất cả</option>
               {categories.map((cat) => (
-                <option key={cat.nameCategory} value={cat.nameCategory}>
+                <option key={cat._id} value={cat._id}>
                   {cat.nameCategory}
                 </option>
               ))}
