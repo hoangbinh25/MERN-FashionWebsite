@@ -126,7 +126,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
           <div className="flex-1 flex flex-col gap-3">
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Name<span className="text-red-500">*</span></label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Tên<span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="nameProduct"
@@ -138,7 +138,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Description<span className="text-red-500">*</span></label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Mô tả<span className="text-red-500">*</span></label>
               <textarea
                 name="description"
                 value={form.description}
@@ -151,7 +151,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
             </div>
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="text-xs sm:text-sm font-semibold text-gray-600">Price (VND)<span className="text-red-500">*</span></label>
+                <label className="text-xs sm:text-sm font-semibold text-gray-600">Giá tiền (VND)<span className="text-red-500">*</span></label>
                 <input
                   type="number"
                   name="price"
@@ -166,7 +166,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Variations (Size + Quantity)<span className="text-red-500">*</span></label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Kích cỡ + số lượng<span className="text-red-500">*</span></label>
               {form.variations.map((v, idx) => (
                 <div key={idx} className="flex gap-3 items-center">
                   <select
@@ -175,7 +175,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                     className="border rounded px-2 py-1 w-32 text-sm"
                     required
                   >
-                    <option value="">Choose size</option>
+                    <option value="">Chọn kích cỡ</option>
                     <option value="S">S</option>
                     <option value="M">M</option>
                     <option value="L">L</option>
@@ -208,11 +208,11 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                 onClick={addVariation}
                 className="text-indigo-500 hover:underline text-sm mt-1"
               >
-                + Add Variation
+                + Thêm kích cỡ + số lượng
               </button>
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Category<span className="text-red-500">*</span></label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Danh mục<span className="text-red-500">*</span></label>
               <select
                 name="category"
                 value={form.category}
@@ -220,7 +220,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                 className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                 required
               >
-                <option value="">Select Category</option>
+                <option value="">Chọn danh mục</option>
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>
                     {cat.nameCategory}

@@ -166,7 +166,7 @@ export default function ProductTable() {
       <div className={`${showFilter ? "block" : "hidden"} md:block mb-4`}>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 w-full md:w-1/4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Search</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Tìm kiếm</label>
             <input
               type="text"
               value={search || ""}
@@ -176,7 +176,7 @@ export default function ProductTable() {
             />
           </div>
           <div className="flex-1 w-full md:w-1/4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Category</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Danh mục</label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -191,7 +191,7 @@ export default function ProductTable() {
             </select>
           </div>
           <div className="flex-1 w-full md:w-1/4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Size</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Kích cỡ</label>
             <select
               value={size}
               onChange={(e) => {
@@ -218,7 +218,7 @@ export default function ProductTable() {
         </div>
         <div className="flex flex-col md:flex-row gap-4 mt-4">
           <div className="flex-1 w-full md:w-1/3">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Price Range</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Mức giá</label>
             <select
               value={priceRange}
               onChange={(e) => setPriceRange(e.target.value)}

@@ -3,7 +3,7 @@ import OrderDetail from "./Detail";
 import { getAllOrders } from "~/services/orderService";
 
 function formatUSD(vnd) {
-  const usd = vnd; 
+  const usd = vnd;
   return usd.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
@@ -33,7 +33,7 @@ export default function Orders() {
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <svg width="28" height="28" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M3 6l1.5 13.5A2 2 0 0 0 6.5 21h11a2 2 0 0 0 2-1.5L21 6M3 6l1.5-3A2 2 0 0 1 6.5 2h11a2 2 0 0 1 2 1.5L21 6" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          Order Management
+          Quản lý đơn hàng
         </h1>
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <select
@@ -41,21 +41,21 @@ export default function Orders() {
             onChange={(e) => setFilterStatus(e.target.value)}
             className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
           >
-            <option value="All">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Cancelled">Cancelled</option>
+            <option value="All">Tất cả</option>
+            <option value="Pending">Chờ xác nhận</option>
+            <option value="Delivered">Đã giao</option>
+            <option value="Shipped">Đang giao</option>
+            <option value="Cancelled">Hủy </option>
           </select>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
           >
-            <option value="date-desc">Newest</option>
-            <option value="date-asc">Oldest</option>
-            <option value="total-desc">Total: High to Low</option>
-            <option value="total-asc">Total: Low to High</option>
+            <option value="date-desc">Mới nhất</option>
+            <option value="date-asc">Cũ nhất</option>
+            <option value="total-desc">Tổng: Cao - Thấp</option>
+            <option value="total-asc">Tổng: Thấp - Cao</option>
           </select>
         </div>
       </div>
@@ -65,20 +65,20 @@ export default function Orders() {
         <table className="min-w-full text-sm">
           <thead>
             <tr className="bg-indigo-50 text-indigo-900">
-              <th className="py-3 px-4 font-semibold text-left">FullName</th>
-              <th className="py-3 px-4 font-semibold text-left">Phone</th>
-              <th className="py-3 px-4 font-semibold text-left">Address</th>
-              <th className="py-3 px-4 font-semibold text-left">Order Date</th>
-              <th className="py-3 px-4 font-semibold text-right">Total</th>
-              <th className="py-3 px-4 font-semibold text-center">Status</th>
-              <th className="py-3 px-4 font-semibold text-center">Actions</th>
+              <th className="py-3 px-4 font-semibold text-left">Tên</th>
+              <th className="py-3 px-4 font-semibold text-left">Số điện thoại</th>
+              <th className="py-3 px-4 font-semibold text-left">Địa chỉ</th>
+              <th className="py-3 px-4 font-semibold text-left">Ngày đặt</th>
+              <th className="py-3 px-4 font-semibold text-right">Tổng</th>
+              <th className="py-3 px-4 font-semibold text-center">Trạng thái</th>
+              <th className="py-3 px-4 font-semibold text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {orders.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-center py-8 text-gray-400">
-                  No orders match the selected filter.
+                  Không có đơn hàng nào khớp với bộ lọc đã chọn.
                 </td>
               </tr>
             ) : (
@@ -98,16 +98,24 @@ export default function Orders() {
                   <td className="py-3 px-4 text-center">
                     {/* Replace with your StatusBadge component if available */}
                     <span className={
-                      `px-2 py-1 rounded ${order.statusOrder.toLowerCase() === "pending" 
-                      ? "bg-yellow-100 text-yellow-800" 
-                      : order.statusOrder.toLowerCase() === "shipped" 
-                      ? "bg-green-100 text-green-800" 
-                      : order.statusOrder.toLowerCase() === "canceled" 
-                      ? "bg-red-100 text-red-800" 
-                      : order.statusOrder.toLowerCase() === "delivered" 
-                      ? "bg-lime-100 text-lime-500" 
-                      : "bg-gray-100 text-gray-800"}`}>
-                      {order.statusOrder}
+                      `px-2 py-1 rounded ${order.statusOrder.toLowerCase() === "pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : order.statusOrder.toLowerCase() === "shipped"
+                          ? "bg-green-100 text-green-800"
+                          : order.statusOrder.toLowerCase() === "canceled"
+                            ? "bg-red-100 text-red-800"
+                            : order.statusOrder.toLowerCase() === "delivered"
+                              ? "bg-lime-100 text-lime-500"
+                              : "bg-gray-100 text-gray-800"}`}>
+                      {order.statusOrder.toLowerCase() === "pending"
+                        ? "Chờ xác nhận"
+                        : order.statusOrder.toLowerCase() === "shipped"
+                          ? "Đang giao"
+                          : order.statusOrder.toLowerCase() === "canceled"
+                            ? "Đã hủy"
+                            : order.statusOrder.toLowerCase() === "delivered"
+                              ? "Đã nhận"
+                              : "bg-gray-100 text-gray-800"}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-center">
@@ -115,18 +123,18 @@ export default function Orders() {
                       onClick={() => setViewOrder(order)}
                       className="inline-flex items-center gap-1 text-indigo-600 hover:underline font-medium px-2"
                     >
-                      <svg 
-                      width="16" 
-                      height="16" 
-                      fill="none" 
-                      viewBox="0 0 24 24"
+                      <svg
+                        width="16"
+                        height="16"
+                        fill="none"
+                        viewBox="0 0 24 24"
                       >
-                        <path 
-                        d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" 
-                        stroke="#6366f1" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
+                        <path
+                          d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"
+                          stroke="#6366f1"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                       View

@@ -47,7 +47,7 @@ export default function Detail({ category, onClose, onSave }) {
           ×
         </button>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
-          <h2 className="text-xl font-semibold text-gray-800">Category Details</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Cập nhật danh mục</h2>
 
           <div>
             <label className="text-sm text-gray-600">ID</label>
@@ -62,7 +62,7 @@ export default function Detail({ category, onClose, onSave }) {
           </div>
 
           <div>
-            <label className="text-sm text-gray-600">Name</label>
+            <label className="text-sm text-gray-600">Tên</label>
             <input
               type="text"
               name="nameCategory"
@@ -81,14 +81,14 @@ export default function Detail({ category, onClose, onSave }) {
               className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Cập nhật..." : "Cập nhật"}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-lg text-sm font-semibold"
             >
-              Cancel
+              Hủy
             </button>
           </div>
         </form>

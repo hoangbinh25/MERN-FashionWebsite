@@ -16,6 +16,7 @@ export default function Product() {
         totalPages: 1,
         totalItems: 0,
     });
+
     const [showDetail, setShowDetail] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [categories, setCategories] = useState([])
@@ -23,10 +24,16 @@ export default function Product() {
 
     const { fetchCartCount } = useCart();
 
-    const loadProducts = async (page = 1) => {
+    const handleCategoryChange = (categoryId) => {
+        setActiveCategory(categoryId);
+        setPagination(prev => ({ ...prev, currentPage: 1 }));
+        loadProducts(1, categoryId);
+    };
+
+    const loadProducts = async (page = 1, category = "") => {
         setLoading(true);
         try {
-            const res = await getAllProducts({ page, limit });
+            const res = await getAllProducts({ page, limit, category });
             const filtered = (res.data || []).filter(item => item.isActive);
             const mapped = filtered.map(item => {
                 let images = [];
@@ -35,7 +42,7 @@ export default function Product() {
                 } else if (typeof item.image === 'string' && item.image) {
                     images = [item.image];
                 } else {
-                    images = ["https://via.placeholder.com/350x350?text=No+Image"];
+                    images = ["https://placehold.co/350x350?text=No+Image"];
                 }
                 return {
                     id: item._id,
@@ -61,6 +68,7 @@ export default function Product() {
             setLoading(false);
         }
     };
+
 
     const User = JSON.parse(localStorage.getItem('user'));
     const addToCart = async (product) => {
@@ -110,15 +118,16 @@ export default function Product() {
                                     key={cat._id}
                                     className={
                                         "transition-all duration-200 " +
-                                        (activeCategory === cat.nameCategory
+                                        (activeCategory === cat._id
                                             ? "text-gray-500 underline underline-offset-4 font-semibold"
                                             : "text-gray-500 hover:text-gray-800 hover:underline hover:underline-offset-4")
                                     }
-                                    onClick={() => setActiveCategory(cat.nameCategory)}
+                                    onClick={() => handleCategoryChange(cat._id)} // Truyền _id
                                 >
                                     {cat.nameCategory}
                                 </button>
                             ))}
+
                         </div>
                     </div>
                     <div className="flex gap-4 md:mt-0 items-center">
@@ -205,7 +214,8 @@ export default function Product() {
                                 className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500"
                                 onClick={e => {
                                     e.stopPropagation();
-                                    addToCart(product);
+                                    setSelectedProduct(product);
+                                    setShowDetail(true);
                                 }}>
                                 <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="9" cy="21" r="1" />
@@ -234,7 +244,7 @@ export default function Product() {
                         >
                             x
                         </button>
-                        <ProductDetail product={selectedProduct} onClose={handleCloseDetail} hideCloseButton={true} />
+                        <ProductDetail product={selectedProduct} onClose={handleCloseDetail} hideCloseButton={true} onAddToCart={addToCart} />
                     </div>
                 </div>
             )}

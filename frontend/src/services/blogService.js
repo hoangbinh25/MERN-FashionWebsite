@@ -10,12 +10,7 @@ const getAllBlog = async ({
     search = '',
     titleBlog,
 }) => {
-    const res = await api.get(`${API_URL}/blog/getBlogs`
-        + '?page=' + page
-        + '&limit=' + limit
-        + '&sort=' + sort
-        + '&order=' + order
-        + '&titleBlog=' + titleBlog, {
+    const res = await api.get(`${API_URL}/blog/getBlogs`, {
         params: { page, limit, sort, order, search, titleBlog },
     })
     return res.data;

@@ -84,7 +84,7 @@ export default function BlogDetail({ blog, onClose, onSave }) {
           ×
         </button>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
-          <h2 className="text-xl font-semibold text-gray-800">Blog Details</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Xem chi tiết</h2>
 
           <div>
             <label className="text-sm text-gray-600">ID</label>
@@ -99,7 +99,7 @@ export default function BlogDetail({ blog, onClose, onSave }) {
           </div>
 
           <div>
-            <label className="text-sm text-gray-600">Title</label>
+            <label className="text-sm text-gray-600">Tiêu đề</label>
             <input
               type="text"
               name="titleBlog"
@@ -111,7 +111,7 @@ export default function BlogDetail({ blog, onClose, onSave }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Description</label>
+            <label className="text-sm font-medium text-gray-700">Mô tả</label>
             <textarea
               type="text"
               name="descBlog"
@@ -124,7 +124,7 @@ export default function BlogDetail({ blog, onClose, onSave }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Image</label>
+            <label className="text-sm font-medium text-gray-700">Ảnh</label>
             <input
               type="file"
               name="image"
@@ -151,14 +151,14 @@ export default function BlogDetail({ blog, onClose, onSave }) {
               className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Cập nhật..." : "Cập nhật"}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-lg text-sm font-semibold"
             >
-              Cancel
+              Đóng
             </button>
           </div>
         </form>

@@ -4,22 +4,22 @@ import { updateOrderStatus as updateOrderStatusAPI } from "~/services/orderServi
 const StatusBadge = ({ status }) => {
     let color, text;
     switch (status) {
-        case "Pending":
+        case "pending":
             color = "bg-yellow-100 text-yellow-800 border-yellow-300";
-            text = "Pending";
+            text = "Chờ xác nhận";
             break;
         case "Shipped":
             color = "bg-green-100 text-green-800 border-green-300";
-            text = "Shipped";
+            text = "Đang giao";
             break;
         case "Delivered":
             color = "bg-blue-100 text-blue-800 border-blue-300";
-            text = "Delivered";
+            text = "Đã nhận";
             break;
         case "Cancelled":
-        case "Canceled":
+        case "Hủy":
             color = "bg-red-100 text-red-700 border-red-300";
-            text = "Canceled";
+            text = "Hủy";
             break;
         default:
             color = "bg-gray-100 text-gray-700 border-gray-300";
@@ -55,26 +55,26 @@ export default function OrderDetail({ order, onBack }) {
                 className="mb-6 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 font-semibold"
                 onClick={onBack}
             >
-                ← Back to Order History
+                ← Quay lại lịch sử đơn hàng
             </button>
             <h2 className="text-xl font-bold mb-6 text-indigo-700 flex items-center gap-2">
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                Order Details
+                Chi tiết đơn hàng
             </h2>
 
             {/* Order Info */}
             <div className="mb-4 p-4 rounded-lg border border-indigo-100 bg-indigo-50/40">
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[120px]">
-                        <div className="text-xs text-gray-500 font-semibold">Order ID</div>
+                        <div className="text-xs text-gray-500 font-semibold">Mã đơn hàng</div>
                         <div className="font-mono text-sm break-all whitespace-pre-line">{order._id}</div>
                     </div>
                     <div className="flex-1 min-w-[120px]">
-                        <div className="text-xs text-gray-500 font-semibold">Date</div>
+                        <div className="text-xs text-gray-500 font-semibold">Ngày đặt</div>
                         <div className="text-sm">{new Date(order.createdAt).toLocaleDateString()}</div>
                     </div>
                     <div className="flex-1 min-w-[120px]">
-                        <div className="text-xs text-gray-500 font-semibold">Status</div>
+                        <div className="text-xs text-gray-500 font-semibold">Trạng thái</div>
                         <StatusBadge status={order.statusOrder} />
                     </div>
                 </div>
@@ -82,23 +82,23 @@ export default function OrderDetail({ order, onBack }) {
 
             {/* Shipping Address */}
             <div className="mb-4 p-4 rounded-lg border border-green-100 bg-green-50/40">
-                <div className="text-xs text-gray-500 font-semibold mb-1">Shipping Address</div>
+                <div className="text-xs text-gray-500 font-semibold mb-1">Địa chỉ giao hàng</div>
                 <div className="text-sm">{order.address}</div>
             </div>
 
             {/* Product List */}
             <div className="mb-4 p-4 rounded-lg border border-blue-100 bg-blue-50/40">
-                <div className="font-semibold text-indigo-700 mb-2">Products</div>
+                <div className="font-semibold text-indigo-700 mb-2">Sản phẩm</div>
                 <ul className="list-disc pl-6 space-y-1">
                     {order.orderDetail.map((item, idx) => (
                         <li key={item._id} className="flex justify-between items-center">
                             <span>
                                 <span className="font-semibold">{item.Product?.nameProduct}</span>
                                 {" — "}
-                                {item.quantity} x {item.price.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}
+                                {item.quantity} x {item.price.toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0 })}
                             </span>
                             <span className="text-xs text-gray-500">
-                                {(item.price * item.quantity).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}
+                                {(item.price * item.quantity).toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0 })}
                             </span>
                         </li>
                     ))}
@@ -108,17 +108,10 @@ export default function OrderDetail({ order, onBack }) {
             {/* Total */}
             <div className="mb-4 p-4 rounded-lg border border-yellow-100 bg-yellow-50/40 text-right">
                 <div className="flex flex-col gap-1 items-end">
-                    <div className="flex justify-between w-full max-w-xs">
-                        <span className="text-sm">Subtotal:</span>
-                        <span className="font-semibold">{subtotal.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}</span>
-                    </div>
-                    <div className="flex justify-between w-full max-w-xs">
-                        <span className="text-sm">Shipping:</span>
-                        <span className="font-semibold">{shipping.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}</span>
-                    </div>
+
                     <div className="flex justify-between w-full max-w-xs text-base font-bold">
-                        <span>Total:</span>
-                        <span>{order.total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 })}</span>
+                        <span>Tổng:</span>
+                        <span>{order.total.toLocaleString("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0 })}</span>
                     </div>
                 </div>
             </div>
@@ -130,7 +123,7 @@ export default function OrderDetail({ order, onBack }) {
                         onClick={handleCancelOrder}
                         className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow transition"
                     >
-                        Cancel Order
+                        Hủy đơn hàng
                     </button>
                 </div>
             )}
