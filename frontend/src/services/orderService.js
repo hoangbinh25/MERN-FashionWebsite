@@ -1,6 +1,17 @@
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL_BACKEND;
 
+export const getAllTransactions = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/transaction/proxy`);
+    console.log("Get all transactions response:", res.data);
+    return res.data;
+  } catch (error) {
+    console.log("Get all transactions error:", error);
+    throw error;
+  }
+};
+
 // Create a new order
 export const createOrder = async (orderData) => {
   try {
@@ -58,6 +69,40 @@ export const getAllOrders = async ({ status, sortBy }) => {
     return res.data;
   } catch (error) {
     console.log("Get all orders error:", error);
+    throw error;
+  }
+};
+
+export const createAddress = async (addressData) => {
+  try {
+    const res = await axios.put(`${API_URL}/user/create`, addressData);
+    return res.data;
+  } catch (error) {
+    console.error("Create address error:", error);
+    throw error;
+  }
+};
+
+export const getAddressByIdUser = async (idUser) => {
+  try {
+    const res = await axios.get(`${API_URL}/address/get/${idUser}`);
+    return res.data;
+  } catch (error) {
+    // Nếu không tìm thấy địa chỉ, trả về null thay vì throw error
+    if (error.response && error.response.status === 404) {
+      return null;
+    }
+    console.error("Get address by address ID error:", error);
+    throw error;
+  }
+};
+
+export const updateAddress = async (addressId, addressData) => {
+  try {
+    const res = await axios.put(`${API_URL}/address/update/${addressId}`, addressData);
+    return res.data;
+  } catch (error) {
+    console.error("Update address error:", error);
     throw error;
   }
 };

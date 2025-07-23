@@ -47,7 +47,15 @@ export default function OrderHistoryPage() {
                                     <td className="py-2">{order._id}</td>
                                     <td className="py-2">{new Date(order.createdAt).toLocaleDateString()}</td>
                                     <td className="py-2">
-                                        <span className={`px-2 py-1 rounded text-xs font-semibold ${order.statusOrder === "Delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>{order.statusOrder}</span>
+                                        <span className={`px-2 py-1 rounded text-xs font-semibold ${order.statusOrder === "pending" 
+                                                ? "bg-yellow-100 text-yellow-800" 
+                                                : order.statusOrder.toLowerCase() === "shipped" 
+                                                ? "bg-green-100 text-green-800" 
+                                                : order.statusOrder.toLowerCase() === "canceled" 
+                                                ? "bg-red-100 text-red-800" 
+                                                : order.statusOrder.toLowerCase() === "delivered" 
+                                                ? "bg-lime-100 text-lime-500" 
+                                                : "bg-gray-100 text-gray-800"}`}>{order.statusOrder}</span>
                                     </td>
                                     <td className="py-2">
                                         <span>{order.statusPayment === "cod" ? "Cash on Delivery" : "Online Payment"}</span>

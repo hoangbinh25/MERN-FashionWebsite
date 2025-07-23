@@ -10,16 +10,24 @@ export const getAllUsers = async (params = {}) => {
             window.location.href = '/login';
             return;
         }
-        const { page, limit, sortBy, role, isActive } = params;
-        const datatest = `${API_URL}/user/getUsers?page=${page}&limit=${limit}&sortBy=${sortBy}&role=${role}&isActive=${isActive}`;
-        console.log("API URL:", datatest);
+        // Thêm searchName vào params nếu có
+        const { page, limit, sortBy, role, isActive, searchName } = params;
+        const queryParams = {
+            page,
+            limit,
+            sortBy,
+            role,
+            isActive,
+        };
+        if (searchName && searchName.trim() !== "") {
+            queryParams.searchName = searchName;
+        }
         const res = await axios.get(`${API_URL}/user/getUsers`, {
-            params,
+            params: queryParams,
             headers: {
                 token: `Bearer ${token}`
             }
         });
-        console.log("getAllUsers response:", res.data);
         return res.data;
     } catch (error) {
         console.error('getAllUsers error:', error);

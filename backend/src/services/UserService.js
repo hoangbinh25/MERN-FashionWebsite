@@ -1,13 +1,22 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt')
 
-// Get all user with filter, sort, pagination
-const getUsers = async (filter = {}, sortBy = '', page = 1, limit = 10) => {
+// Get all user with filter, sort, pagination, search by name (case-insensitive)
+const getUsers = async (filter = {}, sortBy = '', page = 1, limit = 10, searchName = '') => {
     return new Promise(async (resolve, reject) => {
         try {
             let sortObj = {};
             if (sortBy === 'createdAt') {
                 sortObj = { createdAt: -1 };
+            }
+            // Thêm điều kiện tìm kiếm theo tên (không phân biệt hoa thường)
+            if (searchName && typeof searchName === "string" && searchName.trim() !== "") {
+                // Tìm theo firstName hoặc lastName hoặc userName, không phân biệt hoa thường
+                filter.$or = [
+                    { firstName: { $regex: searchName, $options: "i" } },
+                    { lastName: { $regex: searchName, $options: "i" } },
+                    { userName: { $regex: searchName, $options: "i" } }
+                ];
             }
             // Tính tổng số user
             const totalUsers = await User.countDocuments(filter);
@@ -134,6 +143,34 @@ const deleteUser = async (userId) => {
         }
     })
 }
+const updateAddress = async (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById(userId);
+            if (!checkUser) {
+                return reject({
+                    status: 'Error',
+                    message: 'User not found'
+                });
+            }
+            
+            // Chỉ lưu _id của address vào user
+            const updatedUser = await User.findByIdAndUpdate(
+                userId, 
+                { address: data._id }, // Chỉ lưu _id
+                { new: true }
+            ).populate('address'); // Populate để trả về đầy đủ thông tin address
+
+            resolve({
+                status: "OK",
+                message: "Address updated successfully",
+                data: updatedUser
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
 module.exports = {
     getUsers,
@@ -141,4 +178,5 @@ module.exports = {
     createUser,
     updateUser,
     deleteUser,
+    updateAddress,
 };

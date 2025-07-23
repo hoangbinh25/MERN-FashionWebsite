@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import provincesData from "~/assets/64TinhThanh.json";
+import { getAddressByIdUser, createAddress, updateAddress } from "~/services/orderService";
 
 export default function AddressCart({ cartItems, onProceedCheckout, onAddressChange }) {
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const User = JSON.parse(localStorage.getItem("user"));
   const shipping = 0;
   const total = subtotal + shipping;
   const [selectedProvince, setSelectedProvince] = useState("");
@@ -18,6 +20,78 @@ export default function AddressCart({ cartItems, onProceedCheckout, onAddressCha
     commune: "",
     street: "",
   });
+  const [addressDetail, setAddressDetail] = useState({
+    idUser: User._id || User.id,
+    province: "",
+    provinceCode: 0,
+    district: "",
+    districtCode: 0,
+    commune: "",
+    communeCode: 0,
+    addressDetail: ""
+  });
+
+  //lấy địa chỉ của user
+  useEffect(() => {
+  const fetchOrCreateAddress = async () => {
+    try {
+      const res = await getAddressByIdUser(User._id);
+      if (res) {
+        setAddressDetail(res);
+        setAddressInfo({
+          fullName: res.fullName || "",
+          phone: res.phone || "",
+          province: res.province,
+          district: res.district,
+          commune: res.commune,
+          street: res.addressDetail
+        });
+        setSelectedProvince(res.provinceCode?.toString() || "");
+        setSelectedDistrict(res.districtCode?.toString() || "");
+        setSelectedCommune(res.communeCode?.toString() || "");
+      } else {
+        const created = await createAddress({
+          idUser: User._id,
+          province: "",
+          provinceCode: 0,
+          district: "",
+          districtCode: 0,
+          commune: "",
+          communeCode: 0,
+          addressDetail: ""
+        });
+        setAddressDetail(created);
+      }
+    } catch (error) {
+      console.error("Error fetching/creating address:", error);
+    }
+  };
+
+  fetchOrCreateAddress();
+}, []);
+
+//lưu địa chỉ khi thay đổi
+useEffect(() => {
+  const timeout = setTimeout(() => {
+    if (addressDetail?._id) {
+      updateAddress(addressDetail._id, {
+        ...addressDetail,
+        province: addressInfo.province,
+        district: addressInfo.district,
+        commune: addressInfo.commune,
+        provinceCode: parseInt(selectedProvince) || 0,
+        districtCode: parseInt(selectedDistrict) || 0,
+        communeCode: communes.find(c => c.name === selectedCommune)?.idCommune || 0,
+        addressDetail: addressInfo.street,
+        fullName: addressInfo.fullName,
+        phone: addressInfo.phone
+      });
+    }
+  }, 1000); // 1s sau khi dừng nhập
+
+  return () => clearTimeout(timeout);
+}, [addressInfo, selectedProvince, selectedDistrict, selectedCommune]);
+
 
   useEffect(() => {
     if (selectedProvince) {

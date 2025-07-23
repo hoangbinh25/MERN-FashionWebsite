@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const getUsers = async (req, res) => {
     try {
         // Lấy các tham số lọc từ query
-        const { role, isActive, sortBy, page = 1, limit = 10 } = req.query;
+        const { role, isActive, sortBy, page = 1, limit = 10, searchName = "" } = req.query;
         let filter = {};
         if (typeof role !== 'undefined' && role !== '' && role !== 'All') {
             filter.role = role;
@@ -14,8 +14,8 @@ const getUsers = async (req, res) => {
             // isActive: 'true' hoặc 'false'
             filter.isActive = isActive === 'true';
         }
-        // Truyền filter, sortBy, page, limit xuống service
-        const user = await UserService.getUsers(filter, sortBy, Number(page), Number(limit));
+        // Truyền filter, sortBy, page, limit, searchName xuống service
+        const user = await UserService.getUsers(filter, sortBy, Number(page), Number(limit), searchName);
         res.json(user)
     } catch (e) {
         res.status(500).json({ error: e.message });

@@ -26,6 +26,8 @@ import BlogDetail from '~/components/Layouts/customers/Blog/BlogDetail';
 import PaySuccessful from '~/pages/PaySuccessful';
 
 
+const user = JSON.parse(localStorage.getItem("user"));
+
 const routes = [
     // customers
     { path: '/', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
@@ -54,7 +56,7 @@ const routes = [
     { path: '/admin/user', component: User, content: 'Users Management' },
     { path: '/admin/store', component: Store, content: 'Stores Management' },
     { path: '/admin/blog', component: Blog, content: 'Blogs Management' },
-
+    
 
     // successful payment
     { path: '/successful', component: PaySuccessful },
