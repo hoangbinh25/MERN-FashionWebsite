@@ -25,14 +25,13 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
         setMainImg(images[(currentImgIdx + 1) % images.length]);
     };
     const [size, setSize] = useState("");
-    const [color, setColor] = useState("");
     const [quantity, setQuantity] = useState(1);
     const { fetchCartCount } = useCart();
 
     const User = JSON.parse(localStorage.getItem('user'));
-    const addToCart = async ({ id, quantity, price }) => {
+    const addToCart = async ({ id, quantity, price, size }) => {
         try {
-            await addProductToCart(User._id || User.id, id, quantity, price);
+            await addProductToCart(User._id || User.id, id, quantity, price, size);
             await fetchCartCount();
         } catch (error) {
             console.error("Error adding to cart:", error);
@@ -95,14 +94,17 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                     <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                         <div className="w-full sm:w-32 md:w-36">
                             <label className="block text-sm xs:text-base sm:text-lg font-medium mb-1">Kíck cỡ</label>
-                            <select value={size} onChange={e => setSize(e.target.value)} className="w-full border rounded px-3 py-2 sm:px-4 sm:py-3">
+                            <select
+                                value={size}
+                                onChange={e => setSize(e.target.value)}
+                                className="w-full border rounded px-3 py-2 sm:px-4 sm:py-3">
                                 <option value="">Chọn</option>
                                 {Array.isArray(product.sizes) && product.sizes.length > 0 ? (
                                     product.sizes.map((sz, idx) => (
                                         <option key={idx} value={sz}>{sz}</option>
                                     ))
                                 ) : (
-                                    ["S", "M", "L", "XL"].map((sz, idx) => (
+                                    ["S", "M", "L", "XL", "XXL"].map((sz, idx) => (
                                         <option key={idx} value={sz}>{sz}</option>
                                     ))
                                 )}
@@ -112,11 +114,18 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                     <div className="flex items-center gap-3 sm:gap-4">
                         <label className="block text-sm xs:text-base sm:text-lg font-medium">Số lượng:</label>
                         <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => Math.max(1, q - 1))}>-</button>
-                        <input type="text" value={quantity} min={1} className="w-12 xs:w-14 sm:w-16 text-center border rounded py-1 sm:py-2" />
+                        <input
+                            type="text"
+                            value={quantity}
+                            min={1}
+                            className="w-12 xs:w-14 sm:w-16 text-center border rounded py-1 sm:py-2"
+                            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                        />
                         <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => q + 1)}>+</button>
                     </div>
                     <button className="w-full bg-indigo-500 text-white font-semibold py-3 sm:py-4 rounded mt-4 sm:mt-6 hover:bg-indigo-600 transition"
                         onClick={async () => {
+
                             if (!size) {
                                 toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng");
                                 return

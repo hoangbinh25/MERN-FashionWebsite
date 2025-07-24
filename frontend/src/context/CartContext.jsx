@@ -27,8 +27,25 @@ export function CartProvider({ children }) {
     fetchCartCount();
   }, []);
 
+  const fetchCart = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?._id) {
+      try {
+        const res = await getCartByUser(user._id);
+        const data = Array.isArray(res) ? res : [];
+
+        setCartItems(data);
+        const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
+        setCartCount(totalQuantity);
+      } catch (error) {
+        console.error("Lỗi khi fetch giỏ hàng:", error);
+      }
+    }
+  };
+
+
   return (
-    <CartContext.Provider value={{ cartCount, fetchCartCount }}>
+    <CartContext.Provider value={{ cartCount, fetchCartCount, fetchCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -85,7 +85,7 @@ export default function UserDetail({ user, onClose, onSave }) {
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 sm:gap-6"
         >
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-800">User Details</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Chi tiết người dùng</h2>
           {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -99,7 +99,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">First Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Họ</label>
               <input
                 type="text"
                 name="firstName"
@@ -110,7 +110,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Last Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Tên</label>
               <input
                 type="text"
                 name="lastName"
@@ -121,7 +121,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Username</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Tên người dùng</label>
               <input
                 type="text"
                 name="userName"
@@ -132,7 +132,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Password</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Mật khẩu</label>
               <input
                 type="password"
                 name="password"
@@ -154,7 +154,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Role</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Vai trò</label>
               <select
                 name="role"
                 value={form.role}
@@ -167,7 +167,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               </select>
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Phone</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Số điện thoại</label>
               <input
                 type="tel"
                 name="phone"
@@ -177,7 +177,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Address</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Địa chỉ</label>
               <input
                 type="text"
                 name="address"
@@ -197,7 +197,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               <label className="text-xs sm:text-sm font-semibold text-gray-600">Enable User</label>
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Created At</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Ngày tạo</label>
               <input
                 type="text"
                 name="createdAt"
@@ -213,7 +213,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Cập nhật..." : "Cập nhật"}
             </button>
             <button
               type="button"
@@ -221,7 +221,7 @@ export default function UserDetail({ user, onClose, onSave }) {
               onClick={onClose}
               disabled={loading}
             >
-              Cancel
+              Đóng
             </button>
           </div>
         </form>

@@ -16,7 +16,7 @@ export default function Product() {
         totalPages: 1,
         totalItems: 0,
     });
-
+    const [selectedPriceRange, setSelectedPriceRange] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [categories, setCategories] = useState([])
@@ -27,14 +27,32 @@ export default function Product() {
     const handleCategoryChange = (categoryId) => {
         setActiveCategory(categoryId);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
-        loadProducts(1, categoryId);
+        loadProducts(1, categoryId, selectedPriceRange);
     };
 
-    const loadProducts = async (page = 1, category = "") => {
+    const handlePriceFilter = (range) => {
+        setSelectedPriceRange(range);
+        setPagination(prev => ({ ...prev, currentPage: 1 }));
+        loadProducts(1, activeCategory, range);
+    };
+
+    const getPriceClass = (range) =>
+        "cursor-pointer hover:underline " +
+        (JSON.stringify(selectedPriceRange) === JSON.stringify(range)
+            ? "text-indigo-600 font-semibold"
+            : "text-gray-700");
+
+    const loadProducts = async (page = 1, category = "", priceRange = null) => {
         setLoading(true);
         try {
             const res = await getAllProducts({ page, limit, category });
-            const filtered = (res.data || []).filter(item => item.isActive);
+            let filtered = (res.data || []).filter(item => item.isActive);
+
+            if (priceRange) {
+                const [min, max] = priceRange;
+                filtered = filtered.filter(p => p.price >= min && p.price <= max);
+            }
+
             const mapped = filtered.map(item => {
                 let images = [];
                 if (Array.isArray(item.image) && item.image.length > 0) {
@@ -73,7 +91,7 @@ export default function Product() {
     const User = JSON.parse(localStorage.getItem('user'));
     const addToCart = async (product) => {
         try {
-            await addProductToCart(User._id || User.id, product.id, 1, product.price);
+            await addProductToCart(User._id || User.id, product.id, 1, product.price, product.size);
             await fetchCartCount();
         } catch (error) {
             console.error("Error adding to cart:", error);
@@ -166,13 +184,13 @@ export default function Product() {
                         </div>
                         <div>
                             <h3 className="font-bold mb-2">Price</h3>
-                            <ul>
-                                <li>Tất cả</li>
-                                <li>0 - 50 000 VNĐ</li>
-                                <li>50 000 VNĐ - 100 000 VNĐ</li>
-                                <li>100 000 VNĐ - 150 000 VNĐ</li>
-                                <li>150 000 VNĐ - 200 000 VNĐ</li>
-                                <li>200 000 VNĐ +</li>
+                            <ul className="space-y-1 text-gray-700 text-sm">
+                                <li onClick={() => handlePriceFilter(null)} className={getPriceClass(null)}>Tất cả</li>
+                                <li onClick={() => handlePriceFilter([0, 500000])} className={getPriceClass([0, 500000])}>0 - 500,000 VNĐ</li>
+                                <li onClick={() => handlePriceFilter([500000, 1000000])} className={getPriceClass([500000, 1000000])}>500,000 - 1,000,000 VNĐ</li>
+                                <li onClick={() => handlePriceFilter([1000000, 2000000])} className={getPriceClass([1000000, 2000000])}>1,000,000 - 2,000,000 VNĐ</li>
+                                <li onClick={() => handlePriceFilter([2000000, 5000000])} className={getPriceClass([2000000, 5000000])}>2,000,000 - 5,000,000 VNĐ</li>
+                                <li onClick={() => handlePriceFilter([5000000, Infinity])} className={getPriceClass([5000000, Infinity])}>5,000,000 VNĐ +</li>
                             </ul>
                         </div>
                     </div>

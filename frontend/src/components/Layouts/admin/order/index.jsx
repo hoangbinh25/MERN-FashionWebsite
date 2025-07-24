@@ -93,9 +93,10 @@ export default function Orders() {
                     <div className="font-medium">{order.phone}</div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="font-medium text-sm max-w-xs truncate" title={order.address}>
-                      {order.address}
-                    </div>
+                    <div className="font-medium">
+                      {order.address?.split(',').map((line, idx) => (
+                        <div key={idx}>{line.trim()}</div>
+                      ))}</div>
                   </td>
                   <td className="py-3 px-4">{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
                   <td className="py-3 px-4 text-right font-bold text-green-600">

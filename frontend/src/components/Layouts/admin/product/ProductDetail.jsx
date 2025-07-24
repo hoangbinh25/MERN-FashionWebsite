@@ -160,7 +160,7 @@ export default function ProductDetail({ product, categories, onClose, onSave }) 
                   className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"
                   step="0.01"
                   placeholder="Nhập giá tiền"
-                  min="0"
+                  min={0}
                   required
                 />
               </div>

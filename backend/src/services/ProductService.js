@@ -38,7 +38,7 @@ const getProducts = async (limit, page, sort, nameProduct, category, size, minPr
         objectFilter.nameProduct = { $regex: nameProduct, $options: 'i' }
       }
 
-      if (category) {
+      if (category && category !== "All Products") {
         objectFilter.category = category;
       }
 
