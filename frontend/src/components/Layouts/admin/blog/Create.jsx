@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { createBlog } from "~/services/blogService";
 
-// const IMAGE_TYPES = ".jpg,.jpeg,.png,.webp,.gif,.bmp";
-
 export default function CreateBlog({ onClose, onSuccess }) {
   const [form, setForm] = useState({
     titleBlog: "",
@@ -38,17 +36,17 @@ export default function CreateBlog({ onClose, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.titleBlog.trim()) {
-      setError("Blog name cannot be blank");
+      setError("Tiêu đề không được để trống");
       return;
     }
 
     if (!form.descBlog.trim()) {
-      setError("Blog description cannot be blank");
+      setError("Mô tả không được để trống");
       return;
     }
 
     if (!form.image) {
-      setError("Blog image cannot be blank");
+      setError("Ảnh không được để trống");
       return;
     }
 
@@ -78,10 +76,10 @@ export default function CreateBlog({ onClose, onSuccess }) {
           ×
         </button>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold text-gray-800">Create Blog</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Thêm Blog</h2>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Blog Name</label>
+            <label className="text-sm font-medium text-gray-700">Tiêu đề</label>
             <input
               type="text"
               name="titleBlog"
@@ -94,27 +92,27 @@ export default function CreateBlog({ onClose, onSuccess }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Description</label>
+            <label className="text-sm font-medium text-gray-700">Mô tả</label>
             <textarea
               type="text"
               name="descBlog"
               value={form.descBlog}
               onChange={handleChange}
               className="mt-1 border px-3 py-2 w-full rounded-lg focus:ring-2 focus:ring-indigo-400 text-sm"
-              placeholder="Description"
+              placeholder="Mô tả"
               required
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Image blog</label>
+            <label className="text-sm font-medium text-gray-700">Ảnh blog</label>
             <input
               type="file"
               name="image"
               accept="image/*"
               onChange={handleChange}
               className="mt-1 border px-3 py-2 w-full rounded-lg focus:ring-2 focus:ring-indigo-400 text-sm"
-              placeholder="input blog name"
+              placeholder="Ảnh"
               required
             />
             {preview && (
@@ -143,7 +141,7 @@ export default function CreateBlog({ onClose, onSuccess }) {
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm"
               onClick={onClose}
             >
-              Cancel
+              Đóng
             </button>
           </div>
         </form>

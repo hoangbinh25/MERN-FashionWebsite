@@ -83,7 +83,10 @@ export default function OrderDetail({ order, onBack }) {
             {/* Shipping Address */}
             <div className="mb-4 p-4 rounded-lg border border-green-100 bg-green-50/40">
                 <div className="text-xs text-gray-500 font-semibold mb-1">Địa chỉ giao hàng</div>
-                <div className="text-sm">{order.address}</div>
+                <div className="text-sm">
+                    {order.address.split(',').map((line, index) => (
+                        <div key={index}>{line.trim()}</div>
+                    ))}</div>
             </div>
 
             {/* Product List */}

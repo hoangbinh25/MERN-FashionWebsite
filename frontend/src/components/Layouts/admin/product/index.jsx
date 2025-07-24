@@ -206,7 +206,7 @@ export default function ProductTable() {
                 new Set(
                   products.flatMap(product =>
                     product.variations?.map(v => v.size) || []
-                  )
+                  ),
                 )
               ).map(size => (
                 <option key={size} value={size}>

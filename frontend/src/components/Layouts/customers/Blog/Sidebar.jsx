@@ -2,7 +2,6 @@ import CategoryList from "./CategoryList";
 import SearchBox from "./SearchBox";
 import FeaturedProduct from "./FeaturedProduct";
 
-
 export default function Sidebar() {
     return (
         <aside className="w-full md:w-1/3 md:pl-12 mt-12 md:mt-0 p-8">

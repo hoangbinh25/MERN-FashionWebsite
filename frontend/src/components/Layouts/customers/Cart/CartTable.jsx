@@ -63,7 +63,7 @@ export default function TableCart({ cartItems, reloadCart }) {
                 })}
               </p>
               <p className="text-gray-500 text-sm">
-                Kích thước: {item.idProduct?.size || item.size || "N/A"}
+                Kích thước: {item.size || "N/A"}
               </p>
             </div>
           </div>

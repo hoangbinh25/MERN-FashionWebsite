@@ -7,12 +7,13 @@ export const getCartByUser = async (idUser) => {
     return response.data;
 }
 
-export const addProductToCart = async (idUser, idProduct, quantity, price) => {
+export const addProductToCart = async (idUser, idProduct, quantity, price, size) => {
     const response = await axios.post(`${API_URL}/cart/addProduct`, {
         idUser,
         idProduct,
         quantity,
-        price
+        price,
+        size,
     });
     console.log("addProductToCart response:", response.data);
     return response.data;
