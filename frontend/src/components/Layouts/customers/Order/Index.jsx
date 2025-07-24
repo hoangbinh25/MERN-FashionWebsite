@@ -26,7 +26,7 @@ export default function OrderHistoryPage() {
         <div className="max-w-screen-2xl mx-auto py-10 px-2 md:px-4 min-h-screen">
             <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Lịch sử đơn hàng</h2>
             {selectedOrder ? (
-                <OrderDetail order={selectedOrder} onBack={() => setSelectedOrder(null)} />
+                <OrderDetail order={selectedOrder} onBack={() => {setSelectedOrder(null), loadOrders()}} />
             ) : (
                 <div className="bg-gray-50 rounded-lg shadow p-6">
                     <table className="w-full text-sm">

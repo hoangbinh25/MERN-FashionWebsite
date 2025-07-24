@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import OrderDetail from "./Detail";
 import { getAllOrders } from "~/services/orderService";
 
-function formatUSD(vnd) {
-  const usd = vnd;
-  return usd.toLocaleString("en-US", { style: "currency", currency: "USD" });
+function formatVND(amount) {
+  return amount.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
 }
 
 export default function Orders() {
@@ -42,10 +46,10 @@ export default function Orders() {
             className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
           >
             <option value="All">Tất cả</option>
-            <option value="Pending">Chờ xác nhận</option>
-            <option value="Delivered">Đã giao</option>
-            <option value="Shipped">Đang giao</option>
-            <option value="Cancelled">Hủy </option>
+            <option value="pending">Chờ xác nhận</option>
+            <option value="delivered">Đã giao</option>
+            <option value="shipped">Đang giao</option>
+            <option value="canceled">Đã Hủy</option>
           </select>
           <select
             value={sortBy}
@@ -69,7 +73,7 @@ export default function Orders() {
               <th className="py-3 px-4 font-semibold text-left">Số điện thoại</th>
               <th className="py-3 px-4 font-semibold text-left">Địa chỉ</th>
               <th className="py-3 px-4 font-semibold text-left">Ngày đặt</th>
-              <th className="py-3 px-4 font-semibold text-right">Tổng</th>
+              <th className="py-3 px-4 font-semibold text-right">Tổng tiền</th>
               <th className="py-3 px-4 font-semibold text-center">Trạng thái</th>
               <th className="py-3 px-4 font-semibold text-center">Thao tác</th>
             </tr>
@@ -77,7 +81,7 @@ export default function Orders() {
           <tbody>
             {orders.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-8 text-gray-400">
+                <td colSpan={7} className="text-center py-8 text-gray-400">
                   Không có đơn hàng nào khớp với bộ lọc đã chọn.
                 </td>
               </tr>
@@ -89,23 +93,24 @@ export default function Orders() {
                     <div className="font-medium">{order.phone}</div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="font-medium">{order.address}</div>
+                    <div className="font-medium text-sm max-w-xs truncate" title={order.address}>
+                      {order.address}
+                    </div>
                   </td>
-                  <td className="py-3 px-4">{new Date(order.createdAt).toLocaleDateString()}</td>
-                  <td className="py-3 px-4 text-right font-semibold text-gray-700">
-                    {formatUSD(order.total)}
+                  <td className="py-3 px-4">{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
+                  <td className="py-3 px-4 text-right font-bold text-green-600">
+                    {formatVND(order.total)}
                   </td>
                   <td className="py-3 px-4 text-center">
-                    {/* Replace with your StatusBadge component if available */}
                     <span className={
-                      `px-2 py-1 rounded ${order.statusOrder.toLowerCase() === "pending"
+                      `px-3 py-1 rounded-full text-xs font-medium ${order.statusOrder.toLowerCase() === "pending"
                         ? "bg-yellow-100 text-yellow-800"
                         : order.statusOrder.toLowerCase() === "shipped"
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-blue-100 text-blue-800"
                           : order.statusOrder.toLowerCase() === "canceled"
                             ? "bg-red-100 text-red-800"
                             : order.statusOrder.toLowerCase() === "delivered"
-                              ? "bg-lime-100 text-lime-500"
+                              ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"}`}>
                       {order.statusOrder.toLowerCase() === "pending"
                         ? "Chờ xác nhận"
@@ -114,14 +119,14 @@ export default function Orders() {
                           : order.statusOrder.toLowerCase() === "canceled"
                             ? "Đã hủy"
                             : order.statusOrder.toLowerCase() === "delivered"
-                              ? "Đã nhận"
-                              : "bg-gray-100 text-gray-800"}
+                              ? "Đã giao"
+                              : order.statusOrder}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-center">
                     <button
                       onClick={() => setViewOrder(order)}
-                      className="inline-flex items-center gap-1 text-indigo-600 hover:underline font-medium px-2"
+                      className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 font-medium px-3 py-1 rounded-lg transition-colors"
                     >
                       <svg
                         width="16"
@@ -131,15 +136,14 @@ export default function Orders() {
                       >
                         <path
                           d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"
-                          stroke="#6366f1"
+                          stroke="currentColor"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                       </svg>
-                      View
+                      Xem chi tiết
                     </button>
-                    {/* Add delete logic if needed */}
                   </td>
                 </tr>
               ))

@@ -221,7 +221,6 @@ export default function UserTable() {
               <th className="px-2 py-3 border-b">Username</th>
               <th className="px-2 py-3 border-b">Email</th>
               <th className="px-2 py-3 border-b">Phone</th>
-              <th className="px-2 py-3 border-b">Address</th>
               <th className="px-2 py-3 border-b">Role</th>
               <th className="px-2 py-3 border-b">Status</th>
               <th className="px-2 py-3 border-b">Created At</th>
@@ -245,7 +244,6 @@ export default function UserTable() {
                   <td className="px-2 py-3 border-b">{user.userName}</td>
                   <td className="px-2 py-3 border-b">{user.email}</td>
                   <td className="px-2 py-3 border-b">{user.phone}</td>
-                  <td className="px-2 py-3 border-b">{user.address}</td>
                   <td className="px-2 py-3 border-b">{user.role ? "Admin" : "Customer"}</td>
                   <td className="px-2 py-3 border-b">{user.isActive ? "Enabled" : "Disabled"}</td>
                   <td className="px-2 py-3 border-b">{new Date(user.createdAt).toLocaleDateString()}</td>

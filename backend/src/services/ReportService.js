@@ -43,7 +43,14 @@ const ReportService = {
     }
 
     // 1. Thống kê đơn hàng & doanh thu theo thời gian
-    const orders = await Order.find(matchStage).populate("orderDetail");
+    const allOrders = await Order.find(matchStage).populate("orderDetail");
+    
+    // Tách riêng đơn hàng để tính doanh thu (loại trừ đơn pending và canceled)
+    const validOrdersForRevenue = allOrders.filter(order => {
+      const status = (order.statusOrder || "").toLowerCase();
+      return status !== "pending" && status !== "canceled" && status !== "cancelled";
+    });
+
     const orderStats = [];
     const revenueStats = [];
 
@@ -65,39 +72,60 @@ const ReportService = {
       revenueStats[i] = 0;
     }
 
-    for (const order of orders) {
+    // Tính số lượng đơn hàng (tất cả đơn hàng, kể cả đơn hủy)
+    for (const order of allOrders) {
       const date = new Date(order.createdAt);
       let index = 0;
       if (/^day-\d{1,2}-\d{1,2}$/.test(filterType)) index = 0;
       else if (/^day-\d{1,2}$/.test(filterType) || filterType === "day") index = date.getDate() - 1;
       else if (filterType === "month") index = date.getMonth();
       else if (filterType === "quarter") index = Math.floor(date.getMonth() / 3);
-      else if (filterType === "year") index = date.getMonth(); // Sửa lại dòng này
+      else if (filterType === "year") index = date.getMonth();
+      
       if (index >= 0 && index < groupLength) {
         orderStats[index] += 1;
+      }
+    }
+
+    // Tính doanh thu (chỉ tính đơn hàng không bị hủy)
+    for (const order of validOrdersForRevenue) {
+      const date = new Date(order.createdAt);
+      let index = 0;
+      if (/^day-\d{1,2}-\d{1,2}$/.test(filterType)) index = 0;
+      else if (/^day-\d{1,2}$/.test(filterType) || filterType === "day") index = date.getDate() - 1;
+      else if (filterType === "month") index = date.getMonth();
+      else if (filterType === "quarter") index = Math.floor(date.getMonth() / 3);
+      else if (filterType === "year") index = date.getMonth();
+      
+      if (index >= 0 && index < groupLength) {
         revenueStats[index] += order.total;
       }
     }
 
     // 2. Trạng thái đơn hàng (áp dụng filter)
-    const filteredOrders = orders; // đã được lọc theo thời gian
     const statusCounts = {
       Pending: 0,
       Delivery: 0,
       Delivered: 0,
       Canceled: 0,
     };
-    filteredOrders.forEach(order => {
+    
+    allOrders.forEach(order => {
       const status = (order.statusOrder || "").toLowerCase();
       if (status === "pending") statusCounts.Pending++;
       else if (status === "delivery" || status === "shipped") statusCounts.Delivery++;
       else if (status === "delivered") statusCounts.Delivered++;
-      else if (status === "canceled") statusCounts.Canceled++;
+      else if (status === "canceled" || status === "cancelled") statusCounts.Canceled++;
     });
 
-    // 3. Top sản phẩm bán chạy
+    // 3. Top sản phẩm bán chạy (chỉ tính từ đơn hàng không bị hủy)
     const productMap = new Map();
-    const details = await OrderDetail.find();
+    
+    // Lấy OrderDetail từ các đơn hàng hợp lệ (không bị hủy)
+    const validOrderIds = validOrdersForRevenue.map(order => order._id);
+    const details = await OrderDetail.find({ 
+      Order: { $in: validOrderIds } 
+    });
 
     details.forEach((detail) => {
       const id = detail.Product.toString();
@@ -123,11 +151,37 @@ const ReportService = {
         };
       });
 
+    // 4. Thêm thống kê tổng quan
+    const totalOrders = allOrders.length;
+    const totalRevenue = validOrdersForRevenue.reduce((sum, order) => sum + order.total, 0);
+    const canceledOrders = statusCounts.Canceled;
+    const pendingOrders = statusCounts.Pending;
+    const excludedOrders = canceledOrders + pendingOrders;
+    const excludeRate = totalOrders > 0 ? ((excludedOrders / totalOrders) * 100).toFixed(2) : 0;
+
+    console.log(`📊 Thống kê doanh thu:`);
+    console.log(`- Tổng đơn hàng: ${totalOrders}`);
+    console.log(`- Đơn hàng pending: ${pendingOrders}`);
+    console.log(`- Đơn hàng hủy: ${canceledOrders}`);
+    console.log(`- Tổng đơn loại trừ: ${excludedOrders} (${excludeRate}%)`);
+    console.log(`- Đơn hàng hợp lệ cho doanh thu: ${validOrdersForRevenue.length}`);
+    console.log(`- Tổng doanh thu (loại trừ pending & canceled): ${totalRevenue.toLocaleString('vi-VN')} VND`);
+
     return {
       orderStats,
       revenueStats,
       topProducts,
       statusCounts,
+      // Thêm thống kê tổng quan
+      summary: {
+        totalOrders,
+        totalRevenue,
+        validOrders: validOrdersForRevenue.length,
+        pendingOrders,
+        canceledOrders,
+        excludedOrders,
+        excludeRate: parseFloat(excludeRate)
+      }
     };
   },
 };
