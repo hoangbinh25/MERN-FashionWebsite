@@ -49,17 +49,18 @@ export default function Footer() {
           <h3 className="text-lg font-bold text-white mb-4">Vị trí</h3>
           <ul className="space-y-2">
             <li>
-              <a
-                href="https://www.google.com/maps?q=Trinh+Van+Bo,+Nam+Tu+Liem,+Ha+Noi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline flex items-center gap-2"
-              >
-                <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
-                </svg>
-                Xem trên Google Maps
-              </a>
+              <div className="w-full">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4640.290675848051!2d105.74354717525686!3d21.037901680613665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454962c0b6523%3A0x5c76c67564d9d1b9!2zUC4gVHLhu4tuaCBWxINuIELDtCwgSMOgIE7hu5lp!5e1!3m2!1svi!2s!4v1753297083239!5m2!1svi!2s" 
+                width="100%" 
+                height="150" 
+                style={{border: 0}} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                className="rounded-lg"
+              />
+            </div>
             </li>
             <li className="text-sm text-gray-400">Trinh Van Bo, Nam Tu Liem, Ha Noi</li>
           </ul>

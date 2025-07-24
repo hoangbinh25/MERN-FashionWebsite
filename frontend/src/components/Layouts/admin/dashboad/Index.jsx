@@ -18,7 +18,7 @@ export default function Index() {
   const lineRef = useRef(null);
   const pieRef = useRef(null);
   const User = JSON.parse(localStorage.getItem("user"));
-  if(User.role == false){
+  if (User.role == false) {
     return <Navigate to="/user/home" replace />;
   }
   const fileName = `${User.userName}_bao_cao_thong_ke_${new Date().toISOString().split("T")[0]}`;
@@ -37,6 +37,16 @@ export default function Index() {
     Delivered: 0,
     Canceled: 0,
   });
+  // Thêm state cho summary data
+  const [summaryData, setSummaryData] = useState({
+    totalOrders: 0,
+    totalRevenue: 0,
+    validOrders: 0,
+    pendingOrders: 0,
+    canceledOrders: 0,
+    excludedOrders: 0,
+    excludeRate: 0
+  });
 
   // Thêm state cho kiểu xem
   const [viewType, setViewType] = useState("day");
@@ -46,7 +56,7 @@ export default function Index() {
 
   useEffect(() => {
 
-      const now = new Date();
+    const now = new Date();
     if (!year) setYear(now.getFullYear());
     if (!selectedMonth) setSelectedMonth(now.getMonth() + 1);
 
@@ -87,8 +97,17 @@ export default function Index() {
         setRevenueStats(data.revenueStats);
         setTopProducts(data.topProducts);
         setOrderStatusCounts(data.statusCounts);
-        console.log("revenueStats", revenueStats);
-        console.log("orderStats", orderStats);
+        // Thêm dòng này để lưu summary data
+        setSummaryData(data.summary || {
+          totalOrders: 0,
+          totalRevenue: 0,
+          validOrders: 0,
+          pendingOrders: 0,
+          canceledOrders: 0,
+          excludedOrders: 0,
+          excludeRate: 0
+        });
+        console.log("Data Report", data);
       } catch (err) {
         console.error("Lỗi khi lấy dữ liệu thống kê", err);
       }
@@ -351,6 +370,98 @@ export default function Index() {
         </button>
       </div>
 
+      {/* Dashboard Tổng Quan - Thay thế phần tổng doanh thu cũ */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        {/* Tổng Doanh Thu */}
+        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-white text-sm font-medium mb-1">Tổng Doanh Thu</h3>
+              <div className="text-2xl font-bold text-white">
+                {summaryData.totalRevenue.toLocaleString("vi-VN")} VNĐ
+              </div>
+              <p className="text-green-100 text-xs mt-1">
+                {summaryData.validOrders} đơn hợp lệ
+              </p>
+            </div>
+            <div className="text-white text-3xl opacity-20">💰</div>
+          </div>
+        </div>
+
+        {/* Tổng Đơn Hàng */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-white text-sm font-medium mb-1">Tổng Đơn Hàng</h3>
+              <div className="text-2xl font-bold text-white">
+                {summaryData.totalOrders}
+              </div>
+              <p className="text-blue-100 text-xs mt-1">
+                Tất cả đơn hàng
+              </p>
+            </div>
+            <div className="text-white text-3xl opacity-20">📦</div>
+          </div>
+        </div>
+
+        {/* Đơn Hàng Chờ */}
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-white text-sm font-medium mb-1">Đơn Chờ Xác Nhận</h3>
+              <div className="text-2xl font-bold text-white">
+                {summaryData.pendingOrders}
+              </div>
+              <p className="text-yellow-100 text-xs mt-1">
+                {((summaryData.pendingOrders / summaryData.totalOrders) * 100 || 0).toFixed(1)}% tổng đơn
+              </p>
+            </div>
+            <div className="text-white text-3xl opacity-20">⏳</div>
+          </div>
+        </div>
+
+        {/* Đơn Hàng Hủy */}
+        <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-white text-sm font-medium mb-1">Đơn Hàng Hủy</h3>
+              <div className="text-2xl font-bold text-white">
+                {summaryData.canceledOrders}
+              </div>
+              <p className="text-red-100 text-xs mt-1">
+                {((summaryData.canceledOrders / summaryData.totalOrders) * 100 || 0).toFixed(1)}% tổng đơn
+              </p>
+            </div>
+            <div className="text-white text-3xl opacity-20">❌</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Thống Kê Chi Tiết */}
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold mb-4">Thống Kê Chi Tiết</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-800">{summaryData.validOrders}</div>
+            <div className="text-sm text-gray-600">Đơn Hợp Lệ</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-800">{summaryData.excludedOrders}</div>
+            <div className="text-sm text-gray-600">Đơn Loại Trừ</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-orange-600">{summaryData.excludeRate.toFixed(1)}%</div>
+            <div className="text-sm text-gray-600">Tỷ Lệ Loại Trừ</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-600">
+              {((summaryData.validOrders / summaryData.totalOrders) * 100 || 0).toFixed(1)}%
+            </div>
+            <div className="text-sm text-gray-600">Tỷ Lệ Thành Công</div>
+          </div>
+        </div>
+      </div>
+
       {/* Bộ lọc */}
       <div className="flex flex-wrap gap-4 mb-6">
         {/* Chọn kiểu xem */}
@@ -359,7 +470,7 @@ export default function Index() {
           onChange={e => setViewType(e.target.value)}
           className="border rounded px-3 py-2"
         >
-          <option value="day">Xem theo ngày</option>
+          <option value="day">Xem theo ngày tháng</option>
           <option value="month">Xem theo tháng</option>
           <option value="quarter">Xem theo quý</option>
           <option value="year">Xem theo năm</option>
@@ -448,13 +559,6 @@ export default function Index() {
             </li>
           ))}
         </ul>
-      </div>
-      {/* Revenue summary */}
-      <div className="bg-white rounded-xl shadow p-4 mt-8">
-        <h2 className="font-semibold mb-2">Tổng doanh thu</h2>
-        <div className="text-2xl font-bold text-green-600">
-          {revenueStats.reduce((a, b) => a + b, 0).toLocaleString("vi-VN")} VNĐ
-        </div>
       </div>
     </>
   );
