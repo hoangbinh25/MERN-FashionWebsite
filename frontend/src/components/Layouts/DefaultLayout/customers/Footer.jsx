@@ -1,20 +1,49 @@
 // src/components/Footer.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getAllCategory } from "~/services/categoriesService";
 
 export default function Footer() {
+  const [activeCategory, setActiveCategory] = useState("All Products");
+  const [categories, setCategories] = useState([])
+
+  const handleCategoryChange = (categoryId) => {
+    setActiveCategory(categoryId);
+    setPagination(prev => ({ ...prev, currentPage: 1 }));
+    loadProducts(1, categoryId);
+  };
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await getAllCategory({ limit: 1000 })
+        setCategories(Array.isArray(res.data) ? res.data : []);
+      } catch (error) {
+        setCategories([]);
+      }
+    }
+    fetchCategories();
+  }, [])
   return (
     <footer className="bg-neutral-900 text-gray-300 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Categories */}
-        <div>
-          <h3 className="text-lg font-bold text-white mb-4">Danh mục</h3>
-          <ul className="space-y-2">
-            <li><a href="#" className="hover:underline">Women</a></li>
-            <li><a href="#" className="hover:underline">Men</a></li>
-            <li><a href="#" className="hover:underline">Shoes</a></li>
-            <li><a href="#" className="hover:underline">Watches</a></li>
-          </ul>
+        <div className="flex flex-col gap-2 text-gray-500">
+          <h3 className="text-white text-lg font-semibold mb-2">Danh mục</h3>
+          {categories.map((cat) => (
+            <button
+              key={cat._id}
+              className={
+                "text-left transition-all duration-200 text-sm " +
+                (activeCategory === cat._id
+                  ? "text-white font-semibold underline underline-offset-4"
+                  : "hover:text-white")
+              }
+              onClick={() => handleCategoryChange(cat._id)}
+            >
+              {cat.nameCategory}
+            </button>
+          ))}
         </div>
+
         {/* Location */}
         <div>
           <h3 className="text-lg font-bold text-white mb-4">Vị trí</h3>

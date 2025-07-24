@@ -16,17 +16,19 @@ const getCartByUser = async (req, res) => {
 
 // [POST] /cart/addProduct
 const addProductToCart = async (req, res) => {
-    const { idUser, idProduct, quantity, price } = req.body;
+    const { idUser, idProduct, quantity, price, size } = req.body;
     const missingFields = [];
     if (idUser == null) missingFields.push("idUser");
     if (idProduct == null) missingFields.push("idProduct");
     if (quantity == null) missingFields.push("quantity");
     if (price == null) missingFields.push("price");
+    if (!size) missingFields.push("size");
+
     if (missingFields.length > 0) {
         return res.status(400).json({ message: `Missing or null fields: ${missingFields.join(", ")}` });
     }
     try {
-        const newCart = await cartService.addPrdToCart(idUser, idProduct, quantity, price);
+        const newCart = await cartService.addPrdToCart(idUser, idProduct, quantity, price, size);
         res.status(201).json(newCart);
     } catch (error) {
         res.status(500).json({ message: error.message });

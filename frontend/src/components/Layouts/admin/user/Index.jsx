@@ -127,15 +127,15 @@ export default function UserTable() {
             />
           </div>
           <div className="flex-1">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Role</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Vai trò</label>
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             >
-              <option value="">All Role</option>
+              <option value="">Tất cả vai trò</option>
               <option value="true">Admin</option>
-              <option value="false">Customer</option>
+              <option value="false">Khách hàng</option>
             </select>
           </div>
           <div className="flex-1">
@@ -151,15 +151,15 @@ export default function UserTable() {
             </select>
           </div>
           <div className="flex-1">
-            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Sort by</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Sắp xếp</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
             >
-              <option value="">-- Select --</option>
-              <option value="createdAt">Latest</option>
-              <option value="">Oldest</option>
+              <option value="">-- Chọn --</option>
+              <option value="createdAt">Mới nhất</option>
+              <option value="">Cũ nhất</option>
             </select>
           </div>
         </div>
@@ -182,7 +182,7 @@ export default function UserTable() {
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-gray-800">{user.firstName} {user.lastName}</h3>
                   <p className="text-xs text-gray-600">{user.email} | {user.phone}</p>
-                  <p className="text-xs text-gray-500">{user.role ? "Admin" : "Customer"} | {user.isActive ? "Enabled" : "Disabled"}</p>
+                  <p className="text-xs text-gray-500">{user.role ? "Admin" : "Khách hàng"} | {user.isActive ? "Enabled" : "Disabled"}</p>
                   <p className="text-xs text-gray-500">{new Date(user.createdAt).toLocaleDateString()}</p>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -193,7 +193,7 @@ export default function UserTable() {
                       setSelectedUser(user);
                     }}
                   >
-                    Edit
+                    Cập nhật
                   </button>
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg text-xs"
@@ -202,7 +202,7 @@ export default function UserTable() {
                       handleDeleteUser(user._id);
                     }}
                   >
-                    Delete
+                    Xóa
                   </button>
                 </div>
               </div>
@@ -217,22 +217,22 @@ export default function UserTable() {
           <thead className="bg-gray-100 text-gray-700 uppercase">
             <tr>
               <th className="px-2 py-3 border-b">#</th>
-              <th className="px-2 py-3 border-b">Name</th>
-              <th className="px-2 py-3 border-b">Username</th>
+              <th className="px-2 py-3 border-b">Tên</th>
+              <th className="px-2 py-3 border-b">Tên người dùng</th>
               <th className="px-2 py-3 border-b">Email</th>
-              <th className="px-2 py-3 border-b">Phone</th>
-              <th className="px-2 py-3 border-b">Address</th>
-              <th className="px-2 py-3 border-b">Role</th>
-              <th className="px-2 py-3 border-b">Status</th>
-              <th className="px-2 py-3 border-b">Created At</th>
-              <th className="px-2 py-3 border-b text-center">Actions</th>
+              <th className="px-2 py-3 border-b">Số điện thoại</th>
+              <th className="px-2 py-3 border-b">Địa chỉ</th>
+              <th className="px-2 py-3 border-b">Vai trò</th>
+              <th className="px-2 py-3 border-b">Trạng thái</th>
+              <th className="px-2 py-3 border-b">Tạo ngày</th>
+              <th className="px-2 py-3 border-b text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr><td colSpan={10} className="text-center py-8 text-gray-400">Loading...</td></tr>
             ) : users.length === 0 ? (
-              <tr><td colSpan={10} className="text-center py-8 text-gray-400">No users found.</td></tr>
+              <tr><td colSpan={10} className="text-center py-8 text-gray-400">Không tìm thấy tài khoản.</td></tr>
             ) : (
               users.map((user, index) => (
                 <tr
@@ -246,7 +246,7 @@ export default function UserTable() {
                   <td className="px-2 py-3 border-b">{user.email}</td>
                   <td className="px-2 py-3 border-b">{user.phone}</td>
                   <td className="px-2 py-3 border-b">{user.address}</td>
-                  <td className="px-2 py-3 border-b">{user.role ? "Admin" : "Customer"}</td>
+                  <td className="px-2 py-3 border-b">{user.role ? "Admin" : "Khách hàng"}</td>
                   <td className="px-2 py-3 border-b">{user.isActive ? "Enabled" : "Disabled"}</td>
                   <td className="px-2 py-3 border-b">{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td className="px-2 py-3 border-b text-center">
@@ -259,7 +259,7 @@ export default function UserTable() {
                           handleDeleteUser(user._id);
                         }}
                       >
-                        Delete
+                        Xóa
                       </button>
                     </div>
                   </td>

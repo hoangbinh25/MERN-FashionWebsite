@@ -111,6 +111,7 @@ export default function ProductCreate({ categories, onClose, onSave }) {
                 <input
                   type="number"
                   name="price"
+                  min={0}
                   value={form.price || ""}
                   onChange={handleChange}
                   className="border rounded px-2 sm:px-3 py-1.5 sm:py-2 w-full focus:ring-2 focus:ring-indigo-400 mt-1 text-sm"

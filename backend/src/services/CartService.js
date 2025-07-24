@@ -1,7 +1,7 @@
 const Cart = require('../models/Cart');
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 
-const addPrdToCart = async (idUser, idProduct, quantity, price) => {
+const addPrdToCart = async (idUser, idProduct, quantity, price, size) => {
     return new Promise(async (resolve, reject) => {
         try {
             const cartItem = await Cart.findOne({ idUser: idUser, idProduct: idProduct });
@@ -14,7 +14,8 @@ const addPrdToCart = async (idUser, idProduct, quantity, price) => {
                 idUser: idUser,
                 idProduct: idProduct,
                 quantity: quantity,
-                price: price
+                price: price,
+                size: size,
             });
             await newCart.save();
             resolve(newCart);
@@ -40,7 +41,7 @@ const deleteProductFromCart = async (idUser, idProduct) => {
         try {
             const checkCart = await Cart.findOne({
                 idUser: new mongoose.Types.ObjectId(idUser),
-                idProduct: new mongoose.Types.ObjectId(idProduct)  
+                idProduct: new mongoose.Types.ObjectId(idProduct)
             })
 
             if (!checkCart) {
@@ -55,7 +56,7 @@ const deleteProductFromCart = async (idUser, idProduct) => {
                 status: 'OK',
                 message: 'Delete product from cart success'
             })
-        }catch (error) {
+        } catch (error) {
             reject(error);
         }
     })
@@ -67,7 +68,7 @@ const updateQuantityProductInCart = async (idUser, idProduct, quantity) => {
             console.log(`Updating quantity for User: ${idUser}, Product: ${idProduct}, Quantity: ${quantity}`);
             const cartItem = await Cart.findOne({
                 idUser: new mongoose.Types.ObjectId(idUser),
-                idProduct: new mongoose.Types.ObjectId(idProduct)   
+                idProduct: new mongoose.Types.ObjectId(idProduct)
             });
             console.log("cartItem:", cartItem);
             if (cartItem) {

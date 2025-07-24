@@ -63,11 +63,11 @@ export default function UserCreate({ onClose, onSave }) {
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 sm:gap-6"
         >
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Create User</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Thêm người dùng</h2>
           {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">First Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Họ <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="firstName"
@@ -78,7 +78,7 @@ export default function UserCreate({ onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Last Name</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Tên <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="lastName"
@@ -89,7 +89,7 @@ export default function UserCreate({ onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Username</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Tên người dùng <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="userName"
@@ -100,7 +100,7 @@ export default function UserCreate({ onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Email</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Email <span className="text-red-500">*</span></label>
               <input
                 type="email"
                 name="email"
@@ -111,7 +111,7 @@ export default function UserCreate({ onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Password</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Mật khẩu <span className="text-red-500">*</span></label>
               <input
                 type="password"
                 name="password"
@@ -122,7 +122,7 @@ export default function UserCreate({ onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Confirm Password</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Nhập lại mật khẩu <span className="text-red-500">*</span></label>
               <input
                 type="password"
                 name="confirmPassword"
@@ -133,7 +133,7 @@ export default function UserCreate({ onClose, onSave }) {
               />
             </div>
             <div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-600">Phone</label>
+              <label className="text-xs sm:text-sm font-semibold text-gray-600">Số điện thoại <span className="text-red-500">*</span></label>
               <input
                 type="tel"
                 name="phone"
@@ -150,7 +150,7 @@ export default function UserCreate({ onClose, onSave }) {
               className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold shadow text-sm"
               disabled={loading}
             >
-              {loading ? "Creating..." : "Create"}
+              {loading ? "Thêm mới..." : "Thêm"}
             </button>
             <button
               type="button"
@@ -158,7 +158,7 @@ export default function UserCreate({ onClose, onSave }) {
               onClick={onClose}
               disabled={loading}
             >
-              Cancel
+              Đóng
             </button>
           </div>
         </form>
