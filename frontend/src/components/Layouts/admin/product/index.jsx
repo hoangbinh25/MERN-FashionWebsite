@@ -5,6 +5,8 @@ import ProductDetail from "./ProductDetail";
 import ProductCreate from "./ProductCreate";
 import { getAllProducts, deleteProduct, updateProductIsActive } from "~/services/productsService";
 import { getAllCategoryBy } from "~/services/categoriesService";
+import { Navigate } from "react-router-dom";
+
 
 export default function ProductTable() {
   const [products, setProducts] = useState([]);
@@ -57,8 +59,6 @@ export default function ProductTable() {
       const response = await getAllProducts({
         page: pagination.currentPage,
         limit: 5,
-        sort: sortBy || "nameProduct",
-        order,
         nameProduct: safeSearch,
         size: size === "" ? undefined : size,
         category: selectedCategory === "All" ? "" : selectedCategory,
@@ -107,6 +107,11 @@ export default function ProductTable() {
       setLoading(false);
     }
   };
+
+  const User = JSON.parse(localStorage.getItem("user"));
+  if (User.role == false) {
+    return <Navigate to="/user/home" replace />;
+  }
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Bạn chắc chắn muốn xóa sản phẩm này. Sẽ không thể khôi phục");

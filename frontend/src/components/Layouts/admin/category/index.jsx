@@ -4,6 +4,8 @@ import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import CategoryDetail from "./Detail";
 import CreateCategory from "./Create";
 import { getAllCategory, deleteCategory } from "~/services/categoriesService";
+import { Navigate } from "react-router-dom";
+
 
 
 export default function CategoryTable() {
@@ -43,6 +45,11 @@ export default function CategoryTable() {
       setLoading(false);
     }
   };
+
+  const User = JSON.parse(localStorage.getItem("user"));
+  if (User.role == false) {
+    return <Navigate to="/user/home" replace />;
+  }
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this category?");

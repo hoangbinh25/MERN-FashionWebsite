@@ -89,6 +89,10 @@ export default function Index() {
     }
   }, [viewType, selectedMonth, selectedDay, selectedQuarter]);
 
+  if (User.role == false) {
+    return <Navigate to="/user/home" replace />;
+  }
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
