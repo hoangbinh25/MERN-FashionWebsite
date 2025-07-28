@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import OrderDetail from "./Detail";
 import { getAllOrders } from "~/services/orderService";
+import { Navigate } from "react-router-dom";
+
 
 function formatVND(amount) {
   return amount.toLocaleString("vi-VN", {
@@ -27,6 +29,11 @@ export default function Orders() {
         console.error("Error fetching orders:", error);
       });
   };
+
+  const User = JSON.parse(localStorage.getItem("user"));
+  if (User.role == false) {
+    return <Navigate to="/user/home" replace />;
+  }
 
   useEffect(() => {
     loadOrders();

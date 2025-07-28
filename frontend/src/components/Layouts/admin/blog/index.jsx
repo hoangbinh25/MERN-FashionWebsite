@@ -4,6 +4,8 @@ import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import BlogDetail from "./Detail";
 import CreateBlog from "./Create";
 import { getAllBlog, deleteBlog } from "~/services/blogService";
+import { Navigate } from "react-router-dom";
+
 
 export default function BlogTable() {
   const [blogs, setBlogs] = useState([]);
@@ -43,6 +45,11 @@ export default function BlogTable() {
       setLoading(false);
     }
   };
+
+  const User = JSON.parse(localStorage.getItem("user"));
+  if (User.role == false) {
+    return <Navigate to="/user/home" replace />;
+  }
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this blog?");

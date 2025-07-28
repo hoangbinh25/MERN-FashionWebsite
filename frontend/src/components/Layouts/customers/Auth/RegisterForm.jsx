@@ -212,7 +212,7 @@ export default function RegisterForm() {
                     </span>
                 </div>
                 {errors.password && <div className="text-red-500 text-sm">{errors.password}</div>}
-                <PasswordValidator password={formData.password} />
+                {/* <PasswordValidator password={formData.password} /> */}
 
             </div>
 

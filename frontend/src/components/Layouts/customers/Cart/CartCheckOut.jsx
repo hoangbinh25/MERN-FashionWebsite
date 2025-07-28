@@ -201,7 +201,7 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
               <div className="mt-4 p-4 bg-white rounded-lg border">
                 <div className="flex flex-col items-center">
                   <p className="text-sm text-gray-600 mb-3 text-center">
-                    Quét mã QR bên dưới để thanh toán qua TPBank
+                    Quét mã QR bên dưới để thanh toán qua MBBank
                   </p>
                   <img
                     src={URL_QR}
@@ -226,8 +226,8 @@ export default function CheckOut({ addressInfo, cartItems, onCancel }) {
               </button>
               <button
                 className={`w-1/2 py-3 rounded text-center text-sm font-semibold transition duration-200 ${paymentMethod === "cod"
-                    ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 disabled={paymentMethod !== "cod"}
                 onClick={handleCreateOrder}

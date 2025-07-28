@@ -27,13 +27,13 @@ export default function Product() {
     const handleCategoryChange = (categoryId) => {
         setActiveCategory(categoryId);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
-        loadProducts(1, categoryId, selectedPriceRange);
+        loadProducts(pagination.currentPage, categoryId, selectedPriceRange);
     };
 
     const handlePriceFilter = (range) => {
         setSelectedPriceRange(range);
         setPagination(prev => ({ ...prev, currentPage: 1 }));
-        loadProducts(1, activeCategory, range);
+        loadProducts(pagination.currentPage, activeCategory, range);
     };
 
     const getPriceClass = (range) =>
@@ -45,15 +45,21 @@ export default function Product() {
     const loadProducts = async (page = 1, category = "", priceRange = null) => {
         setLoading(true);
         try {
-            const res = await getAllProducts({ page, limit, category });
-            let filtered = (res.data || []).filter(item => item.isActive);
-
+            let minPrice = null;
+            let maxPrice = null;
             if (priceRange) {
-                const [min, max] = priceRange;
-                filtered = filtered.filter(p => p.price >= min && p.price <= max);
+                [minPrice, maxPrice] = priceRange;
             }
 
-            const mapped = filtered.map(item => {
+            const res = await getAllProducts({
+                page,
+                limit,
+                category: category,
+                minPrice: minPrice,
+                maxPrice: maxPrice
+            });
+
+            const mapped = (res.data || []).map(item => {
                 let images = [];
                 if (Array.isArray(item.image) && item.image.length > 0) {
                     images = item.image;
@@ -81,6 +87,7 @@ export default function Product() {
             });
         } catch (error) {
             setProducts([]);
+            console.error("Error loading products:", error);
             setPagination({ currentPage: 1, totalPages: 1, totalItems: 0 });
         } finally {
             setLoading(false);
@@ -99,9 +106,9 @@ export default function Product() {
     };
 
     useEffect(() => {
-        loadProducts(pagination.currentPage);
+        loadProducts(pagination.currentPage, activeCategory, selectedPriceRange);
         // eslint-disable-next-line
-    }, [pagination.currentPage]);
+    }, [pagination.currentPage, activeCategory, selectedPriceRange]);
 
     const handlePageChange = (page) => {
         setPagination(prev => ({ ...prev, currentPage: page }));
@@ -156,10 +163,10 @@ export default function Product() {
                             <svg width="18" height="18" fill="none" stroke="currentColor"><path d="M3 6h12M6 9h6M9 12h0" strokeWidth="2" strokeLinecap="round" /></svg>
                             Lọc
                         </button>
-                        <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500">
+                        {/* <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500">
                             <svg width="18" height="18" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6" strokeWidth="2" /><line x1="14" y1="14" x2="17" y2="17" strokeWidth="2" strokeLinecap="round" /></svg>
                             Tìm kiếm
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 
@@ -225,7 +232,7 @@ export default function Product() {
                                 Xem
                             </button>
                             <div className="mt-2 px-2">
-                                <div className="text-gray-700 text-base">{product.name}</div>
+                                <div className="text-gray-700 text-base max-w-64">{product.name}</div>
                                 <div className="text-gray-500 text-sm">{product.price}VNĐ</div>
                             </div>
                             <button

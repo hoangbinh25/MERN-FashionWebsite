@@ -4,8 +4,8 @@ import api from "./authService.";
 const API_URL = import.meta.env.VITE_API_URL_BACKEND;
 
 const getAllProducts = async ({
-    page = 0,
-    limit = 5,
+    page = 1,
+    limit = 12,
     sort = "nameproduct",
     order = "desc",
     nameProduct,
@@ -14,8 +14,6 @@ const getAllProducts = async ({
     minPrice,
     maxPrice
 }) => {
-    // const datatest = `${API_URL}/product/getProducts` + '?page=' + page + '&limit=' + limit + '&sort=' + sort + '&order=' + order + '&nameProduct=' + nameProduct + '&size=' + size + '&category=' + category + '&minPrice=' + minPrice + '&maxPrice=' + maxPrice;
-    // console.log("API URL:", datatest);
     const response = await api.get(`${API_URL}/product/getProducts`, {
         params: { page, limit, sort, order, nameProduct, size, category, minPrice, maxPrice }
     });

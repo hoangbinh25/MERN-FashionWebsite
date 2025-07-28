@@ -136,7 +136,7 @@ export default function LoginForm() {
                 {errors.password && (
                     <div className="text-red-500 text-sm mt-1">{errors.password}</div>
                 )}
-                <PasswordValidator password={password} />
+                {/* <PasswordValidator password={password} /> */}
             </div>
 
             <div className="flex items-center justify-between">

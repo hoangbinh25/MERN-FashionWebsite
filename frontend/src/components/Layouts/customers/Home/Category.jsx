@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router";
+import ProductDetail from "./ProductDetail";
+
 const API_URL = import.meta.env.VITE_API_URL_BACKEND;
 
 export default function Category() {
 
     const [products, setProducts] = useState([]);
-    // const navigate = useNavigate();
+    const [showDetail, setShowDetail] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    const handleCloseDetail = () => {
+        setShowDetail(false);
+        setSelectedProduct(null);
+    };
 
     useEffect(() => {
         const fetchNewestProducts = async () => {
@@ -32,20 +39,29 @@ export default function Category() {
             </h2>
             <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
                 {products.slice(0, 3).map((p) => (
-                    <Link to="/user/home" key={p._id} className="group block border border-gray-200">
-                        <div className="relative w-full h-[350px] overflow-hidden">
+                    <div key={p._id} className="group block border border-gray-200 cursor-pointer"
+                        onClick={() => {
+                            setSelectedProduct(p);
+                            setShowDetail(true);
+                        }}>
+                        <div className="relative w-full h-[350px] overflow-hidden"
+                        >
                             <img
                                 src={p.image?.[0] || "/placeholder.jpg"}
                                 alt={p.nameProduct}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                             />
                         </div>
-                        <div className="p-4">
-                            <h3 className="text-2xl flex justify-center font-bold text-gray-800">{p.nameProduct}</h3>
+                        <div className="p-4 flex justify-center text-center">
+                            <h3 className="text-2xl flex justify-center font-bold text-gray-800 max-w-72">{p.nameProduct}</h3>
                         </div>
-                    </Link>
+                    </div>
                 ))}
             </div>
+            <ProductDetail
+                product={selectedProduct}
+                onClose={handleCloseDetail}
+            />
 
         </section>
     );

@@ -4,6 +4,8 @@ import { Filter as FilterIcon, Plus } from "lucide-react";
 import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import UserDetail from "./Detail"; // Adjust path as needed
 import UserCreate from "./Create"; // Adjust path as needed
+import { Navigate } from "react-router-dom";
+
 
 
 export default function UserTable() {
@@ -55,6 +57,11 @@ export default function UserTable() {
       setLoading(false);
     }
   };
+
+  const User = JSON.parse(localStorage.getItem("user"));
+  if (User.role == false) {
+    return <Navigate to="/user/home" replace />;
+  }
 
   useEffect(() => {
     fetchUsers();

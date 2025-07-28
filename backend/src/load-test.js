@@ -10,7 +10,7 @@ export const options = {
 };
 
 export default function () {
-    const res = http.get('https://mern-fashion-website.vercel.app'); // thay URL theo backend
+    const res = http.get('https://mern-fashionwebsite-production.up.railway.app'); // thay URL theo backend
     check(res, {
         'status là 200': (r) => r.status === 200,
         'thời gian phản hồi < 500ms': (r) => r.timings.duration < 500,
