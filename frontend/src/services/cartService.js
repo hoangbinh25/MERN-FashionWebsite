@@ -14,7 +14,7 @@ export const addProductToCart = async (idUser, idProduct, quantity, price, size)
         quantity,
         price,
         size,
-    });
+    }, { withCredentials: true });
     console.log("addProductToCart response:", response.data);
     return response.data;
 }
@@ -22,13 +22,13 @@ export const addProductToCart = async (idUser, idProduct, quantity, price, size)
 export const deleteProductFromCart = async (idUser, idProduct) => {
     const response = await axios.delete(`${API_URL}/cart/deleteProduct`, {
         data: { idUser, idProduct }
-    });
+    }, { withCredentials: true });
     console.log("deleteProductFromCart response:", response.data);
     return response.data;
 }
 
 export const updateQuantityInCart = async (idUser, idProduct, quantity) => {
-    console.log("updateQuantityInCart called with:", { idUser, idProduct, quantity });
+    console.log("updateQuantityInCart called with:", { idUser, idProduct, quantity }, { withCredentials: true });
     const response = await axios.put(`${API_URL}/cart/updateQuantity`, {
         idUser,
         idProduct,
@@ -42,7 +42,7 @@ export const deleteAllProductInCart = async (idUser) => {
     console.log("deleteAllProductInCart called with idUser:", idUser);
     const response = await axios.delete(`${API_URL}/cart/deleteAllProductInCart`, {
         data: { idUser }
-    });
+    }, { withCredentials: true });
     console.log("deleteAllProductInCart response:", response.data);
     return response.data;
 }

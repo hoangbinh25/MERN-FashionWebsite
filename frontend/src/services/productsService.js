@@ -16,13 +16,13 @@ const getAllProducts = async ({
 }) => {
     const response = await api.get(`${API_URL}/product/getProducts`, {
         params: { page, limit, sort, order, nameProduct, size, category, minPrice, maxPrice }
-    });
+    }, { withCredentials: true });
 
     return response.data;
 };
 
 const getProductById = async (id) => {
-    const response = await api.get(`${API_URL}/product/getproduct/${id}`);
+    const response = await api.get(`${API_URL}/product/getproduct/${id}`, { withCredentials: true });
     return response.data;
 }
 
@@ -34,7 +34,7 @@ const createProduct = async (data) => {
         config.headers = { 'Content-Type': 'multipart/form-data' };
     }
     try {
-        const response = await api.post(`${API_URL}/product/create`, payload, config);
+        const response = await api.post(`${API_URL}/product/create`, payload, config, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.log('createProduct error:', error);
@@ -50,7 +50,7 @@ const updateProduct = async (id, data) => {
         config.headers = { 'Content-Type': 'multipart/form-data' };
     }
     try {
-        const response = await api.put(`${API_URL}/product/update/${id}`, payload, config);
+        const response = await api.put(`${API_URL}/product/update/${id}`, payload, config, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.log('updateProduct error:', error);
@@ -60,7 +60,7 @@ const updateProduct = async (id, data) => {
 
 const updateProductIsActive = async (id, isActive) => {
     try {
-        const response = await api.put(`${API_URL}/product/update-isActive/${id}`, { isActive });
+        const response = await api.put(`${API_URL}/product/update-isActive/${id}`, { isActive }, { withCredentials: true });
         return response.data;
     } catch (error) {
         console.error('updateProductIsActive error:', error);
@@ -69,7 +69,7 @@ const updateProductIsActive = async (id, isActive) => {
 }
 
 const deleteProduct = async (id) => {
-    const response = await api.delete(`${API_URL}/product/delete/${id}`);
+    const response = await api.delete(`${API_URL}/product/delete/${id}`, { withCredentials: true });
     return response.data;
 }
 

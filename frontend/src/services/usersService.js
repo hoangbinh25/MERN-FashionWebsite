@@ -27,7 +27,7 @@ export const getAllUsers = async (params = {}) => {
             headers: {
                 token: `Bearer ${token}`
             }
-        });
+        }, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.error('getAllUsers error:', error);
@@ -47,7 +47,7 @@ export const getUserById = async (userId) => {
             headers: {
                 token: `Bearer ${token}`
             }
-        });
+        }, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.error('getUserById error:', error);
@@ -67,7 +67,7 @@ export const createUser = async (data) => {
             headers: {
                 token: `Bearer ${token}`
             }
-        });
+        }, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.error('createUser error:', error);
@@ -87,7 +87,7 @@ export const updateUser = async (userId, data) => {
             headers: {
                 token: `Bearer ${token}`
             }
-        });
+        }, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.error('updateUser error:', error);
@@ -107,7 +107,7 @@ export const deleteUser = async (userId) => {
             headers: {
                 token: `Bearer ${token}`
             }
-        });
+        }, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.error('deleteUser error:', error);
@@ -126,7 +126,7 @@ export const updateUserProfile = async (userId, data) => {
             headers: {
                 token: `Bearer ${token}`
             }
-        });
+        }, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.error('updateUserProfile error:', error);
@@ -149,7 +149,7 @@ export const sendContactMail = async (email, message) => {
                 headers: {
                     token: `Bearer ${token}`
                 }
-            });
+            }, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.error('sendContactMail error:', error);

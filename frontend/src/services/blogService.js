@@ -12,12 +12,12 @@ const getAllBlog = async ({
 }) => {
     const res = await api.get(`${API_URL}/blog/getBlogs`, {
         params: { page, limit, sort, order, search, titleBlog },
-    })
+    }, { withCredentials: true })
     return res.data;
 }
 
 const getBlogById = async (id) => {
-    const res = await api.get(`${API_URL}/blog/getBlog/${id}`);
+    const res = await api.get(`${API_URL}/blog/getBlog/${id}`, { withCredentials: true });
     return res.data.data;
 }
 
@@ -28,7 +28,7 @@ const createBlog = async (data) => {
         config.headers = { 'Content-Type': 'multipart/form-data' };
     }
     try {
-        const res = await api.post(`${API_URL}/blog/create`, payload, config);
+        const res = await api.post(`${API_URL}/blog/create`, payload, config, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.log('Create blog error: ', error)
@@ -43,7 +43,7 @@ const updateBlog = async (id, data) => {
         config.headers = { 'Content-Type': 'multipart/form-data' };
     }
     try {
-        const res = await api.put(`${API_URL}/blog/update/${id}`, payload, config);
+        const res = await api.put(`${API_URL}/blog/update/${id}`, payload, config, { withCredentials: true });
         return res.data;
     } catch (error) {
         console.log('Create blog error: ', error)

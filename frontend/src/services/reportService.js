@@ -6,7 +6,7 @@ export const fetchReportData = async ({ filterType, year, month, quarter }) => {
   try {
     const params = { filterType, year, month, quarter };
     console.log("Fetching report data with params:", params);
-    const response = await axios.get(`${API_URL}/report/reportAll`, { params });
+    const response = await axios.get(`${API_URL}/report/reportAll`, { params }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch report data:", error);

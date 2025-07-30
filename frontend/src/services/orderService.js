@@ -16,7 +16,7 @@ export const getAllTransactions = async () => {
 export const createOrder = async (orderData) => {
   try {
     console.log("Creating order with data:", orderData);
-    const res = await axios.post(`${API_URL}/order`, orderData);
+    const res = await axios.post(`${API_URL}/order`, orderData, { withCredentials: true });
     console.log("Create order response:", res.data);
     return res.data;
   } catch (error) {
@@ -28,7 +28,7 @@ export const createOrder = async (orderData) => {
 // Get all orders of a user
 export const getOrdersByUser = async (idUser) => {
   try {
-    const res = await axios.get(`${API_URL}/order?idUser=${idUser}`);
+    const res = await axios.get(`${API_URL}/order?idUser=${idUser}`, { withCredentials: true });
     return res.data;
   } catch (error) {
     console.log("Get orders by user error:", error);
@@ -39,7 +39,7 @@ export const getOrdersByUser = async (idUser) => {
 // Get order by id
 export const getOrderById = async (orderId) => {
   try {
-    const res = await axios.get(`${API_URL}/order/${orderId}`);
+    const res = await axios.get(`${API_URL}/order/${orderId}`, { withCredentials: true });
     return res.data;
   } catch (error) {
     console.log("Get order by id error:", error);
@@ -50,7 +50,7 @@ export const getOrderById = async (orderId) => {
 // Update order status
 export const updateOrderStatus = async (orderId, statusOrder) => {
   try {
-    const res = await axios.put(`${API_URL}/order/${orderId}/status`, { statusOrder });
+    const res = await axios.put(`${API_URL}/order/${orderId}/status`, { statusOrder }, { withCredentials: true });
     return res.data;
   } catch (error) {
     console.log("Update order status error:", error);
@@ -65,7 +65,7 @@ export const getAllOrders = async ({ status, sortBy }) => {
     if (status) params.status = status;
     if (sortBy) params.sortBy = sortBy;
 
-    const res = await axios.get(`${API_URL}/order/getAllOrders`, { params });
+    const res = await axios.get(`${API_URL}/order/getAllOrders`, { params }, { withCredentials: true });
     return res.data;
   } catch (error) {
     console.log("Get all orders error:", error);
@@ -86,7 +86,7 @@ export const createAddress = async (addressData) => {
 
 export const getAddressByIdUser = async (idUser) => {
   try {
-    const res = await axios.get(`${API_URL}/address/get/${idUser}`);
+    const res = await axios.get(`${API_URL}/address/get/${idUser}`, { withCredentials: true });
     return res.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -99,7 +99,7 @@ export const getAddressByIdUser = async (idUser) => {
 
 export const updateAddress = async (addressId, addressData) => {
   try {
-    const res = await axios.put(`${API_URL}/address/update/${addressId}`, addressData);
+    const res = await axios.put(`${API_URL}/address/update/${addressId}`, addressData, { withCredentials: true });
     return res.data;
   } catch (error) {
     console.error("Update address error:", error);

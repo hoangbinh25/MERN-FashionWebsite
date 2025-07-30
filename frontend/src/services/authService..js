@@ -2,24 +2,24 @@ import axios from "axios"
 const API_URL = import.meta.env.VITE_API_URL_BACKEND;
 
 export const login = async (email, password) => {
-    const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+    const res = await axios.post(`${API_URL}/auth/login`, { email, password }, { withCredentials: true });
     return res.data
 }
 
 export const register = async (firstName, lastName, email, password, confirmPassword) => {
-    return await axios.post(`${API_URL}/auth/register`, { firstName, lastName, email, password, confirmPassword });
+    return await axios.post(`${API_URL}/auth/register`, { firstName, lastName, email, password, confirmPassword }, { withCredentials: true });
 }
 
 export const verifyOTP = async (email, otp) => {
-    return await axios.post(`${API_URL}/auth/verify-otp`, { email, otp });
+    return await axios.post(`${API_URL}/auth/verify-otp`, { email, otp }, { withCredentials: true });
 }
 
 export const resendOTP = async (email) => {
-    return await axios.post(`${API_URL}/auth/resend-otp`, { email });
+    return await axios.post(`${API_URL}/auth/resend-otp`, { email }, { withCredentials: true });
 }
 
 export const forgotPassword = async (email) => {
-    return await axios.post(`${API_URL}/auth/forgot-password`, { email });
+    return await axios.post(`${API_URL}/auth/forgot-password`, { email }, { withCredentials: true });
 }
 
 export const refreshAccessToken = async (refreshToken) => {
@@ -35,7 +35,7 @@ export const refreshAccessToken = async (refreshToken) => {
 }
 
 export const resetPassword = async (token, newPassword) => {
-    return await axios.post(`${API_URL}/auth/reset-password`, { token, newPassword });
+    return await axios.post(`${API_URL}/auth/reset-password`, { token, newPassword }, { withCredentials: true });
 }
 
 const api = axios.create({

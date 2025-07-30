@@ -25,26 +25,26 @@ const getAllCategoryBy = async ({
 }) => {
     const response = await api.get(`${API_URL}/category/getCategories`, {
         params: { page, limit, sort, order, search }
-    });
+    }, { withCredentials: true });
     return response.data;
 };
 
 const getCategoryById = async (id) => {
-    const response = await api.get(`${API_URL}/category/getCategory/${id}`);
+    const response = await api.get(`${API_URL}/category/getCategory/${id}`, { withCredentials: true });
     return response.data;
 }
 
 const createCategory = async (data) => {
-    const response = await api.post(`${API_URL}/category/create`, data);
+    const response = await api.post(`${API_URL}/category/create`, data, { withCredentials: true });
     return response.data;
 }
 
 const updateCategory = async (id, data) => {
-    const response = await api.put(`${API_URL}/category/update/${id}`, data);
+    const response = await api.put(`${API_URL}/category/update/${id}`, data, { withCredentials: true });
     return response.data;
 }
 const deleteCategory = async (id) => {
-    const response = await api.delete(`${API_URL}/category/delete/${id}`);
+    const response = await api.delete(`${API_URL}/category/delete/${id}`, { withCredentials: true });
     return response.data;
 }
 
