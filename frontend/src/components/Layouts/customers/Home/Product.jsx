@@ -5,12 +5,11 @@ import { addProductToCart } from "~/services/cartService";
 import Paginate from "../../DefaultLayout/admin/Paginate";
 import { useCart } from "~/context/CartContext";
 import { getAllCategory } from "~/services/categoriesService";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Product() {
     const [activeCategory, setActiveCategory] = useState("All Products");
     const [showFilter, setShowFilter] = useState(false);
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -42,21 +41,24 @@ export default function Product() {
             ? "text-indigo-600 font-semibold"
             : "text-gray-700");
 
-    const loadProducts = async (page = 1, category = "", priceRange = null) => {
-        setLoading(true);
-        try {
+    const {
+        data: queryData,
+        isLoading,
+    } = useQuery({
+        queryKey: ['products', activeCategory, selectedPriceRange, pagination.currentPage],
+        queryFn: async () => {
             let minPrice = null;
             let maxPrice = null;
-            if (priceRange) {
-                [minPrice, maxPrice] = priceRange;
+            if (selectedPriceRange) {
+                [minPrice, maxPrice] = selectedPriceRange;
             }
 
             const res = await getAllProducts({
-                page,
+                page: pagination.currentPage,
                 limit,
-                category: category,
-                minPrice: minPrice,
-                maxPrice: maxPrice
+                category: activeCategory,
+                minPrice,
+                maxPrice
             });
 
             const mapped = (res.data || []).map(item => {
@@ -79,20 +81,22 @@ export default function Product() {
                     price: item.price,
                 };
             });
-            setProducts(mapped);
-            setPagination({
-                currentPage: res.pageCurrent || 1,
-                totalPages: res.totalPage || 1,
-                totalItems: res.totalProduct || 0,
-            });
-        } catch (error) {
-            setProducts([]);
-            console.error("Error loading products:", error);
-            setPagination({ currentPage: 1, totalPages: 1, totalItems: 0 });
-        } finally {
-            setLoading(false);
-        }
-    };
+
+            return {
+                products: mapped,
+                pagination: {
+                    currentPage: res.pageCurrent || 1,
+                    totalPages: res.totalPage || 1,
+                    totalItems: res.totalProduct || 0,
+                }
+            };
+        },
+        keepPreviousData: true, // tránh flash UI khi chuyển trang
+        staleTime: 300000, // 5 phút không refetch
+    });
+
+    const productList = queryData?.products || [];
+    const pageInfo = queryData?.pagination || { currentPage: 1, totalPages: 1, totalItems: 0 };
 
 
     const User = JSON.parse(localStorage.getItem('user'));
@@ -105,11 +109,6 @@ export default function Product() {
         }
     };
 
-    useEffect(() => {
-        loadProducts(pagination.currentPage, activeCategory, selectedPriceRange);
-        // eslint-disable-next-line
-    }, [pagination.currentPage, activeCategory, selectedPriceRange]);
-
     const handlePageChange = (page) => {
         setPagination(prev => ({ ...prev, currentPage: page }));
     };
@@ -119,17 +118,17 @@ export default function Product() {
         setSelectedProduct(null);
     };
 
-    useEffect(() => {
-        async function fetchCategories() {
-            try {
-                const res = await getAllCategory({ limit: 1000 })
-                setCategories(Array.isArray(res.data) ? res.data : []);
-            } catch (error) {
-                setCategories([]);
-            }
-        }
-        fetchCategories();
-    }, [])
+    const {
+        data: categoryData = [],
+        isLoading: isCategoryLoading,
+    } = useQuery({
+        queryKey: ['categories'],
+        queryFn: async () => {
+            const res = await getAllCategory({ limit: 1000 });
+            return Array.isArray(res.data) ? res.data : [];
+        },
+        staleTime: 1000 * 60 * 5,
+    });
 
     return (
         <>
@@ -138,7 +137,7 @@ export default function Product() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between my-4">
                     <div>
                         <div className="flex text-xl gap-8">
-                            {categories.map(cat => (
+                            {categoryData.map(cat => (
                                 <button
                                     key={cat._id}
                                     className={
@@ -204,7 +203,7 @@ export default function Product() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
-                    {products.map((product, idx) => (
+                    {productList.map((product, idx) => (
                         <div
                             key={idx}
                             className="group relative bg-white overflow-hidden w-full mb-8 cursor-pointer"
@@ -253,8 +252,8 @@ export default function Product() {
                 </div>
             </div>
             <Paginate
-                currentPage={pagination.currentPage}
-                totalPages={pagination.totalPages}
+                currentPage={pageInfo.currentPage}
+                totalPages={pageInfo.totalPages}
                 onPageChange={handlePageChange}
             />
             {showDetail && selectedProduct && (
