@@ -94,7 +94,7 @@ MERN-FashionWebsite/
 
 ## 📞 Liên hệ & Hỗ trợ
 
-Nếu bạn gặp vấn đề hoặc cần hỗ trợ, vui lòng tạo issue trên GitHub hoặc liên hệ qua email: [contact@example.com](mailto:contact@example.com)
+Nếu bạn gặp vấn đề hoặc cần hỗ trợ, vui lòng tạo issue trên GitHub hoặc liên hệ qua email: [binhhp.work@gmail.com](binhhp.work@gmail.com)
 
 ---
 
