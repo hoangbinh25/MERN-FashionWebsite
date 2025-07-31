@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductDetail from "./ProductDetail";
+import { useQuery } from "@tanstack/react-query";
+import { getAllProducts } from "~/services/productsService";
 
 const API_URL = import.meta.env.VITE_API_URL_BACKEND;
 
@@ -15,30 +17,29 @@ export default function Category() {
         setSelectedProduct(null);
     };
 
-    useEffect(() => {
-        const fetchNewestProducts = async () => {
-            try {
-                const res = await axios.get(`${API_URL}/product/getProducts`, {
-                    params: {
-                        limit: 3,
-                        sort: "createdAt",
-                        order: "desc"
-                    }
-                });
-                setProducts(res.data?.data || []);
-            } catch (error) {
-                console.error("")
-            }
-        }
-        fetchNewestProducts();
-    }, []);
+    const {
+        data: productNew = [],
+        isLoading: isProductNewLoading,
+    } = useQuery({
+        queryKey: ['products'],
+        queryFn: async () => {
+            const res = await getAllProducts({
+                limit: 3,
+                sort: "createdAt",
+                order: "desc"
+            })
+            return Array.isArray(res.data) ? res.data : [];
+        },
+        staleTime: 1000 * 60 * 5,
+    });
+
     return (
         <section className="mx-auto bg-white py-16">
             <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center uppercase">
                 Các sản phẩm mới
             </h2>
             <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-                {products.slice(0, 3).map((p) => (
+                {productNew.slice(0, 3).map((p) => (
                     <div key={p._id} className="group block border border-gray-200 cursor-pointer"
                         onClick={() => {
                             setSelectedProduct(p);
