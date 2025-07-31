@@ -136,23 +136,23 @@ const googleAuth = (req, res) => {
 
 const googleCallback = (req, res) => {
     try {
-        passport.authenticate('google', { failureRedirect: '/auth/login', session: false }, async (err, user) => {
+        passport.authenticate('google', {
+            failureRedirect: `${process.env.CLIENT_URL}/auth/login`,
+            session: false
+        }, async (err, user) => {
             if (err || !user) {
-                // console.error('Error in Google Callback:', err);
-                return res.redirect('/auth/login?error=oauth');
-            }
-            if (!user) {
-                // console.error('User not found in Google Callback');
-                return res.redirect('/auth/login?error=oauth');
+                console.log('OAuth callback error:', err);
+                console.log('OAuth callback user:', user);
+                return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=oauth`);
             }
 
             try {
                 const access_token = await AuthService.generateGoogleToken(user);
                 const refresh_token = await AuthService.generateGoogleRefreshToken(user);
                 const frontendUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-                res.redirect(`${frontendUrl}/auth/login?access_token=${access_token}&refresh_token=${refresh_token}`);
+                return res.redirect(`${frontendUrl}/auth/login?access_token=${access_token}&refresh_token=${refresh_token}`);
             } catch (e) {
-                res.redirect('/auth/login?error=server');
+                return res.redirect(`${process.env.CLIENT_URL}/auth/login?error=server`);
             }
         })(req, res);
     } catch (error) {
