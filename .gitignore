@@ -12,6 +12,7 @@ dist-ssr
 *.local
 
 .env
+.env.docker
 node_modules
 
 
