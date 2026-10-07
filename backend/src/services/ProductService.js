@@ -82,7 +82,7 @@ const getProducts = async (limit, page, sort, nameProduct, category, size, minPr
           category: { _id: p.categoryInfo._id, nameCategory: p.categoryInfo.nameCategory }
         }));
       } else {
-        const [totalProduct, getAllProduct] = await Promise.all([
+        [totalProduct, getAllProduct] = await Promise.all([
           Product.countDocuments(objectFilter),
           Product.find(objectFilter)
             .select('nameProduct description image category price variations createdAt')
