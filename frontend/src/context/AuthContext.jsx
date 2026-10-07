@@ -1,20 +1,20 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 // Create context
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-
-    // App load first -> get user from localStorage 
-    useEffect(() => {
+const getStoredUser = () => {
+    try {
         const storedUser = localStorage.getItem('user');
-        if (storedUser && storedUser !== "undefined") {
-            setUser(JSON.parse(storedUser));
-        } else {
-            setUser(null);
-        }
-    }, []);
+        return storedUser && storedUser !== "undefined" ? JSON.parse(storedUser) : null;
+    } catch {
+        localStorage.removeItem('user');
+        return null;
+    }
+};
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(getStoredUser);
 
     const login = (userData) => {
         // Nếu userData có payload (tức là login Google), lấy payload làm user

@@ -1,5 +1,6 @@
 import ProductDetail from "./ProductDetail";
 import Paginate from "../../DefaultLayout/admin/Paginate";
+import { optimizeCloudinaryImage } from "~/utils/image";
 
 export default function Product({
     activeCategory,
@@ -10,6 +11,9 @@ export default function Product({
     onPriceFilter,
     getPriceClass,
     productList,
+    isLoading,
+    isFetching,
+    errorMessage,
     onSelectProduct,
     pageInfo,
     onPageChange,
@@ -85,15 +89,21 @@ export default function Product({
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
-                    {productList.map((product, idx) => (
+                {isFetching && !isLoading && <p className="mb-4 text-sm text-gray-500">Đang cập nhật sản phẩm...</p>}
+                {errorMessage && <p className="py-12 text-center text-red-600">Không thể tải sản phẩm. Vui lòng thử lại.</p>}
+                {isLoading && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12" aria-label="Đang tải sản phẩm">
+                    {Array.from({ length: 8 }, (_, index) => <div key={index} className="h-[420px] animate-pulse bg-gray-200" />)}
+                </div>}
+                {!isLoading && !errorMessage && productList.length === 0 && <p className="py-12 text-center text-gray-500">Không tìm thấy sản phẩm phù hợp.</p>}
+                {!isLoading && !errorMessage && productList.length > 0 && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
+                    {productList.map((product) => (
                         <div
-                            key={idx}
+                            key={product.id}
                             className="group relative bg-white overflow-hidden w-full mb-8 cursor-pointer"
                             onClick={() => onSelectProduct(product)}
                         >
                             <img
-                                src={product.images?.[0] || "https://via.placeholder.com/350x350?text=No+Image"}
+                                src={optimizeCloudinaryImage(product.images?.[0], 700) || "https://via.placeholder.com/350x350?text=No+Image"}
                                 alt={product.name}
                                 loading="lazy"
                                 decoding="async"
@@ -131,13 +141,13 @@ export default function Product({
                             </button>
                         </div>
                     ))}
-                </div>
+                </div>}
             </div>
-            <Paginate
+            {!isLoading && !errorMessage && pageInfo.totalPages > 1 && <Paginate
                 currentPage={pageInfo.currentPage}
                 totalPages={pageInfo.totalPages}
                 onPageChange={onPageChange}
-            />
+            />}
             {showDetail && selectedProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg shadow-lg max-w-5xl w-full relative">

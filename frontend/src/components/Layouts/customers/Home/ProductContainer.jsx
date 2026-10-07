@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useCart } from "~/context/CartContext";
-import { getAllCategory } from "~/services/categoriesService";
 import { getAllProducts } from "~/services/productsService";
+import { useCategories } from "~/hooks/useCategories";
 import Product from "./Product";
 
 const DEFAULT_PAGINATION = { currentPage: 1, totalPages: 1, totalItems: 0 };
@@ -33,7 +33,7 @@ export default function ProductContainer() {
             ? "text-indigo-600 font-semibold"
             : "text-gray-700");
 
-    const { data: queryData } = useQuery({
+    const { data: queryData, isLoading, isFetching, isError, error } = useQuery({
         queryKey: ["products", activeCategory, selectedPriceRange, pagination.currentPage],
         queryFn: async () => {
             let minPrice = null;
@@ -107,14 +107,7 @@ export default function ProductContainer() {
         await fetchCartCount();
     };
 
-    const { data: categoryData = [] } = useQuery({
-        queryKey: ["categories"],
-        queryFn: async () => {
-            const response = await getAllCategory({ limit: 1000 });
-            return Array.isArray(response.data) ? response.data : [];
-        },
-        staleTime: 1000 * 60 * 5,
-    });
+    const { data: categoryData = [] } = useCategories();
 
     return (
         <Product
@@ -126,6 +119,9 @@ export default function ProductContainer() {
             onPriceFilter={handlePriceFilter}
             getPriceClass={getPriceClass}
             productList={productList}
+            isLoading={isLoading}
+            isFetching={isFetching}
+            errorMessage={isError ? error?.message : ""}
             onSelectProduct={handleSelectProduct}
             pageInfo={pageInfo}
             onPageChange={handlePageChange}

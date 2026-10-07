@@ -82,7 +82,7 @@ api.interceptors.response.use(
                 localStorage.removeItem('access_token')
                 localStorage.removeItem('refresh_token')
                 localStorage.removeItem('user')
-                window.location.href = "/login";
+                window.location.href = "/auth/login";
                 return Promise.reject(refreshError);
             }
         }
@@ -91,17 +91,4 @@ api.interceptors.response.use(
 )
 
 // lấy token để xác thực bên /admin
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            config.headers["token"] = `Bearer ${token}`
-        }
-        return config
-    },
-    (error) => Promise.reject(error)
-)
-
-
-
 export default api;

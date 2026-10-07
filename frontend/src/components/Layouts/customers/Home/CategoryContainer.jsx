@@ -6,8 +6,8 @@ import Category from "./Category";
 export default function CategoryContainer() {
     const [selectedProduct, setSelectedProduct] = useState(null);
 
-    const { data: products = [] } = useQuery({
-        queryKey: ["products"],
+    const { data: products = [], isLoading, isError } = useQuery({
+        queryKey: ["products", "featured", 3],
         queryFn: async () => {
             const response = await getAllProducts({
                 limit: 3,
@@ -26,6 +26,8 @@ export default function CategoryContainer() {
     return (
         <Category
             products={products}
+            isLoading={isLoading}
+            hasError={isError}
             selectedProduct={selectedProduct}
             onSelectProduct={setSelectedProduct}
             onCloseDetail={handleCloseDetail}

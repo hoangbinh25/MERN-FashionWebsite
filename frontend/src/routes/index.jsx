@@ -1,3 +1,5 @@
+import { lazy } from 'react';
+
 // User
 import HomePage from '~/pages/Customers/HomePage';
 import LoginPage from '~/pages/Customers/LoginPage';
@@ -13,7 +15,7 @@ import ResetPasswordPage from '~/pages/Customers/ResetPasswordPage';
 import NotFoundPage from '~/pages/NotFoundPage';
 
 // Admin
-import Index from '~/pages/Admin/Index';
+const Index = lazy(() => import('~/pages/Admin/Index'));
 import Product from '~/pages/Admin/Product';
 import Category from '~/pages/Admin/Category';
 import Order from '~/pages/Admin/Order';
@@ -27,8 +29,6 @@ import PaySuccessful from '~/pages/PaySuccessful';
 import OAuthCallbackHandler from '~/components/Layouts/customers/Auth/OAuthCallbackHandler';
 
 
-const user = JSON.parse(localStorage.getItem("user"));
-
 const routes = [
     // customers
     { path: '/', component: HomePage, content: 'Home', showBanner: true, bannerHeight: 'h-[1000px]' },
@@ -38,9 +38,9 @@ const routes = [
     { path: '/user/blog/:id', component: BlogDetail, content: 'BlogDetail', showBanner: true, bannerHeight: 'h-[240px]' },
     { path: '/user/about', component: AboutPage, content: 'About', showBanner: true, bannerHeight: 'h-[240px]' },
     { path: '/user/contact', component: ContactPage, content: 'Contact', showBanner: true, bannerHeight: 'h-[240px]' },
-    { path: '/user/profile', component: ProfilePage, content: 'Profile', showBanner: false },
-    { path: '/user/cart', component: CartPage, content: 'Cart' },
-    { path: '/user/order', component: OrderHistoryPage, content: 'Order History' },
+    { path: '/user/profile', component: ProfilePage, content: 'Profile', showBanner: false, access: 'user' },
+    { path: '/user/cart', component: CartPage, content: 'Cart', access: 'user' },
+    { path: '/user/order', component: OrderHistoryPage, content: 'Order History', access: 'user' },
 
     // auth
     { path: '/auth/login', component: LoginPage },
@@ -51,13 +51,13 @@ const routes = [
     { path: '/auth/oauth-callback', component: OAuthCallbackHandler },
 
     //admin
-    { path: '/admin', component: Index, content: 'Admin' },
-    { path: '/admin/product', component: Product, content: 'Products Management' },
-    { path: '/admin/category', component: Category, content: 'Categories Management' },
-    { path: '/admin/order', component: Order, content: 'Orders Management' },
-    { path: '/admin/user', component: User, content: 'Users Management' },
-    { path: '/admin/store', component: Store, content: 'Stores Management' },
-    { path: '/admin/blog', component: Blog, content: 'Blogs Management' },
+    { path: '/admin', component: Index, content: 'Admin', access: 'admin' },
+    { path: '/admin/product', component: Product, content: 'Products Management', access: 'admin' },
+    { path: '/admin/category', component: Category, content: 'Categories Management', access: 'admin' },
+    { path: '/admin/order', component: Order, content: 'Orders Management', access: 'admin' },
+    { path: '/admin/user', component: User, content: 'Users Management', access: 'admin' },
+    { path: '/admin/store', component: Store, content: 'Stores Management', access: 'admin' },
+    { path: '/admin/blog', component: Blog, content: 'Blogs Management', access: 'admin' },
     
 
     // successful payment
