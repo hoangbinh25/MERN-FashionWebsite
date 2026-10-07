@@ -33,3 +33,6 @@ jobs:
             - name: Build frontend
               working-directory: ./frontend
               run: npm run build
+
+            - name: Build production Docker images
+              run: docker compose -f docker-compose.prod.yml build

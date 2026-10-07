@@ -12,7 +12,9 @@ const app = express();
 
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://mern-fashion-website.vercel.app'
+    'http://localhost:8080',
+    'https://mern-fashion-website.vercel.app',
+    ...((process.env.CLIENT_URL || '').split(',').map((origin) => origin.trim()).filter(Boolean)),
 ];
 
 // Bật CORS cơ bản
@@ -42,6 +44,11 @@ app.options('/{*splat}', cors({
 // Middleware khác
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Lightweight liveness endpoint used by Docker health checks and hosting platforms.
+app.get('/health', (_req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 
 // Session & Passport
 app.use(session({
