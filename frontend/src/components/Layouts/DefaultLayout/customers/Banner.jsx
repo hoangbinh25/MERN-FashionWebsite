@@ -6,17 +6,17 @@ const bannerConfigs = {
         showSlider: true,
     },
     blog: {
-        img: "https://themewagon.github.io/cozastore/images/bg-02.jpg",
+        img: bannerImg,
         h1: "Fashion Blog",
         showSlider: false,
     },
     about: {
-        img: "https://themewagon.github.io/cozastore/images/bg-01.jpg",
+        img: bannerImg,
         h1: "About TBN Store",
         showSlider: false,
     },
     contact: {
-        img: "https://themewagon.github.io/cozastore/images/bg-01.jpg",
+        img: bannerImg,
         h1: "Contact",
         showSlider: false,
     }

@@ -17,7 +17,6 @@ services:
             - ./backend/.env.docker
         environment:
             PORT: 3001
-            MONGODB_URL: mongodb://mongo:27017/fashion-store
         depends_on:
             - mongo
 

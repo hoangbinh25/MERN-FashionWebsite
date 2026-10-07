@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { useCart } from "~/context/CartContext";
 import { getAllProducts } from "~/services/productsService";
 import { useCategories } from "~/hooks/useCategories";
@@ -9,13 +10,21 @@ const DEFAULT_PAGINATION = { currentPage: 1, totalPages: 1, totalItems: 0 };
 const PRODUCT_LIMIT = 12;
 
 export default function ProductContainer() {
-    const [activeCategory, setActiveCategory] = useState("All Products");
+    const [searchParams] = useSearchParams();
+    const categoryFromUrl = searchParams.get("category") || "All Products";
+    const searchFromUrl = searchParams.get("search") || "";
+    const [activeCategory, setActiveCategory] = useState(categoryFromUrl);
     const [showFilter, setShowFilter] = useState(false);
     const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
     const [selectedPriceRange, setSelectedPriceRange] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const { fetchCartCount } = useCart();
+
+    useEffect(() => {
+        setActiveCategory(categoryFromUrl);
+        setPagination((previous) => ({ ...previous, currentPage: 1 }));
+    }, [categoryFromUrl, searchFromUrl]);
 
     const handleCategoryChange = (categoryId) => {
         setActiveCategory(categoryId);
@@ -34,7 +43,7 @@ export default function ProductContainer() {
             : "text-gray-700");
 
     const { data: queryData, isLoading, isFetching, isError, error } = useQuery({
-        queryKey: ["products", activeCategory, selectedPriceRange, pagination.currentPage],
+        queryKey: ["products", activeCategory, searchFromUrl, selectedPriceRange, pagination.currentPage],
         queryFn: async () => {
             let minPrice = null;
             let maxPrice = null;
@@ -46,6 +55,7 @@ export default function ProductContainer() {
                 page: pagination.currentPage,
                 limit: PRODUCT_LIMIT,
                 category: activeCategory,
+                nameProduct: searchFromUrl || undefined,
                 minPrice,
                 maxPrice,
             });
@@ -66,6 +76,7 @@ export default function ProductContainer() {
                     name: item.nameProduct,
                     description: item.description || "",
                     size: item.size || null,
+                    variations: item.variations || [],
                     button: "SHOP NOW",
                     showSlider: false,
                     price: item.price,

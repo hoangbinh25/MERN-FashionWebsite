@@ -1,4 +1,8 @@
+import { X, ChevronLeft, ChevronRight, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useProductDetail } from "~/hooks/useProductDetail";
+import { optimizeCloudinaryImage } from "~/utils/image";
+
+const fallbackSizes = ["S", "M", "L", "XL", "XXL"];
 
 export default function ProductDetail({ product, onClose }) {
     const {
@@ -12,99 +16,122 @@ export default function ProductDetail({ product, onClose }) {
         handlePreviousImage,
         handleNextImage,
         handleAddToCart,
+        isAdding,
     } = useProductDetail(product, onClose);
 
-    if (!product) {
-        return null;
-    }
+    if (!product) return null;
+
+    const productName = product.name || product.nameProduct || "Sản phẩm";
+    const variationSizes = product.variations?.map((variation) => variation.size).filter(Boolean) || [];
+    const sizes = product.sizes?.length
+        ? product.sizes
+        : variationSizes.length ? variationSizes : fallbackSizes;
+    const uniqueSizes = [...new Set(sizes)];
+    const formattedPrice = Number(product.price || 0).toLocaleString("vi-VN");
 
     return (
-        <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
-            <div className="absolute inset-0" onClick={onClose}></div>
-            <div
-                className="min-w-[320px] max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 sm:gap-8 md:gap-12 relative bg-white"
-                onClick={(e) => e.stopPropagation()}>
-                {/* Left: Image slider */}
-                <div className="flex flex-col gap-4 sm:gap-6 w-full md:w-1/2">
-                    <div className="bg-gray-100 flex items-center justify-center h-[200px] xs:h-[240px] sm:h-[300px] md:h-[360px] lg:h-[400px] relative"
-                        onClick={e => e.stopPropagation()}>
-                        <img src={mainImg} alt={product.name || "Product"} className="max-h-[140px] xs:max-h-[180px] sm:max-h-[240px] md:max-h-[300px] lg:max-h-[340px] object-contain" />
-                        {/* Prev/Next arrows */}
-                        <button
-                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full p-2 sm:p-3 shadow hover:bg-gray-300"
-                            onClick={handlePreviousImage}
-                            aria-label="Ảnh trước"
-                            type="button"
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 4l-6 6 6 6" /></svg>
-                        </button>
-                        <button
-                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full p-2 sm:p-3 shadow hover:bg-gray-300"
-                            onClick={handleNextImage}
-                            aria-label="Ảnh sau"
-                            type="button"
-                        >
-                            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 4l6 6-6 6" /></svg>
-                        </button>
-                    </div>
-                    <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2" onClick={e => e.stopPropagation()}>
-                        {images.map((img, idx) => (
-                            <img key={idx}
-                                src={img}
-                                alt="Thumb"
-                                className={`w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover rounded cursor-pointer border ${mainImg === img ? "border-indigo-500" : "border-transparent"}`}
-                                onClick={() => setMainImg(img)} />
-                        ))}
-                    </div>
-                </div>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6">
+            <button
+                type="button"
+                aria-label="Đóng chi tiết sản phẩm"
+                onClick={onClose}
+                className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm"
+            />
 
-                {/* Right: Info */}
-                <div className="w-full md:w-1/2 flex flex-col gap-4 sm:gap-6 md:gap-8"
-                    onClick={e => e.stopPropagation()}>
-                    <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-semibold">{product.name}</h2>
-                    <div className="text-base xs:text-lg sm:text-xl md:text-2xl font-bold text-gray-700">
-                        {product.price ? `${product.price}VNĐ` : "Liên hệ"}
+            <section
+                role="dialog"
+                aria-modal="true"
+                aria-label={`Chi tiết ${productName}`}
+                className="relative z-10 max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-3xl bg-white shadow-2xl"
+            >
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Đóng"
+                    className="absolute right-4 top-4 z-20 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-slate-600 shadow-md transition hover:bg-slate-900 hover:text-white"
+                >
+                    <X size={21} />
+                </button>
+
+                <div className="grid lg:grid-cols-2">
+                    <div className="bg-slate-50 p-5 sm:p-8 lg:p-10">
+                        <div className="relative grid min-h-[320px] place-items-center overflow-hidden rounded-2xl bg-white sm:min-h-[500px]">
+                            {mainImg ? (
+                                <img
+                                    src={optimizeCloudinaryImage(mainImg, 1200) || mainImg}
+                                    alt={productName}
+                                    className="h-full max-h-[500px] w-full object-contain p-6"
+                                    onError={(event) => { event.currentTarget.src = "https://placehold.co/900x900?text=No+Image"; }}
+                                />
+                            ) : (
+                                <span className="text-sm text-slate-400">Chưa có ảnh sản phẩm</span>
+                            )}
+
+                            {images.length > 1 && <>
+                                <button type="button" onClick={handlePreviousImage} aria-label="Ảnh trước"
+                                    className="absolute left-4 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-slate-800 shadow transition hover:scale-105">
+                                    <ChevronLeft size={22} />
+                                </button>
+                                <button type="button" onClick={handleNextImage} aria-label="Ảnh sau"
+                                    className="absolute right-4 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-slate-800 shadow transition hover:scale-105">
+                                    <ChevronRight size={22} />
+                                </button>
+                            </>}
+                        </div>
+
+                        {images.length > 1 && <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
+                            {images.map((image, index) => (
+                                <button key={`${image}-${index}`} type="button" onClick={() => setMainImg(image)}
+                                    className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition ${mainImg === image ? "border-indigo-600 ring-2 ring-indigo-100" : "border-transparent hover:border-slate-300"}`}>
+                                    <img src={optimizeCloudinaryImage(image, 160) || image} alt={`${productName} ${index + 1}`} className="h-full w-full object-cover" />
+                                </button>
+                            ))}
+                        </div>}
                     </div>
-                    <p className="text-gray-500 text-sm xs:text-base sm:text-lg md:text-xl">{product.description || "Không có mô tả cho sản phẩm này."}</p>
-                    <div className="flex flex-col gap-4 sm:gap-6">
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                            <div className="w-full sm:w-32 md:w-36">
-                                <label className="block text-sm xs:text-base sm:text-lg font-medium mb-1">Kíck cỡ</label>
-                                <select
-                                    value={size}
-                                    onChange={e => setSize(e.target.value)}
-                                    className="w-full border rounded px-3 py-2 sm:px-4 sm:py-3">
-                                    <option value="">Chọn</option>
-                                    {Array.isArray(product.sizes) && product.sizes.length > 0 ? (
-                                        product.sizes.map((sz, idx) => (
-                                            <option key={idx} value={sz}>{sz}</option>
-                                        ))
-                                    ) : (
-                                        ["S", "M", "L", "XL", "XXL"].map((sz, idx) => (
-                                            <option key={idx} value={sz}>{sz}</option>
-                                        ))
-                                    )}
-                                </select>
+
+                    <div className="p-6 sm:p-10 lg:p-12">
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600">TBN Store selection</p>
+                        <h2 className="text-3xl font-bold leading-tight text-slate-900 sm:text-4xl">{productName}</h2>
+                        <p className="mt-5 text-3xl font-bold text-indigo-600">{formattedPrice} VNĐ</p>
+                        <p className="mt-6 border-t border-slate-100 pt-6 leading-7 text-slate-600">
+                            {product.description || "Sản phẩm được chọn lọc dành cho phong cách hàng ngày của bạn."}
+                        </p>
+
+                        <div className="mt-8">
+                            <div className="mb-3 flex items-center justify-between">
+                                <p className="font-semibold text-slate-900">Chọn kích cỡ</p>
+                                {size && <span className="text-sm text-indigo-600">Đã chọn: {size}</span>}
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                {uniqueSizes.map((itemSize) => (
+                                    <button key={itemSize} type="button" onClick={() => setSize(itemSize)}
+                                        className={`min-w-12 rounded-xl border px-4 py-2.5 text-sm font-semibold transition ${size === itemSize ? "border-indigo-600 bg-indigo-600 text-white shadow-sm" : "border-slate-200 text-slate-700 hover:border-indigo-300"}`}>
+                                        {itemSize}
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 sm:gap-4">
-                            <label className="block text-sm xs:text-base sm:text-lg font-medium">Số lượng:</label>
-                            <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => Math.max(1, q - 1))}>-</button>
-                            <input
-                                type="text"
-                                value={quantity}
-                                min={1}
-                                className="w-12 xs:w-14 sm:w-16 text-center border rounded py-1 sm:py-2"
-                                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                            />
-                            <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => q + 1)}>+</button>
+
+                        <div className="mt-8 flex items-center justify-between gap-4">
+                            <p className="font-semibold text-slate-900">Số lượng</p>
+                            <div className="flex items-center rounded-xl border border-slate-200 bg-white p-1">
+                                <button type="button" aria-label="Giảm số lượng" onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+                                    className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 transition hover:bg-slate-100"><Minus size={16} /></button>
+                                <span className="w-10 text-center font-semibold text-slate-900">{quantity}</span>
+                                <button type="button" aria-label="Tăng số lượng" onClick={() => setQuantity((value) => value + 1)}
+                                    className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 transition hover:bg-slate-100"><Plus size={16} /></button>
+                            </div>
                         </div>
-                        <button className="w-full bg-indigo-500 text-white font-semibold py-3 sm:py-4 rounded mt-4 sm:mt-6 hover:bg-indigo-600 transition"
-                            onClick={handleAddToCart}
-                        >Thêm vào giỏ hàng</button>
+
+                        <button type="button" onClick={handleAddToCart} disabled={isAdding}
+                            className="mt-9 flex w-full items-center justify-center gap-3 rounded-xl bg-indigo-600 py-4 font-bold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70">
+                            <ShoppingBag size={20} />
+                            {isAdding ? "Đang thêm vào giỏ..." : "Thêm vào giỏ hàng"}
+                        </button>
+                        <p className="mt-4 text-center text-xs text-slate-400">Miễn phí đổi trả trong 7 ngày cho sản phẩm chưa sử dụng.</p>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     );
 }

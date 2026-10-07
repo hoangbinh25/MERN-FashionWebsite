@@ -1,24 +1,29 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { useCart } from "~/context/CartContext";
 import { addProductToCart } from "~/services/cartService";
 
 export function useProductDetail(product, onClose) {
-    let images = [];
-    if (Array.isArray(product?.images) && product.images.length > 0) {
-        images = product.images;
-    } else if (Array.isArray(product?.image) && product.image.length > 0) {
-        images = product.image;
-    } else if (typeof product?.img === "string" && product.img) {
-        images = [product.img];
-    }
+    const images = useMemo(() => {
+        if (Array.isArray(product?.images) && product.images.length > 0) return product.images;
+        if (Array.isArray(product?.image) && product.image.length > 0) return product.image;
+        if (typeof product?.img === "string" && product.img) return [product.img];
+        return [];
+    }, [product]);
 
     const [mainImg, setMainImg] = useState(images[0] || "");
     const [size, setSize] = useState("");
     const [quantity, setQuantity] = useState(1);
     const { fetchCartCount } = useCart();
-    const user = JSON.parse(localStorage.getItem("user"));
+    const [isAdding, setIsAdding] = useState(false);
+    const user = JSON.parse(localStorage.getItem("user") || "null");
     const currentImageIndex = images.findIndex((image) => image === mainImg);
+
+    useEffect(() => {
+        setMainImg(images[0] || "");
+        setSize("");
+        setQuantity(1);
+    }, [product?._id, product?.id, images]);
 
     const handlePreviousImage = () => {
         if (!images.length) return;
@@ -56,15 +61,18 @@ export function useProductDetail(product, onClose) {
             return;
         }
 
-        addToCart({
-            id: product.id,
-            quantity,
-            price: product.price,
-            size,
-        });
-        await fetchCartCount();
-        if (typeof onClose === "function") {
-            onClose();
+        try {
+            setIsAdding(true);
+            await addToCart({
+                id: product.id || product._id,
+                quantity,
+                price: product.price,
+                size,
+            });
+            toast.success("Đã thêm sản phẩm vào giỏ hàng");
+            if (typeof onClose === "function") onClose();
+        } finally {
+            setIsAdding(false);
         }
     };
 
@@ -79,5 +87,6 @@ export function useProductDetail(product, onClose) {
         handlePreviousImage,
         handleNextImage,
         handleAddToCart,
+        isAdding,
     };
 }

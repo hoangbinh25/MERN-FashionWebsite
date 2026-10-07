@@ -2,8 +2,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaSearch } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "~/context/AuthContext";
 import { useCart } from "~/context/CartContext";
+import { useDebounce } from "~/hooks/useDebounce";
+import { getAllProducts } from "~/services/productsService";
+import { optimizeCloudinaryImage } from "~/utils/image";
 
 const menuList = [
     { title: 'Trang chủ', path: '/user/home' },
@@ -27,6 +31,17 @@ export default function Header() {
     const searchRef = useRef();
     const searchInputRef = useRef();
     const navigate = useNavigate();
+    const debouncedSearch = useDebounce(searchQuery.trim(), 400);
+
+    const { data: suggestions = [], isFetching: isLoadingSuggestions } = useQuery({
+        queryKey: ["product-suggestions", debouncedSearch],
+        enabled: showSearch && debouncedSearch.length >= 2,
+        queryFn: async () => {
+            const response = await getAllProducts({ nameProduct: debouncedSearch, limit: 5 });
+            return Array.isArray(response.data) ? response.data : [];
+        },
+        staleTime: 60 * 1000,
+    });
 
     // Dropdown when user login
     useEffect(() => {
@@ -67,12 +82,9 @@ export default function Header() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        if (searchQuery.trim()) {
-            console.log('Search for: ', searchQuery);
-            setShowSearch();
-            setSearchQuery("");
-
-        }
+        const query = searchQuery.trim();
+        navigate(`/user/shop${query ? `?search=${encodeURIComponent(query)}` : ""}`);
+        setShowSearch(false);
     }
 
     const handleSearchIconClick = () => {
@@ -81,6 +93,12 @@ export default function Header() {
             setSearchQuery("");
         }
     }
+
+    const handleSuggestionClick = (productName) => {
+        navigate(`/user/shop?search=${encodeURIComponent(productName)}`);
+        setSearchQuery("");
+        setShowSearch(false);
+    };
 
     return (
         <header className={`w-full transition-all duration-500 ${isFixed ? "fixed top-0 left-0 z-50 bg-white shadow" : ""}`}>
@@ -141,6 +159,32 @@ export default function Header() {
                                             className="w-60 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
                                         />
                                     </form>
+                                    {searchQuery.trim().length >= 2 && (
+                                        <div className="mt-2 w-72 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
+                                            {isLoadingSuggestions && <p className="px-4 py-3 text-sm text-gray-500">Đang tìm sản phẩm...</p>}
+                                            {!isLoadingSuggestions && suggestions.length === 0 && (
+                                                <p className="px-4 py-3 text-sm text-gray-500">Không tìm thấy sản phẩm phù hợp.</p>
+                                            )}
+                                            {!isLoadingSuggestions && suggestions.map((product) => (
+                                                <button
+                                                    key={product._id}
+                                                    type="button"
+                                                    onClick={() => handleSuggestionClick(product.nameProduct)}
+                                                    className="flex w-full items-center gap-3 px-3 py-2 text-left transition hover:bg-gray-50"
+                                                >
+                                                    <img
+                                                        src={optimizeCloudinaryImage(product.image?.[0], 120) || "https://placehold.co/80x80?text=No+Image"}
+                                                        alt=""
+                                                        className="h-12 w-12 rounded object-cover"
+                                                    />
+                                                    <span className="min-w-0 flex-1">
+                                                        <span className="block truncate text-sm font-medium text-gray-800">{product.nameProduct}</span>
+                                                        <span className="block text-xs text-gray-500">{product.price?.toLocaleString("vi-VN")} VNĐ</span>
+                                                    </span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>

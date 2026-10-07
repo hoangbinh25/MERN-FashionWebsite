@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, Zap, ShoppingCart, Truck } from 'lucide-react';
+import { optimizeCloudinaryImage } from "~/utils/image";
 
 const founders = [
     {
@@ -52,8 +53,10 @@ export default function About() {
                                 >
                                     <img
                                         className="h-72 w-72 rounded-2xl object-cover mx-auto mb-8 shadow-2xl transition-transform duration-300 group-hover:scale-110 group-hover:shadow-2xl"
-                                        src={founder.imageUrl}
+                                        src={optimizeCloudinaryImage(founder.imageUrl, 700)}
                                         alt={`Portrait of ${founder.name}`}
+                                        loading="lazy"
+                                        decoding="async"
                                         onError={(e) => {
                                             e.target.onerror = null;
                                             e.target.src = 'https://placehold.co/400x400/EFEFEF/333333?text=Image';
