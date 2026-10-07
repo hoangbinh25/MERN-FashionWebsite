@@ -82,13 +82,16 @@ const getProducts = async (limit, page, sort, nameProduct, category, size, minPr
           category: { _id: p.categoryInfo._id, nameCategory: p.categoryInfo.nameCategory }
         }));
       } else {
-        totalProduct = await Product.countDocuments(objectFilter);
-        const objectSort = { createdAt: -1 };
-        getAllProduct = await Product.find(objectFilter)
-          .limit(limit)
-          .skip((page - 1) * limit)
-          .populate('category', 'nameCategory')
-          .sort(objectSort);
+        const [totalProduct, getAllProduct] = await Promise.all([
+          Product.countDocuments(objectFilter),
+          Product.find(objectFilter)
+            .select('nameProduct description image category price variations createdAt')
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .populate('category', 'nameCategory')
+            .lean()
+        ]);
       }
       resolve({
         status: 'OK',

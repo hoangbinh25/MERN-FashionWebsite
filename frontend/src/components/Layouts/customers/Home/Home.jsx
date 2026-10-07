@@ -1,11 +1,11 @@
-import Category from "~/components/Layouts/customers/Home/Category";
-import Product from "~/components/Layouts/customers/Home/Product";
+import CategoryContainer from "~/components/Layouts/customers/Home/CategoryContainer";
+import ProductContainer from "~/components/Layouts/customers/Home/ProductContainer";
 
 export default function Home() {
     return (
         <div className="container mx-auto px-4">
-            <Category />
-            <Product />
+            <CategoryContainer />
+            <ProductContainer />
         </div>
     );
 }

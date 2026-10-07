@@ -1,27 +1,18 @@
 // src/components/Footer.jsx
 import React, { useEffect, useState } from "react";
-import { getAllCategory } from "~/services/categoriesService";
+import { useCategories } from "~/hooks/useCategories";
 
 export default function Footer() {
   const [activeCategory, setActiveCategory] = useState("All Products");
-  const [categories, setCategories] = useState([])
 
   const handleCategoryChange = (categoryId) => {
     setActiveCategory(categoryId);
     setPagination(prev => ({ ...prev, currentPage: 1 }));
     loadProducts(1, categoryId);
   };
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const res = await getAllCategory({ limit: 1000 })
-        setCategories(Array.isArray(res.data) ? res.data : []);
-      } catch (error) {
-        setCategories([]);
-      }
-    }
-    fetchCategories();
-  }, [])
+
+  const { data: categories = [] } = useCategories();
+
   return (
     <footer className="bg-neutral-900 text-gray-300 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -50,17 +41,17 @@ export default function Footer() {
           <ul className="space-y-2">
             <li>
               <div className="w-full">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4640.290675848051!2d105.74354717525686!3d21.037901680613665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454962c0b6523%3A0x5c76c67564d9d1b9!2zUC4gVHLhu4tuaCBWxINuIELDtCwgSMOgIE7hu5lp!5e1!3m2!1svi!2s!4v1753297083239!5m2!1svi!2s" 
-                width="100%" 
-                height="150" 
-                style={{border: 0}} 
-                allowFullScreen="" 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-lg"
-              />
-            </div>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4640.290675848051!2d105.74354717525686!3d21.037901680613665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454962c0b6523%3A0x5c76c67564d9d1b9!2zUC4gVHLhu4tuaCBWxINuIELDtCwgSMOgIE7hu5lp!5e1!3m2!1svi!2s!4v1753297083239!5m2!1svi!2s"
+                  width="100%"
+                  height="150"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="rounded-lg"
+                />
+              </div>
             </li>
             <li className="text-sm text-gray-400">Trinh Van Bo, Nam Tu Liem, Ha Noi</li>
           </ul>

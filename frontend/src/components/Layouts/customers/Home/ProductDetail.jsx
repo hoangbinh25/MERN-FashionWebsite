@@ -1,48 +1,22 @@
-import { useState } from "react";
-import { addProductToCart } from "~/services/cartService";
-import { useCart } from "~/context/CartContext";
-import { toast } from "react-toastify";
+import { useProductDetail } from "~/hooks/useProductDetail";
 
-export default function ProductDetail({ product, onClose, hideCloseButton }) {
+export default function ProductDetail({ product, onClose }) {
+    const {
+        images,
+        mainImg,
+        setMainImg,
+        size,
+        setSize,
+        quantity,
+        setQuantity,
+        handlePreviousImage,
+        handleNextImage,
+        handleAddToCart,
+    } = useProductDetail(product, onClose);
+
     if (!product) {
         return null;
     }
-
-    // Xử lý lấy mảng ảnh đúng chuẩn
-    let images = [];
-    if (Array.isArray(product.images) && product.images.length > 0) {
-        images = product.images;
-    } else if (Array.isArray(product.image) && product.image.length > 0) {
-        images = product.image;
-    } else if (typeof product.img === 'string' && product.img) {
-        images = [product.img];
-    }
-    const [mainImg, setMainImg] = useState(images[0] || "");
-    // Xác định index hiện tại của mainImg
-    const currentImgIdx = images.findIndex(img => img === mainImg);
-    const handlePrevImg = (e) => {
-        // e.stopPropagation();
-        if (!images.length) return;
-        setMainImg(images[(currentImgIdx - 1 + images.length) % images.length]);
-    };
-    const handleNextImg = (e) => {
-        // e.stopPropagation();
-        if (!images.length) return;
-        setMainImg(images[(currentImgIdx + 1) % images.length]);
-    };
-    const [size, setSize] = useState("");
-    const [quantity, setQuantity] = useState(1);
-    const { fetchCartCount } = useCart();
-
-    const User = JSON.parse(localStorage.getItem('user'));
-    const addToCart = async ({ id, quantity, price, size }) => {
-        try {
-            await addProductToCart(User._id || User.id, id, quantity, price, size);
-            await fetchCartCount();
-        } catch (error) {
-            console.error("Error adding to cart:", error);
-        }
-    };
 
     return (
         <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
@@ -58,7 +32,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                         {/* Prev/Next arrows */}
                         <button
                             className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full p-2 sm:p-3 shadow hover:bg-gray-300"
-                            onClick={handlePrevImg}
+                            onClick={handlePreviousImage}
                             aria-label="Ảnh trước"
                             type="button"
                         >
@@ -66,7 +40,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                         </button>
                         <button
                             className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full p-2 sm:p-3 shadow hover:bg-gray-300"
-                            onClick={handleNextImg}
+                            onClick={handleNextImage}
                             aria-label="Ảnh sau"
                             type="button"
                         >
@@ -126,27 +100,7 @@ export default function ProductDetail({ product, onClose, hideCloseButton }) {
                             <button className="border rounded px-3 py-1 sm:px-4 sm:py-2" onClick={() => setQuantity(q => q + 1)}>+</button>
                         </div>
                         <button className="w-full bg-indigo-500 text-white font-semibold py-3 sm:py-4 rounded mt-4 sm:mt-6 hover:bg-indigo-600 transition"
-                            onClick={async (e) => {
-                                e.stopPropagation();
-                                if (!size) {
-                                    toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng");
-                                    return
-                                }
-                                if (!User || (!User._id && !User.id)) {
-                                    toast.error("Vui lòng đăng nhập tài khoản để thêm sản phẩm vào giỏ hàng");
-                                    return
-                                }
-                                addToCart({
-                                    id: product.id,
-                                    quantity,
-                                    price: product.price,
-                                    size,
-                                });
-                                await fetchCartCount();
-                                if (typeof onClose === 'function') {
-                                    onClose();
-                                }
-                            }}
+                            onClick={handleAddToCart}
                         >Thêm vào giỏ hàng</button>
                     </div>
                 </div>

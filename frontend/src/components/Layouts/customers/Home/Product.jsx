@@ -1,135 +1,23 @@
-import { useState, useEffect } from "react";
 import ProductDetail from "./ProductDetail";
-import { getAllProducts } from "~/services/productsService";
-import { addProductToCart } from "~/services/cartService";
 import Paginate from "../../DefaultLayout/admin/Paginate";
-import { useCart } from "~/context/CartContext";
-import { getAllCategory } from "~/services/categoriesService";
-import { useQuery } from "@tanstack/react-query";
 
-export default function Product() {
-    const [activeCategory, setActiveCategory] = useState("All Products");
-    const [showFilter, setShowFilter] = useState(false);
-    const [pagination, setPagination] = useState({
-        currentPage: 1,
-        totalPages: 1,
-        totalItems: 0,
-    });
-    const [selectedPriceRange, setSelectedPriceRange] = useState(null);
-    const [showDetail, setShowDetail] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [categories, setCategories] = useState([])
-    const limit = 12;
-
-    const { fetchCartCount } = useCart();
-
-    const handleCategoryChange = (categoryId) => {
-        setActiveCategory(categoryId);
-        setPagination(prev => ({ ...prev, currentPage: 1 }));
-        loadProducts(pagination.currentPage, categoryId, selectedPriceRange);
-    };
-
-    const handlePriceFilter = (range) => {
-        setSelectedPriceRange(range);
-        setPagination(prev => ({ ...prev, currentPage: 1 }));
-        loadProducts(pagination.currentPage, activeCategory, range);
-    };
-
-    const getPriceClass = (range) =>
-        "cursor-pointer hover:underline " +
-        (JSON.stringify(selectedPriceRange) === JSON.stringify(range)
-            ? "text-indigo-600 font-semibold"
-            : "text-gray-700");
-
-    const {
-        data: queryData,
-        isLoading,
-    } = useQuery({
-        queryKey: ['products', activeCategory, selectedPriceRange, pagination.currentPage],
-        queryFn: async () => {
-            let minPrice = null;
-            let maxPrice = null;
-            if (selectedPriceRange) {
-                [minPrice, maxPrice] = selectedPriceRange;
-            }
-
-            const res = await getAllProducts({
-                page: pagination.currentPage,
-                limit,
-                category: activeCategory,
-                minPrice,
-                maxPrice
-            });
-
-            const mapped = (res.data || []).map(item => {
-                let images = [];
-                if (Array.isArray(item.image) && item.image.length > 0) {
-                    images = item.image;
-                } else if (typeof item.image === 'string' && item.image) {
-                    images = [item.image];
-                } else {
-                    images = ["https://placehold.co/350x350?text=No+Image"];
-                }
-                return {
-                    id: item._id,
-                    images,
-                    name: item.nameProduct,
-                    description: item.description || "",
-                    size: item.size || null,
-                    button: "SHOP NOW",
-                    showSlider: false,
-                    price: item.price,
-                };
-            });
-
-            return {
-                products: mapped,
-                pagination: {
-                    currentPage: res.pageCurrent || 1,
-                    totalPages: res.totalPage || 1,
-                    totalItems: res.totalProduct || 0,
-                }
-            };
-        },
-        keepPreviousData: true, // tránh flash UI khi chuyển trang
-        staleTime: 300000, // 5 phút không refetch
-    });
-
-    const productList = queryData?.products || [];
-    const pageInfo = queryData?.pagination || { currentPage: 1, totalPages: 1, totalItems: 0 };
-
-
-    const User = JSON.parse(localStorage.getItem('user'));
-    const addToCart = async (product) => {
-        try {
-            await addProductToCart(User._id || User.id, product.id, 1, product.price, product.size);
-            await fetchCartCount();
-        } catch (error) {
-            console.error("Error adding to cart:", error);
-        }
-    };
-
-    const handlePageChange = (page) => {
-        setPagination(prev => ({ ...prev, currentPage: page }));
-    };
-
-    const handleCloseDetail = () => {
-        setShowDetail(false);
-        setSelectedProduct(null);
-    };
-
-    const {
-        data: categoryData = [],
-        isLoading: isCategoryLoading,
-    } = useQuery({
-        queryKey: ['categories'],
-        queryFn: async () => {
-            const res = await getAllCategory({ limit: 1000 });
-            return Array.isArray(res.data) ? res.data : [];
-        },
-        staleTime: 1000 * 60 * 5,
-    });
-
+export default function Product({
+    activeCategory,
+    categoryData,
+    onCategoryChange,
+    showFilter,
+    onToggleFilter,
+    onPriceFilter,
+    getPriceClass,
+    productList,
+    onSelectProduct,
+    pageInfo,
+    onPageChange,
+    showDetail,
+    selectedProduct,
+    onCloseDetail,
+    onCloseDetailAndRefreshCart,
+}) {
     return (
         <>
             <div className="max-w-screen-2xl mx-auto my-16">
@@ -137,35 +25,30 @@ export default function Product() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between my-4">
                     <div>
                         <div className="flex text-xl gap-8">
-                            {categoryData.map(cat => (
+                            {categoryData.map((category) => (
                                 <button
-                                    key={cat._id}
+                                    key={category._id}
                                     className={
                                         "transition-all duration-200 " +
-                                        (activeCategory === cat._id
+                                        (activeCategory === category._id
                                             ? "text-gray-500 underline underline-offset-4 font-semibold"
                                             : "text-gray-500 hover:text-gray-800 hover:underline hover:underline-offset-4")
                                     }
-                                    onClick={() => handleCategoryChange(cat._id)} // Truyền _id
+                                    onClick={() => onCategoryChange(category._id)}
                                 >
-                                    {cat.nameCategory}
+                                    {category.nameCategory}
                                 </button>
                             ))}
-
                         </div>
                     </div>
                     <div className="flex gap-4 md:mt-0 items-center">
                         <button
                             className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500"
-                            onClick={() => setShowFilter((prev) => !prev)}
+                            onClick={onToggleFilter}
                         >
                             <svg width="18" height="18" fill="none" stroke="currentColor"><path d="M3 6h12M6 9h6M9 12h0" strokeWidth="2" strokeLinecap="round" /></svg>
                             Lọc
                         </button>
-                        {/* <button className="flex items-center gap-2 border px-4 py-2 rounded hover:bg-indigo-500">
-                            <svg width="18" height="18" fill="none" stroke="currentColor"><circle cx="8" cy="8" r="6" strokeWidth="2" /><line x1="14" y1="14" x2="17" y2="17" strokeWidth="2" strokeLinecap="round" /></svg>
-                            Tìm kiếm
-                        </button> */}
                     </div>
                 </div>
 
@@ -191,12 +74,12 @@ export default function Product() {
                         <div>
                             <h3 className="font-bold mb-2">Price</h3>
                             <ul className="space-y-1 text-gray-700 text-sm">
-                                <li onClick={() => handlePriceFilter(null)} className={getPriceClass(null)}>Tất cả</li>
-                                <li onClick={() => handlePriceFilter([0, 500000])} className={getPriceClass([0, 500000])}>0 - 500,000 VNĐ</li>
-                                <li onClick={() => handlePriceFilter([500000, 1000000])} className={getPriceClass([500000, 1000000])}>500,000 - 1,000,000 VNĐ</li>
-                                <li onClick={() => handlePriceFilter([1000000, 2000000])} className={getPriceClass([1000000, 2000000])}>1,000,000 - 2,000,000 VNĐ</li>
-                                <li onClick={() => handlePriceFilter([2000000, 5000000])} className={getPriceClass([2000000, 5000000])}>2,000,000 - 5,000,000 VNĐ</li>
-                                <li onClick={() => handlePriceFilter([5000000, Infinity])} className={getPriceClass([5000000, Infinity])}>5,000,000 VNĐ +</li>
+                                <li onClick={() => onPriceFilter(null)} className={getPriceClass(null)}>Tất cả</li>
+                                <li onClick={() => onPriceFilter([0, 500000])} className={getPriceClass([0, 500000])}>0 - 500,000 VNĐ</li>
+                                <li onClick={() => onPriceFilter([500000, 1000000])} className={getPriceClass([500000, 1000000])}>500,000 - 1,000,000 VNĐ</li>
+                                <li onClick={() => onPriceFilter([1000000, 2000000])} className={getPriceClass([1000000, 2000000])}>1,000,000 - 2,000,000 VNĐ</li>
+                                <li onClick={() => onPriceFilter([2000000, 5000000])} className={getPriceClass([2000000, 5000000])}>2,000,000 - 5,000,000 VNĐ</li>
+                                <li onClick={() => onPriceFilter([5000000, Infinity])} className={getPriceClass([5000000, Infinity])}>5,000,000 VNĐ +</li>
                             </ul>
                         </div>
                     </div>
@@ -207,14 +90,13 @@ export default function Product() {
                         <div
                             key={idx}
                             className="group relative bg-white overflow-hidden w-full mb-8 cursor-pointer"
-                            onClick={() => {
-                                setSelectedProduct(product);
-                                setShowDetail(true);
-                            }}
+                            onClick={() => onSelectProduct(product)}
                         >
                             <img
                                 src={product.images?.[0] || "https://via.placeholder.com/350x350?text=No+Image"}
                                 alt={product.name}
+                                loading="lazy"
+                                decoding="async"
                                 className="w-full h-[350px] object-cover"
                             />
                             <button
@@ -236,11 +118,11 @@ export default function Product() {
                             </div>
                             <button
                                 className="absolute right-4 bottom-4 text-gray-400 hover:text-pink-500"
-                                onClick={e => {
-                                    e.stopPropagation();
-                                    setSelectedProduct(product);
-                                    setShowDetail(true);
-                                }}>
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    onSelectProduct(product);
+                                }}
+                            >
                                 <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="9" cy="21" r="1" />
                                     <circle cx="20" cy="21" r="1" />
@@ -254,21 +136,21 @@ export default function Product() {
             <Paginate
                 currentPage={pageInfo.currentPage}
                 totalPages={pageInfo.totalPages}
-                onPageChange={handlePageChange}
+                onPageChange={onPageChange}
             />
             {showDetail && selectedProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg shadow-lg max-w-5xl w-full relative">
                         <button
                             className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl font-bold z-30"
-                            onClick={async () => {
-                                await handleCloseDetail();
-                                await fetchCartCount();
-                            }}
+                            onClick={onCloseDetailAndRefreshCart}
                         >
                             x
                         </button>
-                        <ProductDetail product={selectedProduct} onClose={handleCloseDetail} hideCloseButton={true} onAddToCart={addToCart} />
+                        <ProductDetail
+                            product={selectedProduct}
+                            onClose={onCloseDetail}
+                        />
                     </div>
                 </div>
             )}

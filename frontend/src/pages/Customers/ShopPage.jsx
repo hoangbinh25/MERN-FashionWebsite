@@ -1,7 +1,7 @@
-import Product from "~/components/Layouts/customers/Home/Product";
+import ProductContainer from "~/components/Layouts/customers/Home/ProductContainer";
 
 export default function ShopPage() {
     return (<div>
-        <Product />
+        <ProductContainer />
     </div>);
 }
