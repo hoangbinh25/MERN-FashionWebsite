@@ -1,32 +1,32 @@
 import { lazy } from 'react';
 
 // User
-import HomePage from '~/pages/Customers/HomePage';
-import LoginPage from '~/pages/Customers/LoginPage';
-import RegisterPage from '~/pages/Customers/RegisterPage';
-import ShopPage from '~/pages/Customers/ShopPage';
-import BlogPage from '~/pages/Customers/BlogPage';
-import AboutPage from '~/pages/Customers/AboutPage';
-import ContactPage from '~/pages/Customers/ContactPage';
-import ProfilePage from '~/pages/Customers/ProfilePage';
-import OTPVerificationPage from '~/pages/Customers/OTPVerificationPage';
-import ForgotPasswordPage from '~/components/Layouts/customers/Auth/ForgotPasswordPage';
-import ResetPasswordPage from '~/pages/Customers/ResetPasswordPage';
-import NotFoundPage from '~/pages/NotFoundPage';
+const HomePage = lazy(() => import('~/pages/Customers/HomePage'));
+const LoginPage = lazy(() => import('~/pages/Customers/LoginPage'));
+const RegisterPage = lazy(() => import('~/pages/Customers/RegisterPage'));
+const ShopPage = lazy(() => import('~/pages/Customers/ShopPage'));
+const BlogPage = lazy(() => import('~/pages/Customers/BlogPage'));
+const AboutPage = lazy(() => import('~/pages/Customers/AboutPage'));
+const ContactPage = lazy(() => import('~/pages/Customers/ContactPage'));
+const ProfilePage = lazy(() => import('~/pages/Customers/ProfilePage'));
+const OTPVerificationPage = lazy(() => import('~/pages/Customers/OTPVerificationPage'));
+const ForgotPasswordPage = lazy(() => import('~/components/Layouts/customers/Auth/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('~/pages/Customers/ResetPasswordPage'));
+const NotFoundPage = lazy(() => import('~/pages/NotFoundPage'));
 
 // Admin
 const Index = lazy(() => import('~/pages/Admin/Index'));
-import Product from '~/pages/Admin/Product';
-import Category from '~/pages/Admin/Category';
-import Order from '~/pages/Admin/Order';
-import User from '~/pages/Admin/User';
-import Store from '~/pages/Admin/Store';
-import CartPage from '~/pages/Customers/CartPage';
-import OrderHistoryPage from '~/pages/Customers/OrderHistoryPage';
-import Blog from '~/pages/Admin/Blog';
-import BlogDetail from '~/components/Layouts/customers/Blog/BlogDetail';
-import PaySuccessful from '~/pages/PaySuccessful';
-import OAuthCallbackHandler from '~/components/Layouts/customers/Auth/OAuthCallbackHandler';
+const Product = lazy(() => import('~/pages/Admin/Product'));
+const Category = lazy(() => import('~/pages/Admin/Category'));
+const Order = lazy(() => import('~/pages/Admin/Order'));
+const User = lazy(() => import('~/pages/Admin/User'));
+const Store = lazy(() => import('~/pages/Admin/Store'));
+const CartPage = lazy(() => import('~/pages/Customers/CartPage'));
+const OrderHistoryPage = lazy(() => import('~/pages/Customers/OrderHistoryPage'));
+const Blog = lazy(() => import('~/pages/Admin/Blog'));
+const BlogDetail = lazy(() => import('~/components/Layouts/customers/Blog/BlogDetail'));
+const PaySuccessful = lazy(() => import('~/pages/PaySuccessful'));
+const OAuthCallbackHandler = lazy(() => import('~/components/Layouts/customers/Auth/OAuthCallbackHandler'));
 
 
 const routes = [

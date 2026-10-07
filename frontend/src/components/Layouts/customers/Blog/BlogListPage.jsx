@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getAllBlog } from "~/services/blogService";
 import Paginate from "~/components/Layouts/DefaultLayout/admin/Paginate";
 import { optimizeCloudinaryImage } from "~/utils/image";
@@ -20,6 +20,7 @@ export default function BlogListPage() {
             };
         },
         staleTime: 5 * 60 * 1000,
+        placeholderData: keepPreviousData,
     });
 
     const blogs = data?.blogs || [];

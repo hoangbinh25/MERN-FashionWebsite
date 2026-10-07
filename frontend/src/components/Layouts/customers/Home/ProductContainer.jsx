@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { useCart } from "~/context/CartContext";
 import { getAllProducts } from "~/services/productsService";
@@ -92,7 +92,8 @@ export default function ProductContainer() {
                 },
             };
         },
-        keepPreviousData: true,
+        // Keep the current grid visible while the next page is being requested.
+        placeholderData: keepPreviousData,
         staleTime: 300000,
     });
 
