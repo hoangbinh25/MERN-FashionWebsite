@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import bannerImg from "~/assets/img/banner.png";
+import bannerImg from "~/assets/img/banner.webp";
 const bannerConfigs = {
     home: {
         img: bannerImg,
